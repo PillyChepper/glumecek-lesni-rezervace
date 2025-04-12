@@ -9,9 +9,14 @@ import PricingSection from '@/components/sections/PricingSection';
 import CalendarSection from '@/components/sections/CalendarSection';
 
 const Index = () => {
+  console.log("Index page rendering");
+  
   return (
     <div className="min-h-screen">
       <Navbar />
+      <div style={{ backgroundColor: 'blue', padding: '1rem', color: 'white', textAlign: 'center' }}>
+        Test banner to see if page is loading
+      </div>
       <HeroSection />
       <AboutSection />
       <AccommodationSection />
