@@ -96,3 +96,19 @@
 .image-reveal.reveal {
   clip-path: inset(0 0 0 0);
 }
+
+/* Add fade-in animation for hero content */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+/* Add styles for image loading */
+.image-reveal.loaded {
+  opacity: 1;
+}
+

@@ -10,6 +10,7 @@ import { glumecekImage } from '@/assets/images';
 const HeroSection = () => {
   const heroImageRef = useRef<HTMLDivElement>(null);
   const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   
   useEffect(() => {
     // Animate hero image in
@@ -33,24 +34,49 @@ const HeroSection = () => {
     };
   }, []);
 
+  // Preload the image to avoid loading issues
+  useEffect(() => {
+    const img = new Image();
+    img.src = glumecekImage;
+    img.onload = () => {
+      console.log('Hero image preloaded successfully');
+      setImageLoaded(true);
+    };
+    img.onerror = () => {
+      console.log('Hero image preload failed');
+      setImageError(true);
+    };
+  }, []);
+
   // Console log to troubleshoot
-  console.log('Image path:', glumecekImage);
+  console.log('Hero image path:', glumecekImage);
+  console.log('Image loaded state:', imageLoaded);
+  console.log('Image error state:', imageError);
 
   // Fallback image from Unsplash (forest cabin)
   const fallbackImage = "https://images.unsplash.com/photo-1506744038136-46273834b3fb";
+  // New images from uploaded files
+  const newBackgroundImage = "public/lovable-uploads/499b9809-25f4-4e6b-863f-14f43c52d09d.png";
 
   return (
     <section id="domov" className="hero-section relative flex items-center justify-center overflow-hidden">
       <div 
         ref={heroImageRef} 
-        className="absolute inset-0 image-reveal"
+        className={`absolute inset-0 image-reveal ${imageLoaded ? 'loaded' : ''}`}
+        style={{
+          backgroundColor: '#e0e0e0' // Light gray background while loading
+        }}
       >
         <img 
           src={imageError ? fallbackImage : glumecekImage} 
           alt="Glumeček - domek v lese" 
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          onLoad={() => {
+            console.log('Hero image loaded via img tag');
+            setImageLoaded(true);
+          }}
           onError={() => {
-            console.log('Image failed to load, using fallback');
+            console.log('Hero image failed to load via img tag, using fallback');
             setImageError(true);
           }}
         />
