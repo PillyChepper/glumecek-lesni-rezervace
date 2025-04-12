@@ -1,5 +1,5 @@
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { glumecekImage } from '@/assets/images';
 
 const HeroSection = () => {
   const heroImageRef = useRef<HTMLDivElement>(null);
+  const [imageError, setImageError] = useState(false);
   
   useEffect(() => {
     // Animate hero image in
@@ -35,6 +36,9 @@ const HeroSection = () => {
   // Console log to troubleshoot
   console.log('Image path:', glumecekImage);
 
+  // Fallback image from Unsplash (forest cabin)
+  const fallbackImage = "https://images.unsplash.com/photo-1506744038136-46273834b3fb";
+
   return (
     <section id="domov" className="hero-section relative flex items-center justify-center overflow-hidden">
       <div 
@@ -42,9 +46,13 @@ const HeroSection = () => {
         className="absolute inset-0 image-reveal"
       >
         <img 
-          src={glumecekImage} 
+          src={imageError ? fallbackImage : glumecekImage} 
           alt="Glumeček - domek v lese" 
           className="w-full h-full object-cover"
+          onError={() => {
+            console.log('Image failed to load, using fallback');
+            setImageError(true);
+          }}
         />
         <div className="absolute inset-0 bg-black/30" />
       </div>

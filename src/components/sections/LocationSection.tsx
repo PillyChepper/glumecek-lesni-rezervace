@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
@@ -6,15 +7,20 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { glumecekImage } from '@/assets/images';
 
 const LocationSection = () => {
+  const [imageError, setImageError] = useState(false);
+  // Fallback image from Unsplash (forest landscape)
+  const fallbackImage = "https://images.unsplash.com/photo-1472396961693-142e6e269027";
+
   return (
     <Section id="lokalita">
       <div className="grid md:grid-cols-2 gap-12 items-center">
         <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-lg">
           <AspectRatio ratio={3/2} className="bg-muted">
             <img 
-              src={glumecekImage} 
+              src={imageError ? fallbackImage : glumecekImage} 
               alt="Krajina Brdských lesů" 
               className="w-full h-full object-cover"
+              onError={() => setImageError(true)}
             />
           </AspectRatio>
         </div>
