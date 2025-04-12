@@ -9,8 +9,8 @@ import { heroBackgroundImage } from '@/assets/images';
 
 const HeroSection = () => {
   const heroImageRef = useRef<HTMLDivElement>(null);
-  const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
   
   useEffect(() => {
     // Animate hero image in
@@ -38,20 +38,18 @@ const HeroSection = () => {
   useEffect(() => {
     const img = new Image();
     img.src = heroBackgroundImage;
+    
     img.onload = () => {
       console.log('Hero image preloaded successfully');
       setImageLoaded(true);
+      setImageError(false);
     };
+    
     img.onerror = () => {
       console.log('Hero image preload failed');
       setImageError(true);
     };
   }, []);
-
-  // Console log to troubleshoot
-  console.log('Hero image path:', heroBackgroundImage);
-  console.log('Image loaded state:', imageLoaded);
-  console.log('Image error state:', imageError);
 
   // Fallback image from Unsplash (forest cabin)
   const fallbackImage = "https://images.unsplash.com/photo-1506744038136-46273834b3fb";
@@ -60,24 +58,18 @@ const HeroSection = () => {
     <section id="domov" className="hero-section relative flex items-center justify-center overflow-hidden">
       <div 
         ref={heroImageRef} 
-        className={`absolute inset-0 image-reveal ${imageLoaded ? 'loaded' : ''}`}
+        className={`absolute inset-0 image-reveal ${imageLoaded || imageError ? 'loaded' : ''}`}
         style={{
           backgroundColor: '#e0e0e0' // Light gray background while loading
         }}
       >
-        <img 
-          src={imageError ? fallbackImage : heroBackgroundImage} 
-          alt="Glumeček - domek v lese" 
-          className={`w-full h-full object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-          onLoad={() => {
-            console.log('Hero image loaded via img tag');
-            setImageLoaded(true);
+        <div className="absolute inset-0 bg-cover bg-center" 
+          style={{ 
+            backgroundImage: `url(${imageError ? fallbackImage : heroBackgroundImage})`,
+            opacity: imageLoaded || imageError ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out'
           }}
-          onError={() => {
-            console.log('Hero image failed to load via img tag, using fallback');
-            setImageError(true);
-          }}
-        />
+        ></div>
         <div className="absolute inset-0 bg-black/30" />
       </div>
       
