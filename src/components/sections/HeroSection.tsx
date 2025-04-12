@@ -32,6 +32,9 @@ const HeroSection = () => {
     };
   }, []);
 
+  // Console log to troubleshoot
+  console.log('Image path:', glumecekImage);
+
   return (
     <section id="domov" className="hero-section relative flex items-center justify-center overflow-hidden">
       <div 
