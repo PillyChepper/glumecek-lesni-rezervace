@@ -14,9 +14,6 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <div style={{ backgroundColor: 'blue', padding: '1rem', color: 'white', textAlign: 'center' }}>
-        Test banner to see if page is loading
-      </div>
       <HeroSection />
       <AboutSection />
       <AccommodationSection />
