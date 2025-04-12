@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -52,16 +53,36 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
-				}
+        forest: {
+          '50': '#f6f7f6',
+          '100': '#e3e6e3',
+          '200': '#c6ccc5',
+          '300': '#a3ada1',
+          '400': '#7e8a7c',
+          '500': '#5e6b5d',
+          '600': '#4a544a',
+          '700': '#3d443d',
+          '800': '#343834',
+          '900': '#2d302d',
+          '950': '#181a18',
+        },
+        wood: {
+          '50': '#faf5f0',
+          '100': '#f3e9dc',
+          '200': '#e6d0b8',
+          '300': '#d7b18e',
+          '400': '#c89067',
+          '500': '#be8053',
+          '600': '#b06847',
+          '700': '#92513d',
+          '800': '#764337',
+          '900': '#613a30',
+          '950': '#351c18',
+        },
+			},
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
+				display: ['Playfair Display', 'serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +105,22 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				'fade-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.5s ease-out'
 			}
 		}
 	},
