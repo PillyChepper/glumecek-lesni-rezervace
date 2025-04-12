@@ -7,9 +7,16 @@ interface SectionProps {
   className?: string;
   children: ReactNode;
   bgColor?: string;
+  fullWidth?: boolean;
 }
 
-const Section = ({ id, className, children, bgColor = 'bg-background' }: SectionProps) => {
+const Section = ({ 
+  id, 
+  className, 
+  children, 
+  bgColor = 'bg-background',
+  fullWidth = false
+}: SectionProps) => {
   return (
     <section 
       id={id} 
@@ -19,7 +26,9 @@ const Section = ({ id, className, children, bgColor = 'bg-background' }: Section
         className
       )}
     >
-      <div className="section-container">
+      <div className={cn(
+        fullWidth ? 'w-full' : 'section-container'
+      )}>
         {children}
       </div>
     </section>

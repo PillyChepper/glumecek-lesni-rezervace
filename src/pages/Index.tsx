@@ -8,6 +8,7 @@ import Section from '@/components/Section';
 import Feature from '@/components/Feature';
 import Footer from '@/components/Footer';
 import ReservationCalendar from '@/components/Calendar';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 const Index = () => {
   const heroImageRef = useRef<HTMLDivElement>(null);
@@ -45,11 +46,11 @@ const Index = () => {
           className="absolute inset-0 image-reveal"
         >
           <img 
-            src="/lovable-uploads/149a31dc-708d-4c37-a133-213599a66444.png" 
+            src="/lovable-uploads/4ce59332-ab7f-41da-8852-34d1114e0a13.png" 
             alt="Glumeček - domek v lese" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute inset-0 bg-black/30" />
         </div>
         
         <div className="relative z-10 text-center px-4 animate-fade-in">
@@ -102,11 +103,13 @@ const Index = () => {
             </p>
           </div>
           <div className="rounded-lg overflow-hidden shadow-lg">
-            <img 
-              src="/lovable-uploads/149a31dc-708d-4c37-a133-213599a66444.png" 
-              alt="Domek Glumeček v lese" 
-              className="w-full h-full object-cover"
-            />
+            <AspectRatio ratio={3/2} className="bg-muted">
+              <img 
+                src="/lovable-uploads/4ce59332-ab7f-41da-8852-34d1114e0a13.png" 
+                alt="Domek Glumeček v lese" 
+                className="w-full h-full object-cover"
+              />
+            </AspectRatio>
           </div>
         </div>
       </Section>
@@ -156,11 +159,13 @@ const Index = () => {
       <Section id="lokalita">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-lg">
-            <img 
-              src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&q=80&w=1000" 
-              alt="Krajina Brdských lesů" 
-              className="w-full h-full object-cover"
-            />
+            <AspectRatio ratio={3/2} className="bg-muted">
+              <img 
+                src="/lovable-uploads/4ce59332-ab7f-41da-8852-34d1114e0a13.png" 
+                alt="Krajina Brdských lesů" 
+                className="w-full h-full object-cover"
+              />
+            </AspectRatio>
           </div>
           <div className="order-1 md:order-2">
             <h2 className="section-title">Lokalita</h2>
