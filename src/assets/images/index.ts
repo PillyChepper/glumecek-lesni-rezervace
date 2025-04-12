@@ -1,8 +1,8 @@
 
 // This file exports all images for easy imports across components
-import glumecekImage from '/public/lovable-uploads/4a5ce9e4-2dee-4616-946c-6879b73fad03.png';
+import glumecekImage from './placeholder.jpg';
 
-// Use the provided forest cottage image
+// Using a placeholder image since we're having issues with the uploaded image path
 // If you upload a different image, replace the import above with your new image path
 export {
   glumecekImage
