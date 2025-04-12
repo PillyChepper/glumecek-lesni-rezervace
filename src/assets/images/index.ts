@@ -1,7 +1,9 @@
 
 // This file exports all images for easy imports across components
-import glumecekImage from '/lovable-uploads/fecc82ad-de0e-4bc9-962d-ba7f2f6766ac.png';
+import glumecekImage from '../../assets/images/placeholder.jpg';
 
+// Use a placeholder image until we have the real image
+// If you upload an image, replace the import above with your uploaded image path
 export {
   glumecekImage
 };
