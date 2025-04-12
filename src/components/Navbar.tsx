@@ -2,11 +2,13 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,24 +38,43 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <a href="#domov" className="text-forest-800 font-display text-xl md:text-2xl font-semibold">
+        <Link to="/" className="text-forest-800 font-display text-xl md:text-2xl font-semibold">
           Glumeček
-        </a>
+        </Link>
         
         {/* Desktop menu */}
         <div className="hidden md:flex items-center space-x-6">
-          <a href="#o-nas" className="text-forest-800 hover:text-forest-600 transition-colors">
-            O nás
-          </a>
-          <a href="#ubytovani" className="text-forest-800 hover:text-forest-600 transition-colors">
-            Ubytování
-          </a>
-          <a href="#lokalita" className="text-forest-800 hover:text-forest-600 transition-colors">
-            Lokalita
-          </a>
-          <a href="#cenik" className="text-forest-800 hover:text-forest-600 transition-colors">
-            Ceník
-          </a>
+          {isHomePage ? (
+            <>
+              <a href="#o-nas" className="text-forest-800 hover:text-forest-600 transition-colors">
+                O nás
+              </a>
+              <a href="#ubytovani" className="text-forest-800 hover:text-forest-600 transition-colors">
+                Ubytování
+              </a>
+              <a href="#lokalita" className="text-forest-800 hover:text-forest-600 transition-colors">
+                Lokalita
+              </a>
+              <a href="#cenik" className="text-forest-800 hover:text-forest-600 transition-colors">
+                Ceník
+              </a>
+            </>
+          ) : (
+            <>
+              <Link to="/#o-nas" className="text-forest-800 hover:text-forest-600 transition-colors">
+                O nás
+              </Link>
+              <Link to="/#ubytovani" className="text-forest-800 hover:text-forest-600 transition-colors">
+                Ubytování
+              </Link>
+              <Link to="/#lokalita" className="text-forest-800 hover:text-forest-600 transition-colors">
+                Lokalita
+              </Link>
+              <Link to="/#cenik" className="text-forest-800 hover:text-forest-600 transition-colors">
+                Ceník
+              </Link>
+            </>
+          )}
           <Link to="/rezervace">
             <Button className="bg-forest-600 hover:bg-forest-700">
               Rezervace
@@ -78,34 +99,69 @@ const Navbar = () => {
         } overflow-hidden`}
       >
         <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
-          <a 
-            href="#o-nas" 
-            className="text-forest-800 py-2 border-b border-gray-100"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            O nás
-          </a>
-          <a 
-            href="#ubytovani" 
-            className="text-forest-800 py-2 border-b border-gray-100"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Ubytování
-          </a>
-          <a 
-            href="#lokalita" 
-            className="text-forest-800 py-2 border-b border-gray-100"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Lokalita
-          </a>
-          <a 
-            href="#cenik" 
-            className="text-forest-800 py-2 border-b border-gray-100"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Ceník
-          </a>
+          {isHomePage ? (
+            <>
+              <a 
+                href="#o-nas" 
+                className="text-forest-800 py-2 border-b border-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                O nás
+              </a>
+              <a 
+                href="#ubytovani" 
+                className="text-forest-800 py-2 border-b border-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Ubytování
+              </a>
+              <a 
+                href="#lokalita" 
+                className="text-forest-800 py-2 border-b border-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Lokalita
+              </a>
+              <a 
+                href="#cenik" 
+                className="text-forest-800 py-2 border-b border-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Ceník
+              </a>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/#o-nas" 
+                className="text-forest-800 py-2 border-b border-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                O nás
+              </Link>
+              <Link
+                to="/#ubytovani" 
+                className="text-forest-800 py-2 border-b border-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Ubytování
+              </Link>
+              <Link
+                to="/#lokalita" 
+                className="text-forest-800 py-2 border-b border-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Lokalita
+              </Link>
+              <Link
+                to="/#cenik" 
+                className="text-forest-800 py-2 border-b border-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Ceník
+              </Link>
+            </>
+          )}
           <Link 
             to="/rezervace"
             onClick={() => setIsMenuOpen(false)}
