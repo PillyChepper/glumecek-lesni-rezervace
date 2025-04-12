@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Droplets, Utensils, Wifi, PawPrint, Thermometer, ChevronDown } from 'lucide-react';
@@ -11,6 +10,7 @@ import ReservationCalendar from '@/components/Calendar';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 // Import the image directly to ensure it works in production
+// Using a direct import with the full path to ensure Vite processes it correctly
 import heroImage from '/lovable-uploads/fecc82ad-de0e-4bc9-962d-ba7f2f6766ac.png';
 
 const Index = () => {
@@ -48,6 +48,7 @@ const Index = () => {
           ref={heroImageRef} 
           className="absolute inset-0 image-reveal"
         >
+          {/* Use imported image variable for src */}
           <img 
             src={heroImage} 
             alt="Glumeček - domek v lese" 
@@ -107,6 +108,7 @@ const Index = () => {
           </div>
           <div className="rounded-lg overflow-hidden shadow-lg">
             <AspectRatio ratio={3/2} className="bg-muted">
+              {/* Use imported image variable for src */}
               <img 
                 src={heroImage} 
                 alt="Domek Glumeček v lese" 
@@ -163,6 +165,7 @@ const Index = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-lg">
             <AspectRatio ratio={3/2} className="bg-muted">
+              {/* Use imported image variable for src */}
               <img 
                 src={heroImage} 
                 alt="Krajina Brdských lesů" 
