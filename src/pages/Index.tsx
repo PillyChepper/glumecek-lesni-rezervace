@@ -10,6 +10,9 @@ import Footer from '@/components/Footer';
 import ReservationCalendar from '@/components/Calendar';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
+// Import the image directly to ensure it works in production
+import heroImage from '/lovable-uploads/fecc82ad-de0e-4bc9-962d-ba7f2f6766ac.png';
+
 const Index = () => {
   const heroImageRef = useRef<HTMLDivElement>(null);
   
@@ -46,7 +49,7 @@ const Index = () => {
           className="absolute inset-0 image-reveal"
         >
           <img 
-            src="/lovable-uploads/4ce59332-ab7f-41da-8852-34d1114e0a13.png" 
+            src={heroImage} 
             alt="Glumeček - domek v lese" 
             className="w-full h-full object-cover"
           />
@@ -105,7 +108,7 @@ const Index = () => {
           <div className="rounded-lg overflow-hidden shadow-lg">
             <AspectRatio ratio={3/2} className="bg-muted">
               <img 
-                src="/lovable-uploads/4ce59332-ab7f-41da-8852-34d1114e0a13.png" 
+                src={heroImage} 
                 alt="Domek Glumeček v lese" 
                 className="w-full h-full object-cover"
               />
@@ -161,7 +164,7 @@ const Index = () => {
           <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-lg">
             <AspectRatio ratio={3/2} className="bg-muted">
               <img 
-                src="/lovable-uploads/4ce59332-ab7f-41da-8852-34d1114e0a13.png" 
+                src={heroImage} 
                 alt="Krajina Brdských lesů" 
                 className="w-full h-full object-cover"
               />
