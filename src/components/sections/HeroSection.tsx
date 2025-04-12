@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-// Import the image from our assets folder
-import { glumecekImage } from '@/assets/images';
+// Import the images from our assets folder
+import { heroBackgroundImage } from '@/assets/images';
 
 const HeroSection = () => {
   const heroImageRef = useRef<HTMLDivElement>(null);
@@ -37,7 +37,7 @@ const HeroSection = () => {
   // Preload the image to avoid loading issues
   useEffect(() => {
     const img = new Image();
-    img.src = glumecekImage;
+    img.src = heroBackgroundImage;
     img.onload = () => {
       console.log('Hero image preloaded successfully');
       setImageLoaded(true);
@@ -49,14 +49,12 @@ const HeroSection = () => {
   }, []);
 
   // Console log to troubleshoot
-  console.log('Hero image path:', glumecekImage);
+  console.log('Hero image path:', heroBackgroundImage);
   console.log('Image loaded state:', imageLoaded);
   console.log('Image error state:', imageError);
 
   // Fallback image from Unsplash (forest cabin)
   const fallbackImage = "https://images.unsplash.com/photo-1506744038136-46273834b3fb";
-  // New images from uploaded files
-  const newBackgroundImage = "public/lovable-uploads/499b9809-25f4-4e6b-863f-14f43c52d09d.png";
 
   return (
     <section id="domov" className="hero-section relative flex items-center justify-center overflow-hidden">
@@ -68,7 +66,7 @@ const HeroSection = () => {
         }}
       >
         <img 
-          src={imageError ? fallbackImage : glumecekImage} 
+          src={imageError ? fallbackImage : heroBackgroundImage} 
           alt="Glumeček - domek v lese" 
           className={`w-full h-full object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => {
