@@ -4,16 +4,11 @@ import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-// Import the images from our assets folder
-import { heroBackgroundImage } from '@/assets/images';
-
 const HeroSection = () => {
   const heroImageRef = useRef<HTMLDivElement>(null);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
-  
+
   useEffect(() => {
-    // Animate hero image in
+    // Animate hero section in
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -34,85 +29,15 @@ const HeroSection = () => {
     };
   }, []);
 
-  // Preload the image to avoid loading issues
-  useEffect(() => {
-    console.log('Attempting to load hero image:', heroBackgroundImage);
-    
-    // Direct DOM approach - most reliable for background images
-    const backgroundDiv = document.createElement('div');
-    backgroundDiv.style.backgroundImage = `url(${heroBackgroundImage})`;
-    backgroundDiv.style.display = 'none';
-    document.body.appendChild(backgroundDiv);
-    
-    // Also try with Image constructor as backup
-    const img = new Image();
-    img.src = heroBackgroundImage;
-    
-    img.onload = () => {
-      console.log('Hero image preloaded successfully');
-      setImageLoaded(true);
-      setImageError(false);
-      // Clean up
-      document.body.removeChild(backgroundDiv);
-    };
-    
-    img.onerror = () => {
-      console.log('Hero image preload failed');
-      setImageError(true);
-      // Clean up
-      document.body.removeChild(backgroundDiv);
-    };
-    
-    // Fallback timer in case onload/onerror doesn't fire
-    setTimeout(() => {
-      if (!imageLoaded && !imageError) {
-        console.log('Hero image loading timed out, using fallback');
-        setImageError(true);
-        // Clean up if still in DOM
-        if (document.body.contains(backgroundDiv)) {
-          document.body.removeChild(backgroundDiv);
-        }
-      }
-    }, 5000);
-    
-    return () => {
-      // Clean up if component unmounts
-      if (document.body.contains(backgroundDiv)) {
-        document.body.removeChild(backgroundDiv);
-      }
-    };
-  }, [imageLoaded, imageError]);
-
-  // Fallback image from Unsplash (forest cabin)
-  const fallbackImage = "https://images.unsplash.com/photo-1506744038136-46273834b3fb";
-
   return (
     <section id="domov" className="hero-section relative flex items-center justify-center overflow-hidden">
       <div 
         ref={heroImageRef} 
-        className={`absolute inset-0 image-reveal ${imageLoaded || imageError ? 'loaded' : ''}`}
+        className="absolute inset-0 image-reveal"
         style={{
-          backgroundColor: '#e0e0e0' // Light gray background while loading
+          backgroundColor: '#333', // Dark gray solid color for troubleshooting
         }}
       >
-        {/* Using img tag instead of background for better loading control */}
-        <img 
-          src={imageError ? fallbackImage : heroBackgroundImage}
-          alt="Glumeček - domek v lese" 
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ 
-            opacity: imageLoaded || imageError ? 1 : 0,
-            transition: 'opacity 0.5s ease-in-out'
-          }}
-          onLoad={() => {
-            console.log('Hero image loaded via img tag');
-            setImageLoaded(true);
-          }}
-          onError={() => {
-            console.log('Hero image failed to load via img tag, using fallback');
-            setImageError(true);
-          }}
-        />
         <div className="absolute inset-0 bg-black/30" />
       </div>
       
@@ -149,3 +74,4 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+
