@@ -1,5 +1,5 @@
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,41 +7,28 @@ import { Button } from '@/components/ui/button';
 const HeroSection = () => {
   const heroImageRef = useRef<HTMLDivElement>(null);
 
+  // Simple animation for when the section comes into view
   useEffect(() => {
-    // Animate hero section in
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('reveal');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    
     if (heroImageRef.current) {
-      observer.observe(heroImageRef.current);
+      heroImageRef.current.classList.add('reveal');
     }
-    
-    return () => {
-      if (heroImageRef.current) {
-        observer.unobserve(heroImageRef.current);
-      }
-    };
   }, []);
 
   return (
-    <section id="domov" className="hero-section relative flex items-center justify-center overflow-hidden">
+    <section id="domov" className="hero-section relative flex items-center justify-center overflow-hidden bg-forest-800 min-h-[600px]">
+      {/* Solid background div */}
       <div 
         ref={heroImageRef} 
         className="absolute inset-0 image-reveal"
         style={{
-          backgroundColor: '#333', // Dark gray solid color for troubleshooting
+          backgroundColor: '#1F2937', // Darker background for better contrast
         }}
       >
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-black/20" />
       </div>
       
-      <div className="relative z-10 text-center px-4 animate-fade-in">
+      {/* Content */}
+      <div className="relative z-10 text-center px-4">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-semibold text-white mb-4 drop-shadow-lg">
           Glumeček
         </h1>
@@ -64,7 +51,7 @@ const HeroSection = () => {
       
       <a 
         href="#o-nas" 
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white animate-bounce"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white"
         aria-label="Posunout dolů"
       >
         <ChevronDown size={32} />
@@ -74,4 +61,3 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
-
