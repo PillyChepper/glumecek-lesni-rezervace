@@ -2,8 +2,8 @@
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
-// Import the image directly
-import heroImage from '/lovable-uploads/fecc82ad-de0e-4bc9-962d-ba7f2f6766ac.png';
+// Import the image from our assets folder
+import { glumecekImage } from '@/assets/images';
 
 const LocationSection = () => {
   return (
@@ -12,7 +12,7 @@ const LocationSection = () => {
         <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-lg">
           <AspectRatio ratio={3/2} className="bg-muted">
             <img 
-              src={heroImage} 
+              src={glumecekImage} 
               alt="Krajina Brdských lesů" 
               className="w-full h-full object-cover"
             />

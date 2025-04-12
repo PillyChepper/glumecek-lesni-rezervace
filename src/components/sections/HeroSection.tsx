@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-// Import the image directly to ensure it works in production
-import heroImage from '/lovable-uploads/fecc82ad-de0e-4bc9-962d-ba7f2f6766ac.png';
+// Import the image from our assets folder
+import { glumecekImage } from '@/assets/images';
 
 const HeroSection = () => {
   const heroImageRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ const HeroSection = () => {
         className="absolute inset-0 image-reveal"
       >
         <img 
-          src={heroImage} 
+          src={glumecekImage} 
           alt="Glumeček - domek v lese" 
           className="w-full h-full object-cover"
         />

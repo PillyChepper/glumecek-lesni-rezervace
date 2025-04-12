@@ -2,8 +2,8 @@
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import Section from '@/components/Section';
 
-// Import the image directly
-import heroImage from '/lovable-uploads/fecc82ad-de0e-4bc9-962d-ba7f2f6766ac.png';
+// Import the image from our assets folder
+import { glumecekImage } from '@/assets/images';
 
 const AboutSection = () => {
   return (
@@ -28,7 +28,7 @@ const AboutSection = () => {
         <div className="rounded-lg overflow-hidden shadow-lg">
           <AspectRatio ratio={3/2} className="bg-muted">
             <img 
-              src={heroImage} 
+              src={glumecekImage} 
               alt="Domek Glumeček v lese" 
               className="w-full h-full object-cover"
             />
