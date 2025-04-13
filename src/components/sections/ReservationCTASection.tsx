@@ -18,7 +18,7 @@ const ReservationCTASection = () => {
           <Button 
             variant="default" 
             size="lg" 
-            className="bg-forest-600 hover:bg-forest-700"
+            className="bg-forest-600 hover:bg-forest-700 text-white"
           >
             Přejít na rezervace
           </Button>
