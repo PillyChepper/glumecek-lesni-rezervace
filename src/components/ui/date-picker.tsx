@@ -22,6 +22,7 @@ interface DatePickerProps {
   selectedForRange?: boolean;
   isSelecting?: boolean;
   minDate?: Date;
+  autoOpen?: boolean;
 }
 
 export function DatePicker({
@@ -34,6 +35,7 @@ export function DatePicker({
   selectedForRange = false,
   isSelecting = true,
   minDate,
+  autoOpen = true,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -45,12 +47,12 @@ export function DatePicker({
     }
   };
 
-  // When isSelecting changes to true, open the popover
+  // When isSelecting changes to true, open the popover if autoOpen is true
   React.useEffect(() => {
-    if (isSelecting && !open) {
+    if (isSelecting && !open && autoOpen) {
       setOpen(true);
     }
-  }, [isSelecting, open]);
+  }, [isSelecting, open, autoOpen]);
 
   const isDateDisabled = (date: Date) => {
     return disabledDates.some(

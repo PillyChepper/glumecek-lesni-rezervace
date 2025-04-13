@@ -2,6 +2,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export type DateRange = {
   from: Date | undefined;
@@ -22,6 +29,7 @@ const DateRangePicker = ({
   onSearch,
 }: DateRangePickerProps) => {
   const [selectingDeparture, setSelectingDeparture] = useState(false);
+  const [showContactForm, setShowContactForm] = useState(false);
 
   const handleFromChange = (date: Date | undefined) => {
     // When arrival date is selected, automatically set up for selecting departure
@@ -50,6 +58,12 @@ const DateRangePicker = ({
     });
   };
 
+  const handleReservationClick = () => {
+    if (onSearch) {
+      onSearch();
+    }
+  };
+
   return (
     <div className="w-full space-y-6">
       <h2 className="text-xl md:text-2xl font-display font-medium text-forest-800">
@@ -66,6 +80,7 @@ const DateRangePicker = ({
           className="flex-1"
           selectedForRange={dateRange.from && !selectingDeparture}
           isSelecting={!dateRange.from || !selectingDeparture}
+          autoOpen={false}
         />
         
         <DatePicker
@@ -93,13 +108,14 @@ const DateRangePicker = ({
           selectedForRange={dateRange.to && !selectingDeparture}
           isSelecting={selectingDeparture}
           minDate={dateRange.from}
+          autoOpen={selectingDeparture}
         />
         
         <Button 
-          onClick={onSearch}
+          onClick={handleReservationClick}
           className="bg-forest-600 hover:bg-forest-700 h-12 md:w-[180px]"
         >
-          VYHLEDÁVÁNÍ
+          REZERVOVAT
         </Button>
       </div>
     </div>
