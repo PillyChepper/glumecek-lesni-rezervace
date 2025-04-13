@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Menu, X, Shield } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -78,7 +79,7 @@ const Navbar = () => {
               className={
                 isScrolled 
                   ? 'bg-forest-600 hover:bg-forest-700 text-white' 
-                  : 'bg-forest-600 hover:bg-forest-700 text-white'
+                  : 'bg-forest-600 hover:bg-forest-700 text-white/70'
               }
             >
               Rezervace
