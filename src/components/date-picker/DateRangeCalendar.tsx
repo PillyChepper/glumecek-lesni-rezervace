@@ -92,7 +92,7 @@ const DateRangeCalendar = ({
   const isFullyReserved = (date: Date): boolean => {
     const periods = getReservationPeriods();
     return periods.some(period => 
-      date >= period.from && date <= period.to && 
+      date > period.from && date < period.to && 
       !isSameDay(period.from, date) && 
       !isSameDay(period.to, date)
     );
@@ -123,7 +123,8 @@ const DateRangeCalendar = ({
           fullyReserved: (date) => isFullyReserved(date),
         }}
         disabled={(date) => {
-          // Disable dates that are already fully reserved
+          // Only disable dates that are in the middle of a reservation
+          // NOT arrival or departure dates (which should be selectable for new bookings)
           if (isFullyReserved(date)) {
             return true;
           }

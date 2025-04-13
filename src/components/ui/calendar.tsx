@@ -73,12 +73,12 @@ function Calendar({
       components={{
         IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
-        Day: (props) => {
-          // Fix TypeScript errors by using safe property access
-          const date = props.date;
-          const isArrivalDate = props.modifiers?.arrivalDate;
-          const isDepartureDate = props.modifiers?.departureDate;
-          const isFullyReserved = props.modifiers?.fullyReserved;
+        Day: ({ date, ...props }) => {
+          // Fixed: Cast props to a more specific type that includes modifiers
+          const dayProps = props as any;
+          const isArrivalDate = dayProps.modifiers?.arrivalDate;
+          const isDepartureDate = dayProps.modifiers?.departureDate;
+          const isFullyReserved = dayProps.modifiers?.fullyReserved;
           
           return (
             <button
@@ -87,7 +87,7 @@ function Calendar({
               data-departure={isDepartureDate ? "true" : undefined}
               className={cn(
                 "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
-                props.className,
+                dayProps.className,
                 isFullyReserved && "day-fullyReserved"
               )}
             >
