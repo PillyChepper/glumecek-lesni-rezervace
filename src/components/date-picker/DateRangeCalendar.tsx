@@ -69,7 +69,8 @@ const DateRangeCalendar = ({
   // Set modifiers for the days
   const modifiers = useMemo(() => {
     return {
-      hoverRange: (day: Date) => isInHoverRange(day),
+      // Always apply arrivalSelected to the arrival date, regardless of hover state
+      hoverRange: (day: Date) => isInHoverRange(day) && !isArrivalDate(day),
       arrivalSelected: (day: Date) => isArrivalDate(day),
       fullyReserved: (day: Date) => isDateDisabled(day),
       arrivalDate: (day: Date) => isArrivalDate(day),

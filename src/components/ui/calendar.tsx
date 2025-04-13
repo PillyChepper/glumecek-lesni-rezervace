@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker, DayMouseEventHandler } from "react-day-picker";
@@ -50,6 +49,7 @@ function Calendar({
           "last:[&:has([aria-selected])]:rounded-r-md",
           "focus-within:relative focus-within:z-20",
           "[&:has(.day-hoverRange)]:bg-forest-50",
+          // Keep arrival date with the selected style even when hovering
           "[&:has(.day-arrivalSelected)]:bg-forest-600 [&:has(.day-arrivalSelected)]:text-white",
           "[&:has(.day-fullyReserved)]:bg-red-200",
           "[&:has(.day-arrivalDate)]:arrival-date",
