@@ -29,24 +29,28 @@ const ReservationSummary = ({ dateRange }: ReservationSummaryProps) => {
   if (!dateRange.from || !dateRange.to) return null;
 
   return (
-    <div className="mb-8 p-4 bg-green-50 rounded-lg border border-green-100">
-      <h3 className="text-lg font-medium mb-2 text-forest-700">Souhrn rezervace</h3>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <p className="text-sm text-forest-600">Příjezd:</p>
-          <p className="font-medium">{format(dateRange.from, 'PPP', { locale: cs })}</p>
+    <div className="mb-8 p-6 bg-green-50 rounded-lg border border-green-100 shadow-sm">
+      <h3 className="text-xl font-medium mb-4 text-forest-700">Souhrn rezervace</h3>
+      
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="bg-white p-4 rounded border border-green-100">
+          <p className="text-sm text-forest-600 mb-1">Příjezd:</p>
+          <p className="font-medium text-lg">{format(dateRange.from, 'PPP', { locale: cs })}</p>
         </div>
-        <div>
-          <p className="text-sm text-forest-600">Odjezd:</p>
-          <p className="font-medium">{format(dateRange.to, 'PPP', { locale: cs })}</p>
+        
+        <div className="bg-white p-4 rounded border border-green-100">
+          <p className="text-sm text-forest-600 mb-1">Odjezd:</p>
+          <p className="font-medium text-lg">{format(dateRange.to, 'PPP', { locale: cs })}</p>
         </div>
-        <div>
-          <p className="text-sm text-forest-600">Počet nocí:</p>
-          <p className="font-medium">{calculateNights()}</p>
+        
+        <div className="bg-white p-4 rounded border border-green-100">
+          <p className="text-sm text-forest-600 mb-1">Počet nocí:</p>
+          <p className="font-medium text-lg">{calculateNights()}</p>
         </div>
-        <div>
-          <p className="text-sm text-forest-600">Celková cena:</p>
-          <p className="font-medium">{calculatePrice()} Kč</p>
+        
+        <div className="bg-white p-4 rounded border border-green-100">
+          <p className="text-sm text-forest-600 mb-1">Celková cena:</p>
+          <p className="font-medium text-lg text-forest-700">{calculatePrice().toLocaleString()} Kč</p>
         </div>
       </div>
     </div>

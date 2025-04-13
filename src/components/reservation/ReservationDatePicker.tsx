@@ -15,7 +15,7 @@ const ReservationDatePicker = ({
   disabledDates
 }: ReservationDatePickerProps) => {
   return (
-    <div className="mb-12">
+    <div className="mb-12 bg-white p-6 rounded-lg shadow-sm">
       <DateRangePicker 
         dateRange={dateRange}
         onDateChange={onDateChange}

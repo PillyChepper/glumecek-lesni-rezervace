@@ -96,14 +96,6 @@ const DateRangeCalendar = ({
     );
   };
 
-  // Debug logs to help troubleshoot
-  console.log("Disabled dates:", disabledDates);
-  console.log("Reservation periods:", getReservationPeriods());
-  console.log("Selected date:", selectedDate);
-  console.log("Is selecting departure:", isSelectingDeparture);
-  console.log("Arrival dates in periods:", getReservationPeriods().map(p => p.from));
-  console.log("Departure dates in periods:", getReservationPeriods().map(p => p.to));
-
   return (
     <>
       <div className="p-2 text-center text-sm font-medium">

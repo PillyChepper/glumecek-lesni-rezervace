@@ -32,8 +32,6 @@ const DateRangePicker = ({
   const [hoverDate, setHoverDate] = useState<Date | undefined>(undefined);
   
   const handleDateSelect = (date: Date | undefined) => {
-    console.log("Date selected:", date);
-    
     if (!selectingDeparture) {
       // Selecting arrival date
       if (date?.getTime() === dateRange.from?.getTime()) {
@@ -128,8 +126,6 @@ const DateRangePicker = ({
       setSelectingDeparture(false);
     }
   }, [dateRange.from]);
-
-  console.log("DateRangePicker state:", { dateRange, selectingDeparture, open });
 
   return (
     <div className="w-full space-y-6">
