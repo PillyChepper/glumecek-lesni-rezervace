@@ -94,7 +94,7 @@ const ReservationCalendar = ({ disabledDates = [], onBookingComplete }: Calendar
       </CardContent>
       <CardFooter className="flex justify-end">
         <Button 
-          className="bg-forest-600 hover:bg-forest-700" 
+          className="bg-forest-600 hover:bg-forest-700 text-white" 
           onClick={handleReservationSubmit}
           disabled={!dateRange.from || !dateRange.to}
         >

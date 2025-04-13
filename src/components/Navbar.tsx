@@ -75,11 +75,11 @@ const Navbar = () => {
           )}
           <Link to="/rezervace">
             <Button 
-              className={`
-                ${isScrolled 
+              className={
+                isScrolled 
                   ? 'bg-forest-600 hover:bg-forest-700 text-white' 
-                  : 'bg-white/20 hover:bg-white/30 text-white border-white'}
-              `}
+                  : 'bg-white/20 hover:bg-white/30 text-gray-200 border border-white/60'
+              }
             >
               Rezervace
             </Button>
@@ -175,12 +175,7 @@ const Navbar = () => {
             onClick={() => setIsMenuOpen(false)}
           >
             <Button 
-              className={`
-                w-full 
-                ${isScrolled 
-                  ? 'bg-forest-600 hover:bg-forest-700 text-white' 
-                  : 'bg-white/20 hover:bg-white/30 text-white border-white'}
-              `}
+              className="w-full bg-forest-600 hover:bg-forest-700 text-white"
             >
               Rezervace
             </Button>
