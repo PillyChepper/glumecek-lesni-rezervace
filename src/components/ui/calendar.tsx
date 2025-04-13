@@ -74,9 +74,11 @@ function Calendar({
         IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
         Day: (props) => {
-          const { date, displayMonth } = props;
+          // Fix TypeScript errors by using safe property access
+          const date = props.date;
           const isArrivalDate = props.modifiers?.arrivalDate;
           const isDepartureDate = props.modifiers?.departureDate;
+          const isFullyReserved = props.modifiers?.fullyReserved;
           
           return (
             <button
@@ -86,7 +88,7 @@ function Calendar({
               className={cn(
                 "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
                 props.className,
-                props.modifiers?.fullyReserved && "day-fullyReserved"
+                isFullyReserved && "day-fullyReserved"
               )}
             >
               {date.getDate()}

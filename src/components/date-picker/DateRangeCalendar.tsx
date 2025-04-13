@@ -98,6 +98,10 @@ const DateRangeCalendar = ({
     );
   };
 
+  // For debugging
+  console.log("Disabled dates:", disabledDates);
+  console.log("Reservation periods:", getReservationPeriods());
+
   return (
     <>
       <div className="p-2 text-center text-sm font-medium">
@@ -118,15 +122,9 @@ const DateRangeCalendar = ({
           departureDate: (date) => isDepartureDate(date),
           fullyReserved: (date) => isFullyReserved(date),
         }}
-        // Remove modifiersStyles as it's not working correctly with the custom CSS
         disabled={(date) => {
-          // Disable dates that are already reserved
-          if (disabledDates.some(
-            (disabledDate) =>
-              disabledDate.getDate() === date.getDate() &&
-              disabledDate.getMonth() === date.getMonth() &&
-              disabledDate.getFullYear() === date.getFullYear()
-          )) {
+          // Disable dates that are already fully reserved
+          if (isFullyReserved(date)) {
             return true;
           }
           

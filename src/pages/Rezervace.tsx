@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { DateRange } from '@/components/DateRangePicker';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ReservationDatePicker from '@/components/reservation/ReservationDatePicker';
 import ReservationSummary from '@/components/reservation/ReservationSummary';
@@ -46,17 +45,39 @@ const Rezervace = () => {
     setShowContactForm(true);
   };
 
-  const disabledDates = [
-    new Date(2025, 3, 15),
-    new Date(2025, 3, 16),
-    new Date(2025, 3, 17),
-    new Date(2025, 3, 18),
-  ];
+  // Create sample disabled dates - a consecutive range for testing
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth();
+  
+  // Sample reservation 1: 5-day stay
+  const startDate1 = new Date(currentYear, currentMonth, 15);
+  const endDate1 = new Date(currentYear, currentMonth, 20);
+  
+  // Sample reservation 2: 3-day stay later in the month
+  const startDate2 = new Date(currentYear, currentMonth, 25);
+  const endDate2 = new Date(currentYear, currentMonth, 28);
+  
+  // Create arrays of all dates in each range
+  const disabledDates = [];
+  
+  // Add dates for first reservation
+  let currentDate = new Date(startDate1);
+  while (currentDate <= endDate1) {
+    disabledDates.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  
+  // Add dates for second reservation
+  currentDate = new Date(startDate2);
+  while (currentDate <= endDate2) {
+    disabledDates.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  
+  console.log("Disabled dates on page:", disabledDates);
   
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-      
       <div className="pt-24 pb-16 px-4">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-3xl md:text-4xl font-display font-medium mb-8 text-forest-800 text-center">Rezervace pobytu</h1>

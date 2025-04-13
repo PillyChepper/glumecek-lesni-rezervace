@@ -134,6 +134,15 @@
   background: linear-gradient(to right, rgba(234, 56, 76, 0.5) 50%, transparent 50%) !important;
 }
 
+/* Add more specific CSS to ensure the data attributes work properly */
+button[data-arrival="true"] {
+  background: linear-gradient(to right, transparent 50%, rgba(234, 56, 76, 0.5) 50%) !important;
+}
+
+button[data-departure="true"] {
+  background: linear-gradient(to right, rgba(234, 56, 76, 0.5) 50%, transparent 50%) !important;
+}
+
 /* Smooth image reveal */
 .image-reveal {
   clip-path: inset(0 100% 0 0);
