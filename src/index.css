@@ -1,6 +1,6 @@
 
 @layer utilities {
   .hover-range-background:has(.day-hoverRange) {
-    @apply bg-forest-200; // Changing from bg-forest-100 to bg-forest-200 for a darker green
+    @apply bg-forest-200; /* Changing from bg-forest-100 to bg-forest-200 for a darker green */
   }
 }
