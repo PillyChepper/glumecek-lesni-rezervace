@@ -1,180 +1,125 @@
 
 import { Calendar } from "@/components/ui/calendar";
-import { cs } from "date-fns/locale";
-import { compareAsc, isSameDay } from "date-fns";
+import { isSameDay, isAfter, isBefore, isWithinInterval } from "date-fns";
+import { useMemo } from "react";
+import { cn } from "@/lib/utils";
+import React from "react";
 
 interface DateRangeCalendarProps {
-  selectedDate: Date | undefined;
+  selectedDate?: Date;
   onSelect: (date: Date | undefined) => void;
-  onDayMouseEnter: (day: Date) => void;
-  onDayMouseLeave: () => void;
-  isSelectingDeparture: boolean;
-  arrivalDate: Date | undefined;
-  disabledDates: Date[];
+  arrivalDate?: Date;
+  isSelectingDeparture?: boolean;
+  disabledDates?: Date[];
+  onDayMouseEnter?: (day: Date) => void;
+  onDayMouseLeave?: () => void;
   hoverDate?: Date;
-}
-
-// Helper type to track reservation periods
-interface ReservationPeriod {
-  from: Date;
-  to: Date;
 }
 
 const DateRangeCalendar = ({
   selectedDate,
   onSelect,
+  arrivalDate,
+  isSelectingDeparture = false,
+  disabledDates = [],
   onDayMouseEnter,
   onDayMouseLeave,
-  isSelectingDeparture,
-  arrivalDate,
-  disabledDates,
   hoverDate,
 }: DateRangeCalendarProps) => {
-  // Function to check if a date is in the hover range
-  const isDateInHoverRange = (date: Date) => {
-    if (isSelectingDeparture && arrivalDate && hoverDate && date >= arrivalDate && date <= hoverDate) {
-      return true;
+  // Create a map of disabled dates for faster lookup
+  const disabledDatesMap = useMemo(() => {
+    const map = new Map<string, boolean>();
+    
+    if (disabledDates && disabledDates.length > 0) {
+      disabledDates.forEach((date) => {
+        if (date) {
+          map.set(date.toDateString(), true);
+        }
+      });
+    }
+    
+    return map;
+  }, [disabledDates]);
+  
+  // Function to check if a date is disabled
+  const isDateDisabled = (date: Date) => {
+    return disabledDatesMap.has(date.toDateString());
+  };
+  
+  // Function to determine if a day is in the hovered range
+  const isInHoverRange = (day: Date) => {
+    if (isSelectingDeparture && arrivalDate && hoverDate && !isDateDisabled(day)) {
+      if (isAfter(hoverDate, arrivalDate)) {
+        // Hover date is after arrival date (normal forward selection)
+        return isWithinInterval(day, { start: arrivalDate, end: hoverDate });
+      } else if (isBefore(hoverDate, arrivalDate)) {
+        // Hover date is before arrival date (backward selection)
+        return isWithinInterval(day, { start: hoverDate, end: arrivalDate });
+      }
     }
     return false;
   };
   
-  // Convert disabledDates to reservation periods for better visualization
-  const getReservationPeriods = (): ReservationPeriod[] => {
-    if (!disabledDates || disabledDates.length === 0) return [];
-    
-    // Sort dates in chronological order
-    const sortedDates = [...disabledDates].sort(compareAsc);
-    const periods: ReservationPeriod[] = [];
-    
-    let currentPeriod: ReservationPeriod | null = null;
-    
-    sortedDates.forEach((date, index) => {
-      if (!currentPeriod) {
-        // Start a new period
-        currentPeriod = { from: date, to: date };
-      } else {
-        // Check if this date is consecutive with the current period
-        const prevDate = new Date(date);
-        prevDate.setDate(prevDate.getDate() - 1);
-        
-        if (isSameDay(prevDate, sortedDates[index - 1])) {
-          // Extend current period
-          currentPeriod.to = date;
-        } else {
-          // End current period and start a new one
-          periods.push(currentPeriod);
-          currentPeriod = { from: date, to: date };
-        }
-      }
-    });
-    
-    // Add the last period if exists
-    if (currentPeriod) {
-      periods.push(currentPeriod);
-    }
-    
-    return periods;
+  // Function to check if a date is the arrival date
+  const isArrivalDate = (day: Date) => {
+    return arrivalDate ? isSameDay(day, arrivalDate) : false;
   };
   
-  // Check if a date is an arrival date in any reservation period
-  const isArrivalDate = (date: Date): boolean => {
-    const periods = getReservationPeriods();
-    return periods.some(period => isSameDay(period.from, date));
-  };
-  
-  // Check if a date is a departure date in any reservation period
-  const isDepartureDate = (date: Date): boolean => {
-    const periods = getReservationPeriods();
-    return periods.some(period => isSameDay(period.to, date));
-  };
-  
-  // Check if a date is fully reserved (middle of a reservation)
-  const isFullyReserved = (date: Date): boolean => {
-    const periods = getReservationPeriods();
-    return periods.some(period => 
-      date >= period.from && date <= period.to && 
-      !isSameDay(period.from, date) && 
-      !isSameDay(period.to, date)
-    );
+  // Set modifiers for the days
+  const modifiers = useMemo(() => {
+    return {
+      hoverRange: (day: Date) => isInHoverRange(day),
+      arrivalSelected: (day: Date) => isArrivalDate(day),
+      fullyReserved: (day: Date) => isDateDisabled(day),
+      arrivalDate: (day: Date) => isArrivalDate(day),
+      departureDate: (day: Date) => selectedDate && isSameDay(day, selectedDate),
+    };
+  }, [arrivalDate, selectedDate, hoverDate, disabledDatesMap]);
+
+  // Custom styles for the calendar
+  const calendarStyles = {
+    // Apply custom styles with React CSS object syntax instead of string literals
+    ".arrival-date": {
+      position: "relative",
+    },
+    ".arrival-date::after": {
+      content: '""',
+      position: "absolute",
+      right: 0,
+      width: "50%",
+      height: "100%",
+      backgroundColor: "rgb(240, 253, 244)",
+      zIndex: -1,
+    },
+    ".departure-date": {
+      position: "relative",
+    },
+    ".departure-date::before": {
+      content: '""',
+      position: "absolute",
+      left: 0,
+      width: "50%",
+      height: "100%",
+      backgroundColor: "rgb(240, 253, 244)",
+      zIndex: -1,
+    },
   };
 
   return (
-    <>
-      <div className="p-2 text-center text-sm font-medium">
-        {isSelectingDeparture ? "Vyberte den odjezdu" : "Vyberte den příjezdu"}
-      </div>
+    <div className="p-0" style={calendarStyles as React.CSSProperties}>
       <Calendar
         mode="single"
         selected={selectedDate}
         onSelect={onSelect}
+        className="border-0"
+        modifiers={modifiers}
         onDayMouseEnter={onDayMouseEnter}
         onDayMouseLeave={onDayMouseLeave}
-        modifiers={{
-          hoverRange: (date) => isDateInHoverRange(date),
-          arrivalSelected: (date) => 
-            arrivalDate !== undefined && 
-            date.getTime() === arrivalDate.getTime(),
-          arrivalDate: (date) => isArrivalDate(date),
-          departureDate: (date) => isDepartureDate(date),
-          fullyReserved: (date) => isFullyReserved(date),
-        }}
-        modifiersStyles={{
-          hoverRange: { backgroundColor: 'rgba(94, 107, 93, 0.1)' },
-          arrivalSelected: { 
-            backgroundColor: 'rgb(72, 96, 70)', 
-            color: 'white',
-            fontWeight: 'bold' 
-          },
-          arrivalDate: { 
-            position: 'relative',
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              right: 0,
-              width: '50%',
-              height: '100%',
-              backgroundColor: 'rgba(234, 56, 76, 0.4)',
-            }
-          },
-          departureDate: {
-            position: 'relative',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              left: 0,
-              width: '50%',
-              height: '100%',
-              backgroundColor: 'rgba(234, 56, 76, 0.4)',
-            }
-          },
-          fullyReserved: { 
-            backgroundColor: 'rgba(234, 56, 76, 0.4)', 
-          },
-        }}
-        disabled={(date) => {
-          // Disable dates that are already reserved
-          if (disabledDates.some(
-            (disabledDate) =>
-              disabledDate.getDate() === date.getDate() &&
-              disabledDate.getMonth() === date.getMonth() &&
-              disabledDate.getFullYear() === date.getFullYear()
-          )) {
-            return true;
-          }
-          
-          // When selecting departure date, disable dates before arrival date
-          if (isSelectingDeparture && arrivalDate) {
-            return date < arrivalDate;
-          }
-          
-          return false;
-        }}
-        locale={cs}
         numberOfMonths={2}
         showOutsideDays={false}
-        className="pointer-events-auto border-t"
+        disabled={isDateDisabled}
       />
-    </>
+    </div>
   );
 };
 
