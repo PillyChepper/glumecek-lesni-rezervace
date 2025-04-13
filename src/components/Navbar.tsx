@@ -78,7 +78,7 @@ const Navbar = () => {
               className={
                 isScrolled 
                   ? 'bg-forest-600 hover:bg-forest-700 text-white' 
-                  : 'bg-white/20 hover:bg-white/30 text-gray-200 border border-white/60'
+                  : 'bg-forest-600 hover:bg-forest-700 text-white'
               }
             >
               Rezervace
