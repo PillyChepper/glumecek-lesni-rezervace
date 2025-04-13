@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -128,7 +129,7 @@ const DateRangePicker = ({
 
   return (
     <div className="w-full space-y-6 text-center">
-      <h2 className="section-title">
+      <h2 className="section-title text-2xl md:text-3xl lg:text-4xl">
         Přijeďte si k nám odpočinout
       </h2>
       
