@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker, DayMouseEventHandler } from "react-day-picker";
@@ -62,22 +61,18 @@ function Calendar({
         day_range_middle:
           "aria-selected:bg-forest-100 aria-selected:text-forest-900",
         day_hidden: "invisible",
-        // Fix issue with styled_caption by providing either undefined or a string
         caption_dropdowns: "",
-        // Add any missing class names explicitly
         ...classNames,
       }}
       components={{
         IconLeft: () => <ChevronLeft className="h-4 w-4" />,
         IconRight: () => <ChevronRight className="h-4 w-4" />,
         Day: ({ date, ...props }) => {
-          // Cast props to a type that includes modifiers
           const dayProps = props as any;
           const isArrivalDate = dayProps.modifiers?.arrivalDate;
           const isDepartureDate = dayProps.modifiers?.departureDate;
           const isFullyReserved = dayProps.modifiers?.fullyReserved;
           
-          // Create a class for styling the day based on reservation status
           let customClass = "";
           if (isArrivalDate) customClass += " half-reserved-right";
           if (isDepartureDate) customClass += " half-reserved-left";
@@ -99,7 +94,6 @@ function Calendar({
             </button>
           );
         },
-        // Fix: Properly type the Caption component and remove the className reference
         Caption: (props: { displayMonth: Date }) => (
           <div className="flex justify-center pt-1 relative items-center">
             <h2 className="text-sm font-medium">
