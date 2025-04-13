@@ -99,7 +99,7 @@ function Calendar({
             </button>
           );
         },
-        // Fix for the Caption component by removing all references to className
+        // Fixed Caption component - removed className as it's not in the type
         Caption: ({ displayMonth }) => {
           return (
             <div className="flex justify-center pt-1 relative items-center">
