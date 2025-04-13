@@ -129,7 +129,7 @@ const DateRangePicker = ({
 
   return (
     <div className="w-full space-y-6 text-center">
-      <h2 className="section-title text-2xl md:text-3xl lg:text-4xl">
+      <h2 className="text-lg font-normal text-forest-800">
         Přijeďte si k nám odpočinout
       </h2>
       
