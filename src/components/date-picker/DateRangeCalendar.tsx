@@ -101,6 +101,8 @@ const DateRangeCalendar = ({
   // For debugging
   console.log("Disabled dates:", disabledDates);
   console.log("Reservation periods:", getReservationPeriods());
+  console.log("Selected date:", selectedDate);
+  console.log("Is selecting departure:", isSelectingDeparture);
 
   return (
     <>
@@ -139,6 +141,7 @@ const DateRangeCalendar = ({
         locale={cs}
         numberOfMonths={2}
         showOutsideDays={false}
+        fromMonth={new Date()} // Don't allow selecting dates from the past
         className="pointer-events-auto border-t"
       />
     </>

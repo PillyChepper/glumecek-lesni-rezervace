@@ -58,7 +58,7 @@ const Rezervace = () => {
   const endDate2 = new Date(currentYear, currentMonth, 28);
   
   // Create arrays of all dates in each range
-  const disabledDates = [];
+  const disabledDates: Date[] = [];
   
   // Add dates for first reservation
   let currentDate = new Date(startDate1);

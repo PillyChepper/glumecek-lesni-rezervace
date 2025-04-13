@@ -71,10 +71,10 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
-        IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
+        IconLeft: () => <ChevronLeft className="h-4 w-4" />,
+        IconRight: () => <ChevronRight className="h-4 w-4" />,
         Day: ({ date, ...props }) => {
-          // Fixed: Cast props to a more specific type that includes modifiers
+          // Cast props to a type that includes modifiers
           const dayProps = props as any;
           const isArrivalDate = dayProps.modifiers?.arrivalDate;
           const isDepartureDate = dayProps.modifiers?.departureDate;
