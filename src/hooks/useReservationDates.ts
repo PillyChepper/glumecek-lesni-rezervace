@@ -28,7 +28,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
         }
         
         const { data, error } = await supabase
-          .rpc<UnavailableDateResponse>('get_unavailable_dates', {
+          .rpc<UnavailableDateResponse[], { start_date: string; end_date: string }>('get_unavailable_dates', {
             start_date: start.toISOString(),
             end_date: end.toISOString()
           });
