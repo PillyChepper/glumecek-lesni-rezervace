@@ -1,19 +1,43 @@
 
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Section from '@/components/Section';
-import ReservationCalendar from '@/components/Calendar';
+import DateRangePicker, { DateRange } from '@/components/DateRangePicker';
 
 const CalendarSection = () => {
+  const [dateRange, setDateRange] = useState<DateRange>({
+    from: undefined,
+    to: undefined,
+  });
+  const navigate = useNavigate();
+
+  const disabledDates = [
+    new Date(2025, 3, 15),
+    new Date(2025, 3, 16),
+    new Date(2025, 3, 17),
+    new Date(2025, 3, 18),
+  ];
+
+  const handleSearch = () => {
+    // Only navigate if both dates are selected
+    if (dateRange.from && dateRange.to) {
+      // Pass the selected dates to the reservation page through URL parameters
+      const fromDate = dateRange.from.toISOString();
+      const toDate = dateRange.to.toISOString();
+      navigate(`/rezervace?from=${fromDate}&to=${toDate}`);
+    }
+  };
+
   return (
     <Section id="kalendar">
-      <h2 className="section-title text-center mb-12">Ověřte si dostupnost</h2>
-      <ReservationCalendar 
-        disabledDates={[
-          new Date(2025, 3, 15),
-          new Date(2025, 3, 16),
-          new Date(2025, 3, 17),
-          new Date(2025, 3, 18),
-        ]}
-      />
+      <div className="max-w-5xl mx-auto">
+        <DateRangePicker 
+          dateRange={dateRange}
+          onDateChange={setDateRange}
+          disabledDates={disabledDates}
+          onSearch={handleSearch}
+        />
+      </div>
     </Section>
   );
 };
