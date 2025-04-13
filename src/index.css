@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -149,4 +150,8 @@
   opacity: 1;
 }
 
-[&:has(.day-hoverRange)]:bg-forest-100
+@layer utilities {
+  .hover-range-background:has(.day-hoverRange) {
+    @apply bg-forest-100;
+  }
+}
