@@ -45,34 +45,32 @@ const Rezervace = () => {
     setShowContactForm(true);
   };
 
-  // Create sample disabled dates - a consecutive range for testing
+  // Create sample disabled dates - create consecutive ranges for testing
+  const createReservationRange = (startDate: Date, numDays: number): Date[] => {
+    const dates: Date[] = [];
+    const currentDate = new Date(startDate);
+    
+    for (let i = 0; i < numDays; i++) {
+      dates.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    return dates;
+  };
+  
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth();
   
   // Sample reservation 1: 5-day stay
   const startDate1 = new Date(currentYear, currentMonth, 15);
-  const endDate1 = new Date(currentYear, currentMonth, 20);
+  const range1 = createReservationRange(startDate1, 6); // 15th - 20th
   
   // Sample reservation 2: 3-day stay later in the month
   const startDate2 = new Date(currentYear, currentMonth, 25);
-  const endDate2 = new Date(currentYear, currentMonth, 28);
+  const range2 = createReservationRange(startDate2, 4); // 25th - 28th
   
-  // Create arrays of all dates in each range
-  const disabledDates: Date[] = [];
-  
-  // Add dates for first reservation
-  let currentDate = new Date(startDate1);
-  while (currentDate <= endDate1) {
-    disabledDates.push(new Date(currentDate));
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
-  
-  // Add dates for second reservation
-  currentDate = new Date(startDate2);
-  while (currentDate <= endDate2) {
-    disabledDates.push(new Date(currentDate));
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
+  // Combine all reservation ranges
+  const disabledDates = [...range1, ...range2];
   
   console.log("Disabled dates on page:", disabledDates);
   

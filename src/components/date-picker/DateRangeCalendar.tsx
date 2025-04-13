@@ -92,13 +92,11 @@ const DateRangeCalendar = ({
   const isFullyReserved = (date: Date): boolean => {
     const periods = getReservationPeriods();
     return periods.some(period => 
-      date > period.from && date < period.to && 
-      !isSameDay(period.from, date) && 
-      !isSameDay(period.to, date)
+      date > period.from && date < period.to
     );
   };
 
-  // For debugging
+  // Debug logs
   console.log("Disabled dates:", disabledDates);
   console.log("Reservation periods:", getReservationPeriods());
   console.log("Selected date:", selectedDate);
@@ -125,9 +123,9 @@ const DateRangeCalendar = ({
           fullyReserved: (date) => isFullyReserved(date),
         }}
         disabled={(date) => {
-          // Only disable dates that are in the middle of a reservation
-          // NOT arrival or departure dates (which should be selectable for new bookings)
-          if (isFullyReserved(date)) {
+          // Allow selection of arrival and departure dates from existing reservations
+          // Only fully block out dates that are in the middle of a reservation
+          if (isFullyReserved(date) && !isArrivalDate(date) && !isDepartureDate(date)) {
             return true;
           }
           
@@ -136,7 +134,10 @@ const DateRangeCalendar = ({
             return date < arrivalDate;
           }
           
-          return false;
+          // Don't allow selecting dates in the past
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          return date < today;
         }}
         locale={cs}
         numberOfMonths={2}

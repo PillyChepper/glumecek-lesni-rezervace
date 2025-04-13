@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -87,13 +86,12 @@
   @apply bg-forest-500 text-white;
 }
 
-/* Half-day reserved styles */
-.arrival-date .day-arrivalDate {
+/* Reservation styles */
+.half-reserved-right {
   position: relative;
-  overflow: hidden;
 }
 
-.arrival-date .day-arrivalDate::after {
+.half-reserved-right::after {
   content: "";
   position: absolute;
   top: 0;
@@ -102,14 +100,15 @@
   width: 50%;
   background-color: rgba(234, 56, 76, 0.5);
   z-index: -1;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
 }
 
-.departure-date .day-departureDate {
+.half-reserved-left {
   position: relative;
-  overflow: hidden;
 }
 
-.departure-date .day-departureDate::before {
+.half-reserved-left::before {
   content: "";
   position: absolute;
   top: 0;
@@ -118,31 +117,25 @@
   width: 50%;
   background-color: rgba(234, 56, 76, 0.5);
   z-index: -1;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
 }
 
-/* Fully reserved styles */
-.day-fullyReserved {
+.fully-reserved {
   background-color: rgba(234, 56, 76, 0.5) !important;
 }
 
-/* Make sure the half-day styles are applied correctly */
-[data-arrival="true"] {
-  background: linear-gradient(to right, transparent 50%, rgba(234, 56, 76, 0.5) 50%) !important;
+/* Day hover states */
+.day-hoverRange {
+  background-color: rgba(94, 107, 93, 0.1);
 }
 
-[data-departure="true"] {
-  background: linear-gradient(to right, rgba(234, 56, 76, 0.5) 50%, transparent 50%) !important;
+.day-arrivalSelected {
+  background-color: #5e6b5d !important;
+  color: white !important;
 }
 
-/* Add more specific CSS to ensure the data attributes work properly */
-button[data-arrival="true"] {
-  background: linear-gradient(to right, transparent 50%, rgba(234, 56, 76, 0.5) 50%) !important;
-}
-
-button[data-departure="true"] {
-  background: linear-gradient(to right, rgba(234, 56, 76, 0.5) 50%, transparent 50%) !important;
-}
-
+/* Other existing styles */
 /* Smooth image reveal */
 .image-reveal {
   clip-path: inset(0 100% 0 0);
