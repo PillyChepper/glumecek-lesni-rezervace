@@ -17,7 +17,7 @@ export interface Reservation {
   created_at?: string;
 }
 
-export async function createReservation(reservation: Omit<Reservation, 'id' | 'status' | 'created_at'>): Promise<{ data: Reservation | null; error: Error | null }> {
+export async function createReservation(reservation: Omit<Reservation, 'id' | 'status' | 'created_at'>): Promise<{ data: Reservation | null; error: any }> {
   const { data, error } = await supabase
     .from('reservations')
     .insert({
@@ -31,7 +31,7 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
   return { data, error };
 }
 
-export async function getReservationsByDateRange(startDate: string, endDate: string) {
+export async function getReservationsByDateRange(startDate: string, endDate: string): Promise<{ data: Reservation[] | null; error: any }> {
   const { data, error } = await supabase
     .from('reservations')
     .select('*')
@@ -41,7 +41,7 @@ export async function getReservationsByDateRange(startDate: string, endDate: str
   return { data, error };
 }
 
-export async function getReservationsByEmail(email: string) {
+export async function getReservationsByEmail(email: string): Promise<{ data: Reservation[] | null; error: any }> {
   const { data, error } = await supabase
     .from('reservations')
     .select('*')
@@ -51,7 +51,7 @@ export async function getReservationsByEmail(email: string) {
   return { data, error };
 }
 
-export async function updateReservationStatus(id: string, status: 'pending' | 'confirmed' | 'cancelled') {
+export async function updateReservationStatus(id: string, status: 'pending' | 'confirmed' | 'cancelled'): Promise<{ data: Reservation | null; error: any }> {
   const { data, error } = await supabase
     .from('reservations')
     .update({ status })
