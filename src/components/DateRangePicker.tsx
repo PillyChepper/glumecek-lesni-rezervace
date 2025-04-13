@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -133,10 +132,10 @@ const DateRangePicker = ({
         Přijeďte si k nám odpočinout
       </h2>
       
-      <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
+      <div className="flex flex-col md:flex-row gap-4 justify-center items-center max-w-[800px] mx-auto">
         <Popover open={open} onOpenChange={handleOpenChange}>
-          <div className="flex flex-col md:flex-row gap-4 flex-1 justify-center items-center">
-            <div className="md:w-[130px] w-full">
+          <div className="flex flex-col md:flex-row gap-4 flex-1 justify-center items-center w-full">
+            <div className="md:w-[300px] w-full">
               <PopoverTrigger asChild>
                 <DatePickerInput
                   date={dateRange.from}
@@ -147,7 +146,7 @@ const DateRangePicker = ({
               </PopoverTrigger>
             </div>
             
-            <div className="md:w-[130px] w-full">
+            <div className="md:w-[300px] w-full">
               <DatePickerInput
                 date={dateRange.to}
                 label="Odjezd"
@@ -174,7 +173,7 @@ const DateRangePicker = ({
         
         <Button 
           onClick={handleReservationClick}
-          className="bg-forest-600 hover:bg-forest-700 h-12 md:w-[140px]"
+          className="bg-forest-600 hover:bg-forest-700 h-12 md:w-[180px] w-full"
           disabled={!dateRange.from || !dateRange.to}
         >
           REZERVOVAT
@@ -185,4 +184,3 @@ const DateRangePicker = ({
 };
 
 export default DateRangePicker;
-
