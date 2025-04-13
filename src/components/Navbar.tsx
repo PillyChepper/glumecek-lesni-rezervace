@@ -41,7 +41,6 @@ const Navbar = () => {
           Glumeček
         </Link>
         
-        {/* Desktop menu */}
         <div className="hidden md:flex items-center space-x-6">
           {isHomePage ? (
             <>
@@ -75,7 +74,13 @@ const Navbar = () => {
             </>
           )}
           <Link to="/rezervace">
-            <Button className="bg-forest-600 hover:bg-forest-700 text-white">
+            <Button 
+              className={`
+                ${isScrolled 
+                  ? 'bg-forest-600 hover:bg-forest-700 text-white' 
+                  : 'bg-white/20 hover:bg-white/30 text-white border-white'}
+              `}
+            >
               Rezervace
             </Button>
           </Link>
@@ -87,7 +92,6 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Mobile menu button */}
         <button 
           className="md:hidden text-forest-800"
           onClick={toggleMenu}
@@ -97,7 +101,6 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile menu */}
       <div 
         className={`md:hidden absolute top-full left-0 right-0 bg-white shadow-lg transition-all duration-300 ease-in-out ${
           isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
@@ -171,7 +174,14 @@ const Navbar = () => {
             to="/rezervace"
             onClick={() => setIsMenuOpen(false)}
           >
-            <Button className="w-full bg-forest-600 hover:bg-forest-700">
+            <Button 
+              className={`
+                w-full 
+                ${isScrolled 
+                  ? 'bg-forest-600 hover:bg-forest-700 text-white' 
+                  : 'bg-white/20 hover:bg-white/30 text-white border-white'}
+              `}
+            >
               Rezervace
             </Button>
           </Link>
