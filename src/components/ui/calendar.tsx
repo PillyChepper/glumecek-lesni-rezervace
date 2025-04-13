@@ -2,6 +2,7 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker, DayMouseEventHandler } from "react-day-picker";
+import { cs } from "date-fns/locale";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -83,6 +84,8 @@ function Calendar({
         departureDate: "day-departureDate",
         fullyReserved: "day-fullyReserved",
       }}
+      locale={cs}
+      weekStartsOn={1}
       {...props}
     />
   );

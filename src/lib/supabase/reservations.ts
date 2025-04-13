@@ -12,8 +12,8 @@ export interface Reservation {
   number_of_guests: number;
   number_of_pets: number;
   special_requests?: string;
-  payment_method: string; // Change from union type to string to match database
-  status: 'pending' | 'confirmed' | 'cancelled';
+  payment_method: string; // Changed from union type to string to match database
+  status: 'pending' | 'confirmed' | 'cancelled' | string; // Added string to accept any value from database
   created_at?: string;
 }
 

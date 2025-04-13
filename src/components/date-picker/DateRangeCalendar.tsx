@@ -4,6 +4,7 @@ import { isSameDay, isAfter, isBefore, isWithinInterval } from "date-fns";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { cs } from "date-fns/locale";
 
 interface DateRangeCalendarProps {
   selectedDate?: Date;
@@ -118,6 +119,8 @@ const DateRangeCalendar = ({
         numberOfMonths={2}
         showOutsideDays={false}
         disabled={isDateDisabled}
+        locale={cs}
+        weekStartsOn={1}
       />
     </div>
   );
