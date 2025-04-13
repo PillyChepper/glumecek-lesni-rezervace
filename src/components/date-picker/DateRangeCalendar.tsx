@@ -1,6 +1,7 @@
 
 import { Calendar } from "@/components/ui/calendar";
 import { cs } from "date-fns/locale";
+import { compareAsc, isSameDay } from "date-fns";
 
 interface DateRangeCalendarProps {
   selectedDate: Date | undefined;
@@ -11,6 +12,12 @@ interface DateRangeCalendarProps {
   arrivalDate: Date | undefined;
   disabledDates: Date[];
   hoverDate?: Date;
+}
+
+// Helper type to track reservation periods
+interface ReservationPeriod {
+  from: Date;
+  to: Date;
 }
 
 const DateRangeCalendar = ({
@@ -30,6 +37,66 @@ const DateRangeCalendar = ({
     }
     return false;
   };
+  
+  // Convert disabledDates to reservation periods for better visualization
+  const getReservationPeriods = (): ReservationPeriod[] => {
+    if (!disabledDates || disabledDates.length === 0) return [];
+    
+    // Sort dates in chronological order
+    const sortedDates = [...disabledDates].sort(compareAsc);
+    const periods: ReservationPeriod[] = [];
+    
+    let currentPeriod: ReservationPeriod | null = null;
+    
+    sortedDates.forEach((date, index) => {
+      if (!currentPeriod) {
+        // Start a new period
+        currentPeriod = { from: date, to: date };
+      } else {
+        // Check if this date is consecutive with the current period
+        const prevDate = new Date(date);
+        prevDate.setDate(prevDate.getDate() - 1);
+        
+        if (isSameDay(prevDate, sortedDates[index - 1])) {
+          // Extend current period
+          currentPeriod.to = date;
+        } else {
+          // End current period and start a new one
+          periods.push(currentPeriod);
+          currentPeriod = { from: date, to: date };
+        }
+      }
+    });
+    
+    // Add the last period if exists
+    if (currentPeriod) {
+      periods.push(currentPeriod);
+    }
+    
+    return periods;
+  };
+  
+  // Check if a date is an arrival date in any reservation period
+  const isArrivalDate = (date: Date): boolean => {
+    const periods = getReservationPeriods();
+    return periods.some(period => isSameDay(period.from, date));
+  };
+  
+  // Check if a date is a departure date in any reservation period
+  const isDepartureDate = (date: Date): boolean => {
+    const periods = getReservationPeriods();
+    return periods.some(period => isSameDay(period.to, date));
+  };
+  
+  // Check if a date is fully reserved (middle of a reservation)
+  const isFullyReserved = (date: Date): boolean => {
+    const periods = getReservationPeriods();
+    return periods.some(period => 
+      date >= period.from && date <= period.to && 
+      !isSameDay(period.from, date) && 
+      !isSameDay(period.to, date)
+    );
+  };
 
   return (
     <>
@@ -47,6 +114,9 @@ const DateRangeCalendar = ({
           arrivalSelected: (date) => 
             arrivalDate !== undefined && 
             date.getTime() === arrivalDate.getTime(),
+          arrivalDate: (date) => isArrivalDate(date),
+          departureDate: (date) => isDepartureDate(date),
+          fullyReserved: (date) => isFullyReserved(date),
         }}
         modifiersStyles={{
           hoverRange: { backgroundColor: 'rgba(94, 107, 93, 0.1)' },
@@ -54,6 +124,31 @@ const DateRangeCalendar = ({
             backgroundColor: 'rgb(72, 96, 70)', 
             color: 'white',
             fontWeight: 'bold' 
+          },
+          arrivalDate: { 
+            position: 'relative',
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              right: 0,
+              width: '50%',
+              height: '100%',
+              backgroundColor: 'rgba(234, 56, 76, 0.4)',
+            }
+          },
+          departureDate: {
+            position: 'relative',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              left: 0,
+              width: '50%',
+              height: '100%',
+              backgroundColor: 'rgba(234, 56, 76, 0.4)',
+            }
+          },
+          fullyReserved: { 
+            backgroundColor: 'rgba(234, 56, 76, 0.4)', 
           },
         }}
         disabled={(date) => {
