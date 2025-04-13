@@ -96,14 +96,16 @@ function Calendar({
             </button>
           );
         },
-        // Fix for the Caption component - removed the className reference
-        Caption: ({ displayMonth }) => (
-          <div className="flex justify-center pt-1 relative items-center">
-            <h2 className="text-sm font-medium">
-              {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
-            </h2>
-          </div>
-        )
+        // Fix for the Caption component - completely remove any reference to className
+        Caption: ({ displayMonth }) => {
+          return (
+            <div className="flex justify-center pt-1 relative items-center">
+              <h2 className="text-sm font-medium">
+                {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
+              </h2>
+            </div>
+          );
+        }
       }}
       onDayMouseEnter={onDayMouseEnter}
       onDayMouseLeave={onDayMouseLeave}
