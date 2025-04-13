@@ -19,6 +19,9 @@ interface DatePickerProps {
   placeholder?: string;
   disabledDates?: Date[];
   className?: string;
+  selectedForRange?: boolean;
+  isSelecting?: boolean;
+  minDate?: Date;
 }
 
 export function DatePicker({
@@ -28,7 +31,27 @@ export function DatePicker({
   placeholder = "Vyberte datum",
   disabledDates = [],
   className,
+  selectedForRange = false,
+  isSelecting = true,
+  minDate,
 }: DatePickerProps) {
+  const [open, setOpen] = React.useState(false);
+
+  // Function to handle calendar state changes
+  const handleSelect = (selectedDate: Date | undefined) => {
+    setDate(selectedDate);
+    if (selectedDate) {
+      setOpen(false);
+    }
+  };
+
+  // When isSelecting changes to true, open the popover
+  React.useEffect(() => {
+    if (isSelecting && !open) {
+      setOpen(true);
+    }
+  }, [isSelecting, open]);
+
   const isDateDisabled = (date: Date) => {
     return disabledDates.some(
       (disabledDate) =>
@@ -40,13 +63,15 @@ export function DatePicker({
 
   return (
     <div className={className}>
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
             className={cn(
               "w-full justify-start text-left font-normal",
               !date && "text-muted-foreground",
+              selectedForRange && "border-forest-600 border-2",
+              isSelecting && "ring-2 ring-forest-400 ring-offset-2",
               "h-12"
             )}
           >
@@ -65,12 +90,13 @@ export function DatePicker({
           <Calendar
             mode="single"
             selected={date}
-            onSelect={setDate}
+            onSelect={handleSelect}
             disabled={isDateDisabled}
             locale={cs}
             numberOfMonths={2}
             showOutsideDays={false}
             className="pointer-events-auto border-t"
+            fromDate={minDate}
           />
         </PopoverContent>
       </Popover>

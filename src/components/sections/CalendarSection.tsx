@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Section from '@/components/Section';
 import DateRangePicker, { DateRange } from '@/components/DateRangePicker';
+import { toast } from '@/components/ui/use-toast';
 
 const CalendarSection = () => {
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -25,6 +26,12 @@ const CalendarSection = () => {
       const fromDate = dateRange.from.toISOString();
       const toDate = dateRange.to.toISOString();
       navigate(`/rezervace?from=${fromDate}&to=${toDate}`);
+    } else {
+      toast({
+        title: "Vyberte datum",
+        description: "Prosím vyberte datum příjezdu a odjezdu",
+        variant: "destructive",
+      });
     }
   };
 
