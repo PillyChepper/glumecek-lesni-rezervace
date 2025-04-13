@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker, DayMouseEventHandler } from "react-day-picker";
@@ -94,10 +95,10 @@ function Calendar({
             </button>
           );
         },
-        Caption: (props: { displayMonth: Date }) => (
+        Caption: ({ displayMonth }: { displayMonth: Date }) => (
           <div className="flex justify-center pt-1 relative items-center">
             <h2 className="text-sm font-medium">
-              {props.displayMonth ? props.displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
+              {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
             </h2>
           </div>
         )
