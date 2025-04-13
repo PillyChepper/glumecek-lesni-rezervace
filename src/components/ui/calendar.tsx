@@ -95,7 +95,7 @@ function Calendar({
             </button>
           );
         },
-        Caption: ({ displayMonth }: { displayMonth: Date }) => (
+        Caption: ({ displayMonth }) => (
           <div className="flex justify-center pt-1 relative items-center">
             <h2 className="text-sm font-medium">
               {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
