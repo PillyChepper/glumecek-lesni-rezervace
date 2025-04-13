@@ -75,7 +75,7 @@ const Navbar = () => {
             </>
           )}
           <Link to="/rezervace">
-            <Button className="bg-forest-600 hover:bg-forest-700">
+            <Button className="bg-forest-600 hover:bg-forest-700 text-white">
               Rezervace
             </Button>
           </Link>
