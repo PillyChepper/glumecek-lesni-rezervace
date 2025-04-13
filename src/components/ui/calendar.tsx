@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker, DayMouseEventHandler } from "react-day-picker";
@@ -10,6 +9,11 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
   onDayMouseEnter?: DayMouseEventHandler;
   onDayMouseLeave?: DayMouseEventHandler;
 };
+
+interface CaptionProps {
+  displayMonth: Date;
+  className?: string;
+}
 
 function Calendar({
   className,
@@ -95,12 +99,9 @@ function Calendar({
             </button>
           );
         },
-        Caption: (props) => {
-          // Extract the displayMonth from the props without type assertion
-          const { displayMonth } = props;
-          
+        Caption: ({ displayMonth, className }: CaptionProps) => {
           return (
-            <div className="flex justify-center pt-1 relative items-center">
+            <div className={cn("flex justify-center pt-1 relative items-center", className)}>
               <h2 className="text-sm font-medium">
                 {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
               </h2>
@@ -121,6 +122,7 @@ function Calendar({
     />
   );
 }
+
 Calendar.displayName = "Calendar";
 
 export { Calendar };
