@@ -23,11 +23,6 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
   const [specialRequests, setSpecialRequests] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('bank-transfer');
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(e);
-  };
-
   const handleGuestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNumOfGuests(Number(e.target.value));
   };
@@ -37,17 +32,17 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
   };
 
   return (
-    <div className="mt-8">
+    <div>
       <h2 className="text-xl md:text-2xl font-display font-medium mb-4 text-forest-700">Vyplňte své údaje</h2>
       
-      <Card className="shadow-sm">
-        <form onSubmit={handleFormSubmit}>
+      <Card>
+        <form onSubmit={onSubmit}>
           <CardHeader>
             <CardTitle>Kontaktní informace</CardTitle>
             <CardDescription>Prosím vyplňte své údaje pro dokončení rezervace</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="first-name">Jméno *</Label>
                 <Input 
@@ -68,30 +63,29 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email *</Label>
-                <Input 
-                  id="email" 
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Telefon *</Label>
-                <Input 
-                  id="phone" 
-                  type="tel" 
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email *</Label>
+              <Input 
+                id="email" 
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="phone">Telefon *</Label>
+              <Input 
+                id="phone" 
+                type="tel" 
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="guests">Počet osob</Label>
                 <Input 
@@ -129,13 +123,13 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
             <div className="space-y-2">
               <Label>Způsob platby</Label>
               <RadioGroup defaultValue="bank-transfer" value={paymentMethod} onValueChange={setPaymentMethod}>
-                <div className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded">
+                <div className="flex items-center space-x-2">
                   <RadioGroupItem value="bank-transfer" id="bank-transfer" />
-                  <Label htmlFor="bank-transfer" className="cursor-pointer">Bankovní převod</Label>
+                  <Label htmlFor="bank-transfer">Bankovní převod</Label>
                 </div>
-                <div className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded">
+                <div className="flex items-center space-x-2">
                   <RadioGroupItem value="cash" id="cash" />
-                  <Label htmlFor="cash" className="cursor-pointer">Hotovost při příjezdu</Label>
+                  <Label htmlFor="cash">Hotovost při příjezdu</Label>
                 </div>
               </RadioGroup>
             </div>

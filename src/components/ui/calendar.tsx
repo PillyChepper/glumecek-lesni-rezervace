@@ -11,13 +11,6 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
   onDayMouseLeave?: DayMouseEventHandler;
 };
 
-// Define the caption props interface properly to match react-day-picker expectations
-interface CaptionProps {
-  displayMonth: Date;
-  className?: string;
-  [key: string]: any; // Allow for other props to be passed through
-}
-
 function Calendar({
   className,
   classNames,
@@ -48,12 +41,18 @@ function Calendar({
           "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
         row: "flex w-full mt-2",
         cell: cn(
-          "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+          "h-9 w-9 text-center text-sm p-0 relative",
           "[&:has([aria-selected].day-range-end)]:rounded-r-md",
           "[&:has([aria-selected].day-outside)]:bg-accent/50",
           "[&:has([aria-selected])]:bg-accent",
+          "first:[&:has([aria-selected])]:rounded-l-md",
+          "last:[&:has([aria-selected])]:rounded-r-md",
+          "focus-within:relative focus-within:z-20",
           "[&:has(.day-hoverRange)]:bg-forest-50",
-          "[&:has(.day-arrivalSelected)]:bg-forest-600 [&:has(.day-arrivalSelected)]:text-white"
+          "[&:has(.day-arrivalSelected)]:bg-forest-600 [&:has(.day-arrivalSelected)]:text-white",
+          "[&:has(.day-fullyReserved)]:bg-red-200",
+          "[&:has(.day-arrivalDate)]:arrival-date",
+          "[&:has(.day-departureDate)]:departure-date"
         ),
         day: cn(
           buttonVariants({ variant: "ghost" }),
@@ -69,48 +68,11 @@ function Calendar({
         day_range_middle:
           "aria-selected:bg-forest-100 aria-selected:text-forest-900",
         day_hidden: "invisible",
-        caption_dropdowns: "",
         ...classNames,
       }}
       components={{
-        IconLeft: () => <ChevronLeft className="h-4 w-4" />,
-        IconRight: () => <ChevronRight className="h-4 w-4" />,
-        Day: ({ date, ...props }) => {
-          const dayProps = props as any;
-          const isArrivalDate = dayProps.modifiers?.arrivalDate;
-          const isDepartureDate = dayProps.modifiers?.departureDate;
-          const isFullyReserved = dayProps.modifiers?.fullyReserved;
-          
-          let customClass = "";
-          if (isArrivalDate) customClass += " half-reserved-right";
-          if (isDepartureDate) customClass += " half-reserved-left";
-          if (isFullyReserved) customClass += " fully-reserved";
-          
-          return (
-            <button
-              {...props}
-              className={cn(
-                props.className,
-                customClass,
-                "h-9 w-9 p-0 font-normal aria-selected:opacity-100 relative"
-              )}
-              data-arrival={isArrivalDate ? "true" : undefined}
-              data-departure={isDepartureDate ? "true" : undefined}
-              data-reserved={isFullyReserved ? "true" : undefined}
-            >
-              {date.getDate()}
-            </button>
-          );
-        },
-        Caption: ({ displayMonth, className, ...props }: CaptionProps) => {
-          return (
-            <div className={cn("flex justify-center pt-1 relative items-center", className)} {...props}>
-              <h2 className="text-sm font-medium">
-                {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
-              </h2>
-            </div>
-          );
-        }
+        IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
+        IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
       }}
       onDayMouseEnter={onDayMouseEnter}
       onDayMouseLeave={onDayMouseLeave}
@@ -125,7 +87,6 @@ function Calendar({
     />
   );
 }
-
 Calendar.displayName = "Calendar";
 
 export { Calendar };

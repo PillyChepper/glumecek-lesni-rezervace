@@ -87,12 +87,13 @@
   @apply bg-forest-500 text-white;
 }
 
-/* Reservation styles - improved for better visibility */
-.half-reserved-right {
+/* Half-day reserved styles */
+.arrival-date .day-arrivalDate {
   position: relative;
+  overflow: hidden;
 }
 
-.half-reserved-right::after {
+.arrival-date .day-arrivalDate::after {
   content: "";
   position: absolute;
   top: 0;
@@ -101,15 +102,14 @@
   width: 50%;
   background-color: rgba(234, 56, 76, 0.5);
   z-index: -1;
-  border-top-right-radius: 0.25rem;
-  border-bottom-right-radius: 0.25rem;
 }
 
-.half-reserved-left {
+.departure-date .day-departureDate {
   position: relative;
+  overflow: hidden;
 }
 
-.half-reserved-left::before {
+.departure-date .day-departureDate::before {
   content: "";
   position: absolute;
   top: 0;
@@ -118,66 +118,13 @@
   width: 50%;
   background-color: rgba(234, 56, 76, 0.5);
   z-index: -1;
-  border-top-left-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
 }
 
-.fully-reserved {
+/* Fully reserved styles */
+.day-fullyReserved {
   background-color: rgba(234, 56, 76, 0.5) !important;
 }
 
-/* Add CSS selectors that use data attributes as an alternative to pseudo-selectors */
-[data-arrival="true"] {
-  position: relative;
-}
-
-[data-arrival="true"]::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 50%;
-  background-color: rgba(234, 56, 76, 0.5);
-  z-index: 0;
-  border-top-right-radius: 0.25rem;
-  border-bottom-right-radius: 0.25rem;
-  pointer-events: none;
-}
-
-[data-departure="true"] {
-  position: relative;
-}
-
-[data-departure="true"]::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 50%;
-  background-color: rgba(234, 56, 76, 0.5);
-  z-index: 0;
-  border-top-left-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
-  pointer-events: none;
-}
-
-[data-reserved="true"] {
-  background-color: rgba(234, 56, 76, 0.5);
-}
-
-/* Day hover states */
-.day-hoverRange {
-  background-color: rgba(94, 107, 93, 0.1);
-}
-
-.day-arrivalSelected {
-  background-color: #5e6b5d !important;
-  color: white !important;
-}
-
-/* Other existing styles */
 /* Smooth image reveal */
 .image-reveal {
   clip-path: inset(0 100% 0 0);

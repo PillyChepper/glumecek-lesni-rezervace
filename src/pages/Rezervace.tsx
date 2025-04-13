@@ -1,15 +1,14 @@
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { DateRange } from '@/components/DateRangePicker';
+import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ReservationDatePicker from '@/components/reservation/ReservationDatePicker';
 import ReservationSummary from '@/components/reservation/ReservationSummary';
 import ContactForm from '@/components/reservation/ContactForm';
 
 const Rezervace = () => {
-  const [searchParams] = useSearchParams();
   const [dateRange, setDateRange] = useState<DateRange>({
     from: undefined,
     to: undefined,
@@ -17,20 +16,6 @@ const Rezervace = () => {
   const [showContactForm, setShowContactForm] = useState(false);
   
   const { toast } = useToast();
-  
-  // Get dates from URL parameters if available
-  useEffect(() => {
-    const fromParam = searchParams.get('from');
-    const toParam = searchParams.get('to');
-    
-    if (fromParam && toParam) {
-      setDateRange({
-        from: new Date(fromParam),
-        to: new Date(toParam),
-      });
-      setShowContactForm(true);
-    }
-  }, [searchParams]);
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +28,8 @@ const Rezervace = () => {
       });
       return;
     }
+    
+    // Check if required fields are filled - the ContactForm component will handle validation of required fields
     
     // In a real application, this would send data to a backend
     toast({
@@ -59,47 +46,27 @@ const Rezervace = () => {
     setShowContactForm(true);
   };
 
-  // Create sample disabled dates - create consecutive ranges for testing
-  const createReservationRange = (startDate: Date, numDays: number): Date[] => {
-    const dates: Date[] = [];
-    const currentDate = new Date(startDate);
-    
-    for (let i = 0; i < numDays; i++) {
-      dates.push(new Date(currentDate));
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-    
-    return dates;
-  };
-  
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth();
-  
-  // Sample reservation 1: 5-day stay
-  const startDate1 = new Date(currentYear, currentMonth, 15);
-  const range1 = createReservationRange(startDate1, 6); // 15th - 20th
-  
-  // Sample reservation 2: 3-day stay later in the month
-  const startDate2 = new Date(currentYear, currentMonth, 25);
-  const range2 = createReservationRange(startDate2, 4); // 25th - 28th
-  
-  // Combine all reservation ranges
-  const disabledDates = [...range1, ...range2];
+  const disabledDates = [
+    new Date(2025, 3, 15),
+    new Date(2025, 3, 16),
+    new Date(2025, 3, 17),
+    new Date(2025, 3, 18),
+  ];
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      
       <div className="pt-24 pb-16 px-4">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-3xl md:text-4xl font-display font-medium mb-8 text-forest-800 text-center">Rezervace pobytu</h1>
           
-          <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
-            <ReservationDatePicker
-              dateRange={dateRange}
-              onDateChange={setDateRange}
-              onReservationClick={handleReservationClick}
-              disabledDates={disabledDates}
-            />
-          </div>
+          <ReservationDatePicker
+            dateRange={dateRange}
+            onDateChange={setDateRange}
+            onReservationClick={handleReservationClick}
+            disabledDates={disabledDates}
+          />
 
           {dateRange.from && dateRange.to && (
             <ReservationSummary dateRange={dateRange} />

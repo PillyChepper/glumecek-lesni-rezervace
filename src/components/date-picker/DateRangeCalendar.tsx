@@ -92,7 +92,9 @@ const DateRangeCalendar = ({
   const isFullyReserved = (date: Date): boolean => {
     const periods = getReservationPeriods();
     return periods.some(period => 
-      date > period.from && date < period.to
+      date >= period.from && date <= period.to && 
+      !isSameDay(period.from, date) && 
+      !isSameDay(period.to, date)
     );
   };
 
@@ -116,10 +118,47 @@ const DateRangeCalendar = ({
           departureDate: (date) => isDepartureDate(date),
           fullyReserved: (date) => isFullyReserved(date),
         }}
+        modifiersStyles={{
+          hoverRange: { backgroundColor: 'rgba(94, 107, 93, 0.1)' },
+          arrivalSelected: { 
+            backgroundColor: 'rgb(72, 96, 70)', 
+            color: 'white',
+            fontWeight: 'bold' 
+          },
+          arrivalDate: { 
+            position: 'relative',
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              right: 0,
+              width: '50%',
+              height: '100%',
+              backgroundColor: 'rgba(234, 56, 76, 0.4)',
+            }
+          },
+          departureDate: {
+            position: 'relative',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              left: 0,
+              width: '50%',
+              height: '100%',
+              backgroundColor: 'rgba(234, 56, 76, 0.4)',
+            }
+          },
+          fullyReserved: { 
+            backgroundColor: 'rgba(234, 56, 76, 0.4)', 
+          },
+        }}
         disabled={(date) => {
-          // Allow selection of arrival and departure dates from existing reservations
-          // Only fully block out dates that are in the middle of a reservation
-          if (isFullyReserved(date) && !isArrivalDate(date) && !isDepartureDate(date)) {
+          // Disable dates that are already reserved
+          if (disabledDates.some(
+            (disabledDate) =>
+              disabledDate.getDate() === date.getDate() &&
+              disabledDate.getMonth() === date.getMonth() &&
+              disabledDate.getFullYear() === date.getFullYear()
+          )) {
             return true;
           }
           
@@ -128,15 +167,11 @@ const DateRangeCalendar = ({
             return date < arrivalDate;
           }
           
-          // Don't allow selecting dates in the past
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          return date < today;
+          return false;
         }}
         locale={cs}
         numberOfMonths={2}
         showOutsideDays={false}
-        fromMonth={new Date()} // Don't allow selecting dates from the past
         className="pointer-events-auto border-t"
       />
     </>
