@@ -61,8 +61,8 @@ const ReservationCalendar = ({ disabledDates = [], onBookingComplete }: Calendar
   return (
     <Card className="w-full max-w-lg mx-auto">
       <CardHeader>
-        <CardTitle>Rezervace pobytu</CardTitle>
-        <CardDescription>Vyberte datum příjezdu a odjezdu</CardDescription>
+        <CardTitle className="section-title text-center">Rezervace pobytu</CardTitle>
+        <CardDescription className="text-center text-lg">Vyberte datum příjezdu a odjezdu</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center">
         <DateRangePicker 

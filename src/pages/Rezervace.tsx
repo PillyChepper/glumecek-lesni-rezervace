@@ -46,7 +46,7 @@ const Rezervace = () => {
     <div className="min-h-screen bg-background">
       <div className="pt-24 pb-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-display font-medium mb-8 text-forest-800 text-center">Rezervace pobytu</h1>
+          <h1 className="section-title text-center mb-8">Rezervace pobytu</h1>
           
           {loading ? (
             <div className="flex justify-center items-center h-64">

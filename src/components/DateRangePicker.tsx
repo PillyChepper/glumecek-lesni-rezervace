@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -129,7 +128,7 @@ const DateRangePicker = ({
 
   return (
     <div className="w-full space-y-6 text-center">
-      <h2 className="text-xl md:text-2xl font-display font-medium text-forest-800 text-center">
+      <h2 className="section-title">
         Přijeďte si k nám odpočinout
       </h2>
       
