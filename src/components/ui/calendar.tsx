@@ -99,16 +99,13 @@ function Calendar({
             </button>
           );
         },
-        Caption: ({ displayMonth }) => {
-          // Fixed: properly type the Caption component with no className prop reference
-          return (
-            <div className="flex justify-center pt-1 relative items-center">
-              <h2 className="text-sm font-medium">
-                {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
-              </h2>
-            </div>
-          );
-        }
+        Caption: ({ displayMonth }) => (
+          <div className="flex justify-center pt-1 relative items-center">
+            <h2 className="text-sm font-medium">
+              {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
+            </h2>
+          </div>
+        )
       }}
       onDayMouseEnter={onDayMouseEnter}
       onDayMouseLeave={onDayMouseLeave}
