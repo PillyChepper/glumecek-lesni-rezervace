@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { 
   Table, 
@@ -26,8 +27,9 @@ import {
 } from "@/components/ui/sidebar";
 import { Calendar, Home, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Reservation, getReservationsByDateRange } from "@/lib/supabase/reservations";
+import { Reservation } from "@/lib/supabase/reservations";
 import { Spinner } from "@/components/ui/spinner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Admin = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);

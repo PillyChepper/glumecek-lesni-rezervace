@@ -12,7 +12,7 @@ export interface Reservation {
   number_of_guests: number;
   number_of_pets: number;
   special_requests?: string;
-  payment_method: 'bank-transfer' | 'cash';
+  payment_method: string; // Change from union type to string to match database
   status: 'pending' | 'confirmed' | 'cancelled';
   created_at?: string;
 }

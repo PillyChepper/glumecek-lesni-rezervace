@@ -24,7 +24,7 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
   const [numOfGuests, setNumOfGuests] = useState<number>(2);
   const [numOfPets, setNumOfPets] = useState<number>(0);
   const [specialRequests, setSpecialRequests] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<'bank-transfer' | 'cash'>('bank-transfer');
+  const [paymentMethod, setPaymentMethod] = useState<string>('bank-transfer');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { toast } = useToast();
