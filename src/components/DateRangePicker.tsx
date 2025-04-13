@@ -136,24 +136,28 @@ const DateRangePicker = ({
       <div className="flex flex-col md:flex-row gap-4">
         <Popover open={open} onOpenChange={handleOpenChange}>
           <div className="flex flex-col md:flex-row gap-4 flex-1">
-            <PopoverTrigger asChild>
+            <div className="md:w-[130px] w-full">
+              <PopoverTrigger asChild>
+                <DatePickerInput
+                  date={dateRange.from}
+                  label="Příjezd"
+                  onClick={handleArrivalTriggerClick}
+                  isActive={!selectingDeparture && open}
+                />
+              </PopoverTrigger>
+            </div>
+            
+            <div className="md:w-[130px] w-full">
               <DatePickerInput
-                date={dateRange.from}
-                label="Příjezd"
-                onClick={handleArrivalTriggerClick}
-                isActive={!selectingDeparture && open}
+                date={dateRange.to}
+                label="Odjezd"
+                onClick={handleDepartureTriggerClick}
+                isActive={selectingDeparture && open}
+                disabled={!dateRange.from}
               />
-            </PopoverTrigger>
+            </div>
             
-            <DatePickerInput
-              date={dateRange.to}
-              label="Odjezd"
-              onClick={handleDepartureTriggerClick}
-              isActive={selectingDeparture && open}
-              disabled={!dateRange.from}
-            />
-            
-            <PopoverContent className="w-auto p-0" align="start">
+            <PopoverContent className="w-auto p-0" align="start" sideOffset={5}>
               <DateRangeCalendar
                 selectedDate={selectingDeparture ? dateRange.to : dateRange.from}
                 onSelect={handleDateSelect}
@@ -170,7 +174,7 @@ const DateRangePicker = ({
         
         <Button 
           onClick={handleReservationClick}
-          className="bg-forest-600 hover:bg-forest-700 h-12 md:w-[180px]"
+          className="bg-forest-600 hover:bg-forest-700 h-12 md:w-[140px]"
           disabled={!dateRange.from || !dateRange.to}
         >
           REZERVOVAT

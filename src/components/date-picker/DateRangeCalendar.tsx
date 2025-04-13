@@ -108,12 +108,12 @@ const DateRangeCalendar = ({
   };
 
   return (
-    <div className="p-0" style={calendarStyles as React.CSSProperties}>
+    <div className="p-0 w-full max-w-[600px]" style={calendarStyles as React.CSSProperties}>
       <Calendar
         mode="single"
         selected={selectedDate}
         onSelect={onSelect}
-        className="border-0"
+        className="border-0 w-full"
         modifiers={modifiers}
         onDayMouseEnter={onDayMouseEnter}
         onDayMouseLeave={onDayMouseLeave}

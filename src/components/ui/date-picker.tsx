@@ -89,7 +89,7 @@ export function DatePicker({
             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent className="w-auto p-0 max-w-[600px]" align="start">
           <div className="p-2 text-center text-sm font-medium">
             {label}
           </div>
@@ -101,7 +101,7 @@ export function DatePicker({
             locale={cs}
             numberOfMonths={2}
             showOutsideDays={false}
-            className="pointer-events-auto border-t"
+            className="pointer-events-auto border-t w-full"
             fromDate={minDate}
             onDayMouseEnter={onDayMouseEnter}
             onDayMouseLeave={onDayMouseLeave}
