@@ -15,7 +15,11 @@ const ReservationCTASection = () => {
         </p>
         
         <Link to="/rezervace">
-          <Button className="bg-forest-600 hover:bg-forest-700 text-white px-8 py-4 rounded-lg text-lg">
+          <Button 
+            variant="default" 
+            size="lg" 
+            className="bg-forest-600 hover:bg-forest-700"
+          >
             Přejít na rezervace
           </Button>
         </Link>
