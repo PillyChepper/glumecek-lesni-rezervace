@@ -48,7 +48,8 @@ function Calendar({
           "first:[&:has([aria-selected])]:rounded-l-md",
           "last:[&:has([aria-selected])]:rounded-r-md",
           "focus-within:relative focus-within:z-20",
-          "[&:has(.day-hoverRange)]:bg-forest-50"
+          "[&:has(.day-hoverRange)]:bg-forest-50",
+          "[&:has(.day-arrivalSelected)]:bg-forest-600 [&:has(.day-arrivalSelected)]:text-white"
         ),
         day: cn(
           buttonVariants({ variant: "ghost" }),
@@ -72,6 +73,10 @@ function Calendar({
       }}
       onDayMouseEnter={onDayMouseEnter}
       onDayMouseLeave={onDayMouseLeave}
+      modifiersClassNames={{
+        hoverRange: "day-hoverRange",
+        arrivalSelected: "day-arrivalSelected",
+      }}
       {...props}
     />
   );

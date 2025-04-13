@@ -37,21 +37,48 @@ const DateRangePicker = ({
   const handleDateSelect = (date: Date | undefined) => {
     if (!selectingDeparture) {
       // Selecting arrival date
-      onDateChange({
-        from: date,
-        to: undefined,
-      });
-      setSelectingDeparture(true);
+      if (date?.getTime() === dateRange.from?.getTime()) {
+        // Clicking the same date again, unselect it
+        onDateChange({
+          from: undefined,
+          to: undefined,
+        });
+      } else {
+        // Selecting a new arrival date
+        onDateChange({
+          from: date,
+          to: undefined,
+        });
+        if (date) {
+          setSelectingDeparture(true);
+        }
+      }
     } else {
       // Selecting departure date
-      if (date && dateRange.from && date >= dateRange.from) {
-        onDateChange({
-          ...dateRange,
-          to: date,
-        });
-        setOpen(false);
-        setSelectingDeparture(false);
-        setHoverDate(undefined);
+      if (date && dateRange.from) {
+        if (date < dateRange.from) {
+          // If user selects a date before arrival, make it the new arrival date
+          onDateChange({
+            from: date,
+            to: undefined,
+          });
+        } else if (date.getTime() === dateRange.from.getTime()) {
+          // If user selects the same date as arrival, unselect arrival
+          onDateChange({
+            from: undefined,
+            to: undefined,
+          });
+          setSelectingDeparture(false);
+        } else {
+          // Valid departure date
+          onDateChange({
+            ...dateRange,
+            to: date,
+          });
+          setOpen(false);
+          setSelectingDeparture(false);
+          setHoverDate(undefined);
+        }
       }
     }
   };
@@ -79,7 +106,7 @@ const DateRangePicker = ({
     setOpen(newOpen);
     if (!newOpen) {
       // Reset selecting state when closing
-      setSelectingDeparture(false);
+      setSelectingDeparture(dateRange.from !== undefined);
       setHoverDate(undefined);
     }
   };
@@ -103,6 +130,13 @@ const DateRangePicker = ({
     }
     return false;
   };
+
+  // Make sure to reset selectingDeparture if arrival date is removed
+  useEffect(() => {
+    if (!dateRange.from) {
+      setSelectingDeparture(false);
+    }
+  }, [dateRange.from]);
 
   return (
     <div className="w-full space-y-6">
@@ -164,9 +198,17 @@ const DateRangePicker = ({
                 onDayMouseLeave={handleDayMouseLeave}
                 modifiers={{
                   hoverRange: (date) => isDateInHoverRange(date),
+                  arrivalSelected: (date) => 
+                    dateRange.from !== undefined && 
+                    date.getTime() === dateRange.from.getTime(),
                 }}
                 modifiersStyles={{
                   hoverRange: { backgroundColor: 'rgba(94, 107, 93, 0.1)' },
+                  arrivalSelected: { 
+                    backgroundColor: 'rgb(72, 96, 70)', 
+                    color: 'white',
+                    fontWeight: 'bold' 
+                  },
                 }}
                 disabled={(date) => {
                   // Disable dates that are already reserved
