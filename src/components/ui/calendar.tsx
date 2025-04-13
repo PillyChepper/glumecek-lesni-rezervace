@@ -12,9 +12,8 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
 };
 
 // Define the caption props interface properly to match react-day-picker expectations
-interface CaptionProps {
+interface CaptionProps extends React.HTMLAttributes<HTMLDivElement> {
   displayMonth: Date;
-  className?: string;
 }
 
 function Calendar({
@@ -101,9 +100,9 @@ function Calendar({
             </button>
           );
         },
-        Caption: ({ displayMonth, className }: CaptionProps) => {
+        Caption: ({ displayMonth, className, ...props }: CaptionProps) => {
           return (
-            <div className={cn("flex justify-center pt-1 relative items-center", className)}>
+            <div {...props} className={cn("flex justify-center pt-1 relative items-center", className)}>
               <h2 className="text-sm font-medium">
                 {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
               </h2>
