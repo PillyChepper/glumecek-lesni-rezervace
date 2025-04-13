@@ -6,7 +6,7 @@ import AboutSection from '@/components/sections/AboutSection';
 import AccommodationSection from '@/components/sections/AccommodationSection';
 import LocationSection from '@/components/sections/LocationSection';
 import PricingSection from '@/components/sections/PricingSection';
-import CalendarSection from '@/components/sections/CalendarSection';
+import ReservationCTASection from '@/components/sections/ReservationCTASection';
 
 const Index = () => {
   console.log("Index page rendering");
@@ -19,7 +19,7 @@ const Index = () => {
       <AccommodationSection />
       <LocationSection />
       <PricingSection />
-      <CalendarSection />
+      <ReservationCTASection />
       <Footer />
     </div>
   );
