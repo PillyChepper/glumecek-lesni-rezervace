@@ -1,16 +1,13 @@
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format } from "date-fns";
-import { cs } from "date-fns/locale";
-import { cn } from "@/lib/utils";
+import DatePickerInput from "./date-picker/DatePickerInput";
+import DateRangeCalendar from "./date-picker/DateRangeCalendar";
 
 export type DateRange = {
   from: Date | undefined;
@@ -123,14 +120,6 @@ const DateRangePicker = ({
     setHoverDate(undefined);
   };
 
-  // Function to check if a date is in the hover range
-  const isDateInHoverRange = (date: Date) => {
-    if (selectingDeparture && dateRange.from && hoverDate && date >= dateRange.from && date <= hoverDate) {
-      return true;
-    }
-    return false;
-  };
-
   // Make sure to reset selectingDeparture if arrival date is removed
   useEffect(() => {
     if (!dateRange.from) {
@@ -148,90 +137,32 @@ const DateRangePicker = ({
         <Popover open={open} onOpenChange={handleOpenChange}>
           <div className="flex flex-col md:flex-row gap-4 flex-1">
             <PopoverTrigger asChild>
-              <Button
+              <DatePickerInput
+                date={dateRange.from}
+                label="Příjezd"
                 onClick={handleArrivalTriggerClick}
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !dateRange.from && "text-muted-foreground",
-                  !selectingDeparture && open && "ring-2 ring-forest-400 ring-offset-2",
-                  "h-12"
-                )}
-              >
-                {dateRange.from ? (
-                  format(dateRange.from, "P", { locale: cs })
-                ) : (
-                  <span>Příjezd</span>
-                )}
-                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-              </Button>
+                isActive={!selectingDeparture && open}
+              />
             </PopoverTrigger>
             
-            <Button
-              variant={"outline"}
+            <DatePickerInput
+              date={dateRange.to}
+              label="Odjezd"
               onClick={handleDepartureTriggerClick}
-              className={cn(
-                "w-full justify-start text-left font-normal",
-                !dateRange.to && "text-muted-foreground",
-                selectingDeparture && open && "ring-2 ring-forest-400 ring-offset-2",
-                "h-12"
-              )}
+              isActive={selectingDeparture && open}
               disabled={!dateRange.from}
-            >
-              {dateRange.to ? (
-                format(dateRange.to, "P", { locale: cs })
-              ) : (
-                <span>Odjezd</span>
-              )}
-              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-            </Button>
+            />
             
             <PopoverContent className="w-auto p-0" align="start">
-              <div className="p-2 text-center text-sm font-medium">
-                {selectingDeparture ? "Vyberte den odjezdu" : "Vyberte den příjezdu"}
-              </div>
-              <Calendar
-                mode="single"
-                selected={selectingDeparture ? dateRange.to : dateRange.from}
+              <DateRangeCalendar
+                selectedDate={selectingDeparture ? dateRange.to : dateRange.from}
                 onSelect={handleDateSelect}
                 onDayMouseEnter={handleDayMouseEnter}
                 onDayMouseLeave={handleDayMouseLeave}
-                modifiers={{
-                  hoverRange: (date) => isDateInHoverRange(date),
-                  arrivalSelected: (date) => 
-                    dateRange.from !== undefined && 
-                    date.getTime() === dateRange.from.getTime(),
-                }}
-                modifiersStyles={{
-                  hoverRange: { backgroundColor: 'rgba(94, 107, 93, 0.1)' },
-                  arrivalSelected: { 
-                    backgroundColor: 'rgb(72, 96, 70)', 
-                    color: 'white',
-                    fontWeight: 'bold' 
-                  },
-                }}
-                disabled={(date) => {
-                  // Disable dates that are already reserved
-                  if (disabledDates.some(
-                    (disabledDate) =>
-                      disabledDate.getDate() === date.getDate() &&
-                      disabledDate.getMonth() === date.getMonth() &&
-                      disabledDate.getFullYear() === date.getFullYear()
-                  )) {
-                    return true;
-                  }
-                  
-                  // When selecting departure date, disable dates before arrival date
-                  if (selectingDeparture && dateRange.from) {
-                    return date < dateRange.from;
-                  }
-                  
-                  return false;
-                }}
-                locale={cs}
-                numberOfMonths={2}
-                showOutsideDays={false}
-                className="pointer-events-auto border-t"
+                isSelectingDeparture={selectingDeparture}
+                arrivalDate={dateRange.from}
+                disabledDates={disabledDates}
+                hoverDate={hoverDate}
               />
             </PopoverContent>
           </div>
