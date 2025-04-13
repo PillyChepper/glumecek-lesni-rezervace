@@ -11,7 +11,8 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
   onDayMouseLeave?: DayMouseEventHandler;
 };
 
-// Define the caption props interface explicitly matching what react-day-picker expects
+// Define the caption props interface to match react-day-picker expectations
+// This is the key fix - making sure we have the right type definition
 interface CaptionProps {
   displayMonth: Date;
   className?: string;
@@ -101,8 +102,11 @@ function Calendar({
             </button>
           );
         },
-        // Use the proper interface for Caption props
-        Caption: ({ displayMonth, className }: CaptionProps) => {
+        Caption: (props: CaptionProps) => {
+          // Using the properly typed props parameter - key fix
+          // Explicitly destructuring displayMonth and className from the props object
+          const { displayMonth, className } = props;
+          
           return (
             <div className={cn("flex justify-center pt-1 relative items-center", className)}>
               <h2 className="text-sm font-medium">
