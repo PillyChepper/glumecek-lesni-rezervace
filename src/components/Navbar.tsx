@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Shield } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from 'react-router-dom';
 
@@ -78,6 +77,12 @@ const Navbar = () => {
           <Link to="/rezervace">
             <Button className="bg-forest-600 hover:bg-forest-700">
               Rezervace
+            </Button>
+          </Link>
+          <Link to="/admin">
+            <Button variant="outline" className="flex items-center gap-2">
+              <Shield size={16} />
+              Admin
             </Button>
           </Link>
         </div>
@@ -169,6 +174,14 @@ const Navbar = () => {
             <Button className="w-full bg-forest-600 hover:bg-forest-700">
               Rezervace
             </Button>
+          </Link>
+          <Link 
+            to="/admin"
+            onClick={() => setIsMenuOpen(false)}
+            className="text-forest-800 py-2 border-b border-gray-100 flex items-center gap-2"
+          >
+            <Shield size={16} />
+            Admin
           </Link>
         </div>
       </div>
