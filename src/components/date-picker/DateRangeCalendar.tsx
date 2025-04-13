@@ -1,4 +1,3 @@
-
 import { Calendar } from "@/components/ui/calendar";
 import { isSameDay, isAfter, isBefore, isWithinInterval } from "date-fns";
 import { useMemo } from "react";
@@ -27,7 +26,6 @@ const DateRangeCalendar = ({
   onDayMouseLeave,
   hoverDate,
 }: DateRangeCalendarProps) => {
-  // Create a map of disabled dates for faster lookup
   const disabledDatesMap = useMemo(() => {
     const map = new Map<string, boolean>();
     
@@ -42,34 +40,27 @@ const DateRangeCalendar = ({
     return map;
   }, [disabledDates]);
   
-  // Function to check if a date is disabled
   const isDateDisabled = (date: Date) => {
     return disabledDatesMap.has(date.toDateString());
   };
   
-  // Function to determine if a day is in the hovered range
   const isInHoverRange = (day: Date) => {
     if (isSelectingDeparture && arrivalDate && hoverDate && !isDateDisabled(day)) {
       if (isAfter(hoverDate, arrivalDate)) {
-        // Hover date is after arrival date (normal forward selection)
         return isWithinInterval(day, { start: arrivalDate, end: hoverDate });
       } else if (isBefore(hoverDate, arrivalDate)) {
-        // Hover date is before arrival date (backward selection)
         return isWithinInterval(day, { start: hoverDate, end: arrivalDate });
       }
     }
     return false;
   };
   
-  // Function to check if a date is the arrival date
   const isArrivalDate = (day: Date) => {
     return arrivalDate ? isSameDay(day, arrivalDate) : false;
   };
   
-  // Set modifiers for the days
   const modifiers = useMemo(() => {
     return {
-      // Always apply arrivalSelected to the arrival date, regardless of hover state
       hoverRange: (day: Date) => isInHoverRange(day) && !isArrivalDate(day),
       arrivalSelected: (day: Date) => isArrivalDate(day),
       fullyReserved: (day: Date) => isDateDisabled(day),
@@ -78,9 +69,7 @@ const DateRangeCalendar = ({
     };
   }, [arrivalDate, selectedDate, hoverDate, disabledDatesMap]);
 
-  // Custom styles for the calendar
   const calendarStyles = {
-    // Apply custom styles with React CSS object syntax instead of string literals
     ".arrival-date": {
       position: "relative",
     },
@@ -128,4 +117,3 @@ const DateRangeCalendar = ({
 };
 
 export default DateRangeCalendar;
-
