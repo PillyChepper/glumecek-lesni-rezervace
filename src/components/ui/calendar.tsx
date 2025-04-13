@@ -99,7 +99,7 @@ function Calendar({
             </button>
           );
         },
-        // Fix: Properly type the Caption component props
+        // Fix: Properly type the Caption component and remove the className reference
         Caption: (props: { displayMonth: Date }) => (
           <div className="flex justify-center pt-1 relative items-center">
             <h2 className="text-sm font-medium">
