@@ -128,14 +128,14 @@ const DateRangePicker = ({
   }, [dateRange.from]);
 
   return (
-    <div className="w-full space-y-6">
-      <h2 className="text-xl md:text-2xl font-display font-medium text-forest-800">
-        Najděte si své datum návštěvy
+    <div className="w-full space-y-6 text-center">
+      <h2 className="text-xl md:text-2xl font-display font-medium text-forest-800 text-center">
+        Přijeďte si k nám odpočinout
       </h2>
       
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
         <Popover open={open} onOpenChange={handleOpenChange}>
-          <div className="flex flex-col md:flex-row gap-4 flex-1">
+          <div className="flex flex-col md:flex-row gap-4 flex-1 justify-center items-center">
             <div className="md:w-[130px] w-full">
               <PopoverTrigger asChild>
                 <DatePickerInput
@@ -185,3 +185,4 @@ const DateRangePicker = ({
 };
 
 export default DateRangePicker;
+
