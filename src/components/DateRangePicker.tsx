@@ -174,7 +174,7 @@ const DateRangePicker = ({
         
         <Button 
           onClick={handleReservationClick}
-          className="bg-forest-600 hover:bg-forest-700 h-12 md:w-[180px] w-full"
+          className="bg-forest-600 hover:bg-forest-700 h-12 md:w-[180px] w-full text-white"
           disabled={!dateRange.from || !dateRange.to}
         >
           REZERVOVAT
