@@ -2,11 +2,12 @@
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { DateRange } from '@/components/DateRangePicker';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ReservationDatePicker from '@/components/reservation/ReservationDatePicker';
 import ReservationSummary from '@/components/reservation/ReservationSummary';
 import ContactForm from '@/components/reservation/ContactForm';
+import { useReservationDates } from '@/hooks/useReservationDates';
+import { Spinner } from '@/components/ui/spinner';
 
 const Rezervace = () => {
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -16,6 +17,7 @@ const Rezervace = () => {
   const [showContactForm, setShowContactForm] = useState(false);
   
   const { toast } = useToast();
+  const { disabledDates, loading } = useReservationDates();
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,15 +31,9 @@ const Rezervace = () => {
       return;
     }
     
-    // Check if required fields are filled - the ContactForm component will handle validation of required fields
+    // ContactForm now handles the form submission and API call
     
-    // In a real application, this would send data to a backend
-    toast({
-      title: "Rezervace odeslána",
-      description: `Vaše rezervace byla úspěšně odeslána. Brzy vás budeme kontaktovat.`,
-    });
-
-    // Reset form
+    // Just reset the state in this component
     setShowContactForm(false);
     setDateRange({ from: undefined, to: undefined });
   };
@@ -45,28 +41,25 @@ const Rezervace = () => {
   const handleReservationClick = () => {
     setShowContactForm(true);
   };
-
-  const disabledDates = [
-    new Date(2025, 3, 15),
-    new Date(2025, 3, 16),
-    new Date(2025, 3, 17),
-    new Date(2025, 3, 18),
-  ];
   
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-      
       <div className="pt-24 pb-16 px-4">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-3xl md:text-4xl font-display font-medium mb-8 text-forest-800 text-center">Rezervace pobytu</h1>
           
-          <ReservationDatePicker
-            dateRange={dateRange}
-            onDateChange={setDateRange}
-            onReservationClick={handleReservationClick}
-            disabledDates={disabledDates}
-          />
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <Spinner className="h-8 w-8 text-forest-600" />
+            </div>
+          ) : (
+            <ReservationDatePicker
+              dateRange={dateRange}
+              onDateChange={setDateRange}
+              onReservationClick={handleReservationClick}
+              disabledDates={disabledDates}
+            />
+          )}
 
           {dateRange.from && dateRange.to && (
             <ReservationSummary dateRange={dateRange} />

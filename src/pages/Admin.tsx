@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Table, 
   TableBody, 
@@ -27,67 +27,51 @@ import {
 } from "@/components/ui/sidebar";
 import { Calendar, Home, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-
-// Mock reservation data - would typically come from a database
-const mockReservations = [
-  {
-    id: "1",
-    name: "Jan Novák",
-    email: "jan.novak@example.com",
-    phone: "+420 123 456 789",
-    startDate: new Date(2025, 5, 15),
-    endDate: new Date(2025, 5, 20),
-    people: 2,
-    created: new Date(2025, 4, 10),
-    status: "confirmed"
-  },
-  {
-    id: "2",
-    name: "Eva Svobodová",
-    email: "eva.svobodova@example.com",
-    phone: "+420 987 654 321",
-    startDate: new Date(2025, 6, 5),
-    endDate: new Date(2025, 6, 12),
-    people: 4,
-    created: new Date(2025, 5, 25),
-    status: "pending"
-  },
-  {
-    id: "3",
-    name: "Petr Černý",
-    email: "petr.cerny@example.com",
-    phone: "+420 555 666 777",
-    startDate: new Date(2025, 7, 10),
-    endDate: new Date(2025, 7, 17),
-    people: 3,
-    created: new Date(2025, 6, 30),
-    status: "confirmed"
-  }
-];
-
-type ReservationStatus = "confirmed" | "pending" | "cancelled";
-
-interface Reservation {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  startDate: Date;
-  endDate: Date;
-  people: number;
-  created: Date;
-  status: ReservationStatus;
-}
+import { supabase, type Reservation } from "@/lib/supabase/reservations";
+import { Spinner } from "@/components/ui/spinner";
 
 const Admin = () => {
-  const [reservations] = useState<Reservation[]>(mockReservations);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const getStatusColor = (status: ReservationStatus) => {
+  useEffect(() => {
+    async function fetchReservations() {
+      try {
+        const { data, error } = await supabase
+          .from('reservations')
+          .select('*')
+          .order('arrival_date', { ascending: true });
+        
+        if (error) throw error;
+        
+        setReservations(data || []);
+      } catch (err) {
+        console.error('Error fetching reservations:', err);
+        setError('Nepodařilo se načíst rezervace');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchReservations();
+  }, []);
+
+  const getStatusColor = (status: Reservation['status']) => {
     switch(status) {
       case "confirmed": return "bg-green-100 text-green-800";
       case "pending": return "bg-yellow-100 text-yellow-800";
       case "cancelled": return "bg-red-100 text-red-800";
       default: return "";
+    }
+  };
+
+  const getStatusText = (status: Reservation['status']) => {
+    switch(status) {
+      case "confirmed": return "Potvrzeno";
+      case "pending": return "Čeká na potvrzení";
+      case "cancelled": return "Zrušeno";
+      default: return status;
     }
   };
 
@@ -101,42 +85,60 @@ const Admin = () => {
             <SidebarTrigger />
           </div>
 
-          <Table>
-            <TableCaption>Seznam všech rezervací</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Jméno</TableHead>
-                <TableHead>Kontakt</TableHead>
-                <TableHead>Datum pobytu</TableHead>
-                <TableHead>Osoby</TableHead>
-                <TableHead>Vytvořeno</TableHead>
-                <TableHead>Stav</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {reservations.map((reservation) => (
-                <TableRow key={reservation.id}>
-                  <TableCell className="font-medium">{reservation.name}</TableCell>
-                  <TableCell>
-                    <div>{reservation.email}</div>
-                    <div className="text-sm text-muted-foreground">{reservation.phone}</div>
-                  </TableCell>
-                  <TableCell>
-                    {format(reservation.startDate, "d. MMMM", { locale: cs })} - {format(reservation.endDate, "d. MMMM yyyy", { locale: cs })}
-                  </TableCell>
-                  <TableCell>{reservation.people}</TableCell>
-                  <TableCell>{format(reservation.created, "d.M.yyyy", { locale: cs })}</TableCell>
-                  <TableCell>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(reservation.status)}`}>
-                      {reservation.status === "confirmed" && "Potvrzeno"}
-                      {reservation.status === "pending" && "Čeká na potvrzení"}
-                      {reservation.status === "cancelled" && "Zrušeno"}
-                    </span>
-                  </TableCell>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <Spinner className="h-8 w-8 text-forest-600" />
+            </div>
+          ) : error ? (
+            <div className="text-center text-red-500 p-4">{error}</div>
+          ) : (
+            <Table>
+              <TableCaption>Seznam všech rezervací</TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Jméno</TableHead>
+                  <TableHead>Kontakt</TableHead>
+                  <TableHead>Datum pobytu</TableHead>
+                  <TableHead>Osoby</TableHead>
+                  <TableHead>Vytvořeno</TableHead>
+                  <TableHead>Stav</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {reservations.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                      Zatím nejsou žádné rezervace
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  reservations.map((reservation) => (
+                    <TableRow key={reservation.id}>
+                      <TableCell className="font-medium">
+                        {reservation.first_name} {reservation.last_name}
+                      </TableCell>
+                      <TableCell>
+                        <div>{reservation.email}</div>
+                        <div className="text-sm text-muted-foreground">{reservation.phone}</div>
+                      </TableCell>
+                      <TableCell>
+                        {format(new Date(reservation.arrival_date), "d. MMMM", { locale: cs })} - {format(new Date(reservation.departure_date), "d. MMMM yyyy", { locale: cs })}
+                      </TableCell>
+                      <TableCell>{reservation.number_of_guests}</TableCell>
+                      <TableCell>
+                        {reservation.created_at && format(new Date(reservation.created_at), "d.M.yyyy", { locale: cs })}
+                      </TableCell>
+                      <TableCell>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(reservation.status)}`}>
+                          {getStatusText(reservation.status)}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          )}
         </SidebarInset>
       </div>
     </SidebarProvider>

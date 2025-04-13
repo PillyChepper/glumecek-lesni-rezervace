@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { DateRange } from '@/components/DateRangePicker';
+import { useToast } from '@/components/ui/use-toast';
+import { createReservation } from '@/lib/supabase/reservations';
 
 interface ContactFormProps {
   dateRange: DateRange;
@@ -21,7 +24,11 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
   const [numOfGuests, setNumOfGuests] = useState<number>(2);
   const [numOfPets, setNumOfPets] = useState<number>(0);
   const [specialRequests, setSpecialRequests] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('bank-transfer');
+  const [paymentMethod, setPaymentMethod] = useState<'bank-transfer' | 'cash'>('bank-transfer');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleGuestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNumOfGuests(Number(e.target.value));
@@ -31,12 +38,83 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
     setNumOfPets(Number(e.target.value));
   };
 
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!dateRange.from || !dateRange.to) {
+      toast({
+        title: "Chyba při rezervaci",
+        description: "Prosím vyberte datum příjezdu a odjezdu",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!firstName || !lastName || !email || !phone) {
+      toast({
+        title: "Chyba při rezervaci",
+        description: "Prosím vyplňte všechny povinné údaje",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      const { data, error } = await createReservation({
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone,
+        arrival_date: dateRange.from.toISOString(),
+        departure_date: dateRange.to.toISOString(),
+        number_of_guests: numOfGuests,
+        number_of_pets: numOfPets,
+        special_requests: specialRequests,
+        payment_method: paymentMethod
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Rezervace odeslána",
+        description: "Vaše rezervace byla úspěšně odeslána. Brzy vás budeme kontaktovat.",
+      });
+      
+      // Call the original onSubmit to maintain existing behavior
+      onSubmit(e);
+      
+      // Reset form
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPhone('');
+      setNumOfGuests(2);
+      setNumOfPets(0);
+      setSpecialRequests('');
+      setPaymentMethod('bank-transfer');
+      
+      // Navigate to homepage after submission
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.error('Error creating reservation:', error);
+      toast({
+        title: "Chyba při rezervaci",
+        description: "Došlo k chybě při odesílání rezervace. Prosím zkuste to znovu později.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div>
       <h2 className="text-xl md:text-2xl font-display font-medium mb-4 text-forest-700">Vyplňte své údaje</h2>
       
       <Card>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleFormSubmit}>
           <CardHeader>
             <CardTitle>Kontaktní informace</CardTitle>
             <CardDescription>Prosím vyplňte své údaje pro dokončení rezervace</CardDescription>
@@ -122,7 +200,7 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
             
             <div className="space-y-2">
               <Label>Způsob platby</Label>
-              <RadioGroup defaultValue="bank-transfer" value={paymentMethod} onValueChange={setPaymentMethod}>
+              <RadioGroup value={paymentMethod} onValueChange={(value: 'bank-transfer' | 'cash') => setPaymentMethod(value)}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="bank-transfer" id="bank-transfer" />
                   <Label htmlFor="bank-transfer">Bankovní převod</Label>
@@ -138,8 +216,9 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
             <Button 
               className="w-full bg-forest-600 hover:bg-forest-700" 
               type="submit"
+              disabled={isSubmitting}
             >
-              Dokončit rezervaci
+              {isSubmitting ? "Odesílání..." : "Dokončit rezervaci"}
             </Button>
           </CardFooter>
         </form>
