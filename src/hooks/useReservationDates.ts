@@ -30,11 +30,13 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
         // Try to fetch from Supabase
         try {
           // Instead of using RPC which doesn't exist yet, query the reservations table directly
+          // Filter out reservations with status 'cancelled'
           const { data: reservationsData, error: reservationsError } = await supabase
             .from('reservations')
-            .select('arrival_date, departure_date')
+            .select('arrival_date, departure_date, status')
             .gte('departure_date', start.toISOString())
-            .lte('arrival_date', end.toISOString());
+            .lte('arrival_date', end.toISOString())
+            .neq('status', 'cancelled'); // Exclude cancelled reservations
 
           if (reservationsError) throw reservationsError;
 
@@ -43,6 +45,9 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
             const bookedDatesSet = new Set<string>();
             
             reservationsData.forEach(reservation => {
+              // Skip cancelled reservations (double check even though we filtered in the query)
+              if (reservation.status === 'cancelled') return;
+              
               const arrivalDate = new Date(reservation.arrival_date);
               const departureDate = new Date(reservation.departure_date);
               

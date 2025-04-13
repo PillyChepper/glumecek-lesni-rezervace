@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 import ReservationDatePicker from '@/components/reservation/ReservationDatePicker';
 import ReservationSummary from '@/components/reservation/ReservationSummary';
 import ContactForm from '@/components/reservation/ContactForm';
-import { useReservationDates } from '@/hooks/useReservationDates';
+import { useReservationDatesWithRefresh } from '@/hooks/useReservationDatesWithRefresh';
 import { Spinner } from '@/components/ui/spinner';
 
 const Rezervace = () => {
@@ -17,7 +17,7 @@ const Rezervace = () => {
   const [showContactForm, setShowContactForm] = useState(false);
   
   const { toast } = useToast();
-  const { disabledDates, loading } = useReservationDates();
+  const { disabledDates, loading } = useReservationDatesWithRefresh();
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

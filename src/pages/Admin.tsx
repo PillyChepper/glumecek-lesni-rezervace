@@ -90,6 +90,16 @@ const Admin = () => {
         prev.map(res => res.id === id ? { ...res, status: newStatus } : res)
       );
       
+      // If we're cancelling a reservation, broadcast an event that the calendar
+      // data needs to be refreshed (dates have been freed up)
+      if (action === 'cancel') {
+        // The event will be picked up by any component subscribing to it
+        const event = new CustomEvent('reservation-cancelled', { 
+          detail: { reservationId: id } 
+        });
+        window.dispatchEvent(event);
+      }
+      
       toast({
         title: action === 'confirm' ? "Rezervace potvrzena" : "Rezervace zamítnuta",
         description: `Rezervace byla úspěšně ${action === 'confirm' ? 'potvrzena' : 'zamítnuta'}.`,
