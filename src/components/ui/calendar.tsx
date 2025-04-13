@@ -95,13 +95,18 @@ function Calendar({
             </button>
           );
         },
-        Caption: ({ displayMonth }) => (
-          <div className="flex justify-center pt-1 relative items-center">
-            <h2 className="text-sm font-medium">
-              {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
-            </h2>
-          </div>
-        )
+        Caption: (props) => {
+          // Extract the displayMonth from the props without type assertion
+          const { displayMonth } = props;
+          
+          return (
+            <div className="flex justify-center pt-1 relative items-center">
+              <h2 className="text-sm font-medium">
+                {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
+              </h2>
+            </div>
+          );
+        }
       }}
       onDayMouseEnter={onDayMouseEnter}
       onDayMouseLeave={onDayMouseLeave}
