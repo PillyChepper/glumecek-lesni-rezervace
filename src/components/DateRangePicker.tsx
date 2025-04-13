@@ -32,6 +32,7 @@ const DateRangePicker = ({
 }: DateRangePickerProps) => {
   const [open, setOpen] = useState(false);
   const [selectingDeparture, setSelectingDeparture] = useState(false);
+  const [hoverDate, setHoverDate] = useState<Date | undefined>(undefined);
   
   const handleDateSelect = (date: Date | undefined) => {
     if (!selectingDeparture) {
@@ -50,6 +51,7 @@ const DateRangePicker = ({
         });
         setOpen(false);
         setSelectingDeparture(false);
+        setHoverDate(undefined);
       }
     }
   };
@@ -78,7 +80,28 @@ const DateRangePicker = ({
     if (!newOpen) {
       // Reset selecting state when closing
       setSelectingDeparture(false);
+      setHoverDate(undefined);
     }
+  };
+
+  // Function to handle mouse over events on calendar days
+  const handleDayMouseEnter = (day: Date) => {
+    if (selectingDeparture && dateRange.from) {
+      setHoverDate(day);
+    }
+  };
+
+  // Function to handle mouse leave events
+  const handleDayMouseLeave = () => {
+    setHoverDate(undefined);
+  };
+
+  // Function to check if a date is in the hover range
+  const isDateInHoverRange = (date: Date) => {
+    if (selectingDeparture && dateRange.from && hoverDate && date >= dateRange.from && date <= hoverDate) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -137,6 +160,14 @@ const DateRangePicker = ({
                 mode="single"
                 selected={selectingDeparture ? dateRange.to : dateRange.from}
                 onSelect={handleDateSelect}
+                onDayMouseEnter={handleDayMouseEnter}
+                onDayMouseLeave={handleDayMouseLeave}
+                modifiers={{
+                  hoverRange: (date) => isDateInHoverRange(date),
+                }}
+                modifiersStyles={{
+                  hoverRange: { backgroundColor: 'rgba(94, 107, 93, 0.1)' },
+                }}
                 disabled={(date) => {
                   // Disable dates that are already reserved
                   if (disabledDates.some(

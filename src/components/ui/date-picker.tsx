@@ -23,6 +23,8 @@ interface DatePickerProps {
   isSelecting?: boolean;
   minDate?: Date;
   autoOpen?: boolean;
+  onDayMouseEnter?: (day: Date) => void;
+  onDayMouseLeave?: () => void;
 }
 
 export function DatePicker({
@@ -36,6 +38,8 @@ export function DatePicker({
   isSelecting = true,
   minDate,
   autoOpen = true,
+  onDayMouseEnter,
+  onDayMouseLeave,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -99,6 +103,8 @@ export function DatePicker({
             showOutsideDays={false}
             className="pointer-events-auto border-t"
             fromDate={minDate}
+            onDayMouseEnter={onDayMouseEnter}
+            onDayMouseLeave={onDayMouseLeave}
           />
         </PopoverContent>
       </Popover>

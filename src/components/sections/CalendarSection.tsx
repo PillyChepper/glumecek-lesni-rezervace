@@ -36,7 +36,7 @@ const CalendarSection = () => {
     new Date(2025, 3, 18),
   ];
 
-  const handleSearch = () => {
+  const handleReservationClick = () => {
     // Only open contact form dialog if both dates are selected
     if (dateRange.from && dateRange.to) {
       setShowContactForm(true);
@@ -75,7 +75,7 @@ const CalendarSection = () => {
           dateRange={dateRange}
           onDateChange={setDateRange}
           disabledDates={disabledDates}
-          onSearch={handleSearch}
+          onReservationClick={handleReservationClick}
         />
 
         <Dialog open={showContactForm} onOpenChange={setShowContactForm}>
