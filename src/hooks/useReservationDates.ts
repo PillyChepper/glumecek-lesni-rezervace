@@ -2,6 +2,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
+// Define the interface for the data returned by the RPC function
+interface UnavailableDateResponse {
+  booked_date: string;
+}
+
 export function useReservationDates(startDate?: Date, endDate?: Date) {
   const [disabledDates, setDisabledDates] = useState<Date[]>([]);
   const [loading, setLoading] = useState(false);
@@ -23,7 +28,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
         }
         
         const { data, error } = await supabase
-          .rpc('get_unavailable_dates', {
+          .rpc<UnavailableDateResponse>('get_unavailable_dates', {
             start_date: start.toISOString(),
             end_date: end.toISOString()
           });
