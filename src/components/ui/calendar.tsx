@@ -102,7 +102,7 @@ function Calendar({
         },
         Caption: ({ displayMonth, ...props }: CaptionProps) => {
           return (
-            <div {...props} className={cn("flex justify-center pt-1 relative items-center", props.className)}>
+            <div className={cn("flex justify-center pt-1 relative items-center", props.className)} {...props}>
               <h2 className="text-sm font-medium">
                 {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
               </h2>
