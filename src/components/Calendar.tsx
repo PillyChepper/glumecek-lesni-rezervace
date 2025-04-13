@@ -1,11 +1,11 @@
 
-import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
-import { cs } from 'date-fns/locale';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import DateRangePicker, { DateRange } from '@/components/DateRangePicker';
+import { format } from 'date-fns';
+import { cs } from 'date-fns/locale';
 
 type CalendarProps = {
   disabledDates?: Date[];
@@ -30,7 +30,6 @@ const ReservationCalendar = ({ disabledDates = [], onBookingComplete }: Calendar
       return;
     }
 
-    // In a real application, you would send the booking data to a server here
     toast({
       title: "Rezervace odeslána",
       description: `Vaše rezervace od ${format(dateRange.from, 'P', { locale: cs })} do ${format(dateRange.to, 'P', { locale: cs })} byla úspěšně odeslána. Brzy vás budeme kontaktovat.`,
