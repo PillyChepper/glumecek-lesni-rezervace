@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { getReservationsByDateRange } from '@/lib/supabase/reservations';
+import { supabase } from '@/integrations/supabase/client';
 
 export function useReservationDates(startDate?: Date, endDate?: Date) {
   const [disabledDates, setDisabledDates] = useState<Date[]>([]);
@@ -22,30 +22,17 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
           end.setMonth(end.getMonth() + 3);
         }
         
-        const { data, error } = await getReservationsByDateRange(
-          start.toISOString(),
-          end.toISOString()
-        );
+        const { data, error } = await supabase
+          .rpc('get_unavailable_dates', {
+            start_date: start.toISOString(),
+            end_date: end.toISOString()
+          });
 
         if (error) throw error;
 
-        if (data && data.length > 0) {
-          // Process reservations to get all dates that are booked
-          const bookedDates: Date[] = [];
-          
-          data.forEach((reservation) => {
-            const arrival = new Date(reservation.arrival_date);
-            const departure = new Date(reservation.departure_date);
-            
-            // Add all dates between arrival and departure
-            const currentDate = new Date(arrival);
-            
-            while (currentDate <= departure) {
-              bookedDates.push(new Date(currentDate));
-              currentDate.setDate(currentDate.getDate() + 1);
-            }
-          });
-          
+        if (data) {
+          // Convert the dates from the function to Date objects
+          const bookedDates = data.map(row => new Date(row.booked_date));
           setDisabledDates(bookedDates);
         }
       } catch (err) {
