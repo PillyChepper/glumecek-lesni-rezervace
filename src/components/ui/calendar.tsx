@@ -62,7 +62,7 @@ function Calendar({
         day_range_middle:
           "aria-selected:bg-forest-100 aria-selected:text-forest-900",
         day_hidden: "invisible",
-        // Fix issue with captions styled_caption by providing either undefined or a string class instead of an object
+        // Fix issue with styled_caption by providing either undefined or a string
         caption_dropdowns: "",
         // Add any missing class names explicitly
         ...classNames,
@@ -96,11 +96,11 @@ function Calendar({
             </button>
           );
         },
-        // Fix for the caption component
-        Caption: (props) => (
+        // Fix for the Caption component - removed the className reference
+        Caption: ({ displayMonth }) => (
           <div className="flex justify-center pt-1 relative items-center">
             <h2 className="text-sm font-medium">
-              {props.displayMonth ? props.displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
+              {displayMonth ? displayMonth.toLocaleDateString('cs', { month: 'long', year: 'numeric' }) : ''}
             </h2>
           </div>
         )
