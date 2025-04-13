@@ -25,38 +25,93 @@ import {
   SidebarTrigger,
   SidebarInset
 } from "@/components/ui/sidebar";
-import { Calendar, Home, Users } from "lucide-react";
+import { Calendar, Home, Users, Check, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Reservation } from "@/lib/supabase/reservations";
+import { Reservation, updateReservationStatus } from "@/lib/supabase/reservations";
 import { Spinner } from "@/components/ui/spinner";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 const Admin = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState<{id: string, action: 'confirm' | 'cancel'} | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
-    async function fetchReservations() {
-      try {
-        const { data, error } = await supabase
-          .from('reservations')
-          .select('*')
-          .order('arrival_date', { ascending: true });
-        
-        if (error) throw error;
-        
-        setReservations(data || []);
-      } catch (err) {
-        console.error('Error fetching reservations:', err);
-        setError('Nepodařilo se načíst rezervace');
-      } finally {
-        setLoading(false);
-      }
-    }
-
     fetchReservations();
   }, []);
+
+  async function fetchReservations() {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('reservations')
+        .select('*')
+        .order('arrival_date', { ascending: true });
+      
+      if (error) throw error;
+      
+      setReservations(data || []);
+    } catch (err) {
+      console.error('Error fetching reservations:', err);
+      setError('Nepodařilo se načíst rezervace');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleStatusUpdate = async () => {
+    if (!selectedReservation) return;
+    
+    try {
+      const { id, action } = selectedReservation;
+      const newStatus = action === 'confirm' ? 'confirmed' : 'cancelled';
+      
+      const { data, error } = await updateReservationStatus(id, newStatus);
+      
+      if (error) throw error;
+      
+      // Update the local state
+      setReservations(prev => 
+        prev.map(res => res.id === id ? { ...res, status: newStatus } : res)
+      );
+      
+      toast({
+        title: action === 'confirm' ? "Rezervace potvrzena" : "Rezervace zamítnuta",
+        description: `Rezervace byla úspěšně ${action === 'confirm' ? 'potvrzena' : 'zamítnuta'}.`,
+        variant: action === 'confirm' ? "default" : "destructive",
+      });
+    } catch (err) {
+      console.error('Error updating reservation status:', err);
+      toast({
+        title: "Chyba",
+        description: "Nepodařilo se aktualizovat stav rezervace.",
+        variant: "destructive",
+      });
+    } finally {
+      setSelectedReservation(null);
+      setConfirmDialogOpen(false);
+    }
+  };
+
+  const openConfirmDialog = (id: string, action: 'confirm' | 'cancel') => {
+    setSelectedReservation({ id, action });
+    setConfirmDialogOpen(true);
+  };
 
   const getStatusColor = (status: Reservation['status']) => {
     switch(status) {
@@ -82,7 +137,7 @@ const Admin = () => {
         <AdminSidebar />
         <SidebarInset className="px-4 py-6 md:px-8">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Rezervace</h1>
+            <h1 className="section-title">Rezervace</h1>
             <SidebarTrigger />
           </div>
 
@@ -103,12 +158,13 @@ const Admin = () => {
                   <TableHead>Osoby</TableHead>
                   <TableHead>Vytvořeno</TableHead>
                   <TableHead>Stav</TableHead>
+                  <TableHead>Akce</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {reservations.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                       Zatím nejsou žádné rezervace
                     </TableCell>
                   </TableRow>
@@ -134,12 +190,67 @@ const Admin = () => {
                           {getStatusText(reservation.status)}
                         </span>
                       </TableCell>
+                      <TableCell>
+                        <div className="flex space-x-2">
+                          {reservation.status === 'pending' && (
+                            <>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="flex items-center text-green-600 border-green-600 hover:bg-green-50"
+                                onClick={() => openConfirmDialog(reservation.id!, 'confirm')}
+                              >
+                                <Check className="h-4 w-4 mr-1" />
+                                Potvrdit
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="flex items-center text-red-600 border-red-600 hover:bg-red-50"
+                                onClick={() => openConfirmDialog(reservation.id!, 'cancel')}
+                              >
+                                <X className="h-4 w-4 mr-1" />
+                                Zamítnout
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </TableCell>
                     </TableRow>
                   ))
                 )}
               </TableBody>
             </Table>
           )}
+
+          {/* Confirmation Dialog */}
+          <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  {selectedReservation?.action === 'confirm' 
+                    ? 'Potvrdit rezervaci' 
+                    : 'Zamítnout rezervaci'}
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  {selectedReservation?.action === 'confirm'
+                    ? 'Opravdu chcete potvrdit tuto rezervaci? Klient bude informován o potvrzení.'
+                    : 'Opravdu chcete zamítnout tuto rezervaci? Klient bude informován o zamítnutí.'}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Zrušit</AlertDialogCancel>
+                <AlertDialogAction 
+                  onClick={handleStatusUpdate}
+                  className={selectedReservation?.action === 'confirm' 
+                    ? 'bg-green-600 hover:bg-green-700 text-white' 
+                    : 'bg-red-600 hover:bg-red-700 text-white'}
+                >
+                  {selectedReservation?.action === 'confirm' ? 'Potvrdit' : 'Zamítnout'}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </SidebarInset>
       </div>
     </SidebarProvider>
