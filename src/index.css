@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -79,7 +78,7 @@
 /* Custom styles for calendar */
 .rdp {
   --rdp-accent-color: #5e6b5d;
-  --rdp-background-color: rgba(94, 107, 93, 0.1);
+  --rdp-background-color: rgba(94, 107, 93, 0.3);
   @apply font-sans;
 }
 
@@ -149,3 +148,5 @@
 .image-reveal.loaded {
   opacity: 1;
 }
+
+[&:has(.day-hoverRange)]:bg-forest-100
