@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Rezervace from "./pages/Rezervace";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Navbar from "./components/Navbar";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <Navbar /> {/* Add Navbar here to ensure it's on all routes */}
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/rezervace" element={<Rezervace />} />
