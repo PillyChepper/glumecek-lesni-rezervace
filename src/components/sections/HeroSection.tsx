@@ -34,7 +34,7 @@ const HeroSection = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/rezervace">
-            <Button size="lg" className="bg-forest-600 hover:bg-forest-700 text-white">
+            <Button size="lg" className="bg-white/20 hover:bg-white/30 text-white border-white">
               Rezervovat pobyt
             </Button>
           </Link>
