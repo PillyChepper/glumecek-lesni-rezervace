@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker, DayMouseEventHandler } from "react-day-picker";
@@ -10,6 +11,7 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
   onDayMouseLeave?: DayMouseEventHandler;
 };
 
+// Define the caption props interface explicitly matching what react-day-picker expects
 interface CaptionProps {
   displayMonth: Date;
   className?: string;
@@ -99,6 +101,7 @@ function Calendar({
             </button>
           );
         },
+        // Use the proper interface for Caption props
         Caption: ({ displayMonth, className }: CaptionProps) => {
           return (
             <div className={cn("flex justify-center pt-1 relative items-center", className)}>
