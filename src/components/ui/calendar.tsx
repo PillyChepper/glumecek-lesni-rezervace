@@ -99,9 +99,8 @@ function Calendar({
             </button>
           );
         },
-        // Fix for the Caption component without using className
-        Caption: (props) => {
-          const { displayMonth } = props;
+        // Fix for the Caption component by removing all references to className
+        Caption: ({ displayMonth }) => {
           return (
             <div className="flex justify-center pt-1 relative items-center">
               <h2 className="text-sm font-medium">
