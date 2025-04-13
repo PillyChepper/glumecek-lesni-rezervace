@@ -73,6 +73,26 @@ function Calendar({
       components={{
         IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
+        Day: (props) => {
+          const { date, displayMonth } = props;
+          const isArrivalDate = props.modifiers?.arrivalDate;
+          const isDepartureDate = props.modifiers?.departureDate;
+          
+          return (
+            <button
+              {...props}
+              data-arrival={isArrivalDate ? "true" : undefined}
+              data-departure={isDepartureDate ? "true" : undefined}
+              className={cn(
+                "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
+                props.className,
+                props.modifiers?.fullyReserved && "day-fullyReserved"
+              )}
+            >
+              {date.getDate()}
+            </button>
+          );
+        }
       }}
       onDayMouseEnter={onDayMouseEnter}
       onDayMouseLeave={onDayMouseLeave}

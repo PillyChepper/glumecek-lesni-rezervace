@@ -125,6 +125,15 @@
   background-color: rgba(234, 56, 76, 0.5) !important;
 }
 
+/* Make sure the half-day styles are applied correctly */
+[data-arrival="true"] {
+  background: linear-gradient(to right, transparent 50%, rgba(234, 56, 76, 0.5) 50%) !important;
+}
+
+[data-departure="true"] {
+  background: linear-gradient(to right, rgba(234, 56, 76, 0.5) 50%, transparent 50%) !important;
+}
+
 /* Smooth image reveal */
 .image-reveal {
   clip-path: inset(0 100% 0 0);

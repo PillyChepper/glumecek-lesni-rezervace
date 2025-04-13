@@ -1,71 +1,33 @@
 
-import { useState } from "react";
-import { 
-  Table, 
-  TableBody, 
-  TableCaption, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import { useState } from 'react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
-import { format } from "date-fns";
-import { cs } from "date-fns/locale";
-import { 
-  SidebarProvider, 
-  Sidebar, 
-  SidebarContent, 
-  SidebarHeader, 
-  SidebarGroup, 
-  SidebarGroupLabel, 
-  SidebarGroupContent, 
-  SidebarMenu, 
-  SidebarMenuItem, 
-  SidebarMenuButton, 
-  SidebarTrigger,
-  SidebarInset
-} from "@/components/ui/sidebar";
-import { Calendar, Home, Users } from "lucide-react";
-import { Link } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { format } from 'date-fns';
+import { cs } from 'date-fns/locale';
 
-// Mock reservation data - would typically come from a database
-const mockReservations = [
-  {
-    id: "1",
-    name: "Jan Novák",
-    email: "jan.novak@example.com",
-    phone: "+420 123 456 789",
-    startDate: new Date(2025, 5, 15),
-    endDate: new Date(2025, 5, 20),
-    people: 2,
-    created: new Date(2025, 4, 10),
-    status: "confirmed"
-  },
-  {
-    id: "2",
-    name: "Eva Svobodová",
-    email: "eva.svobodova@example.com",
-    phone: "+420 987 654 321",
-    startDate: new Date(2025, 6, 5),
-    endDate: new Date(2025, 6, 12),
-    people: 4,
-    created: new Date(2025, 5, 25),
-    status: "pending"
-  },
-  {
-    id: "3",
-    name: "Petr Černý",
-    email: "petr.cerny@example.com",
-    phone: "+420 555 666 777",
-    startDate: new Date(2025, 7, 10),
-    endDate: new Date(2025, 7, 17),
-    people: 3,
-    created: new Date(2025, 6, 30),
-    status: "confirmed"
-  }
-];
-
-type ReservationStatus = "confirmed" | "pending" | "cancelled";
+type ReservationStatus = 'confirmed' | 'pending' | 'cancelled';
 
 interface Reservation {
   id: string;
@@ -80,111 +42,173 @@ interface Reservation {
 }
 
 const Admin = () => {
-  const [reservations] = useState<Reservation[]>(mockReservations);
-
-  const getStatusColor = (status: ReservationStatus) => {
-    switch(status) {
-      case "confirmed": return "bg-green-100 text-green-800";
-      case "pending": return "bg-yellow-100 text-yellow-800";
-      case "cancelled": return "bg-red-100 text-red-800";
-      default: return "";
+  const [reservations, setReservations] = useState<Reservation[]>([
+    {
+      id: '1',
+      name: 'Jana Nováková',
+      email: 'jana@example.com',
+      phone: '+420 777 123 456',
+      startDate: new Date(2025, 3, 15),
+      endDate: new Date(2025, 3, 18),
+      people: 2,
+      created: new Date(2025, 2, 10),
+      status: 'confirmed',
+    },
+    {
+      id: '2',
+      name: 'Petr Svoboda',
+      email: 'petr@example.com',
+      phone: '+420 777 987 654',
+      startDate: new Date(2025, 3, 20),
+      endDate: new Date(2025, 3, 25),
+      people: 4,
+      created: new Date(2025, 2, 15),
+      status: 'pending',
     }
+  ]);
+  
+  const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
+  const handleStatusChange = (id: string, status: ReservationStatus) => {
+    setReservations(
+      reservations.map(reservation => 
+        reservation.id === id ? { ...reservation, status } : reservation
+      )
+    );
   };
-
+  
+  const handleViewDetails = (reservation: Reservation) => {
+    setSelectedReservation(reservation);
+    setIsDialogOpen(true);
+  };
+  
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <AdminSidebar />
-        <SidebarInset className="px-4 py-6 md:px-8">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Rezervace</h1>
-            <SidebarTrigger />
-          </div>
-
+    <div className="container mx-auto py-10 px-4">
+      <h1 className="text-3xl font-bold mb-8">Administrace rezervací</h1>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>Seznam rezervací</CardTitle>
+        </CardHeader>
+        <CardContent>
           <Table>
-            <TableCaption>Seznam všech rezervací</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead>Jméno</TableHead>
-                <TableHead>Kontakt</TableHead>
-                <TableHead>Datum pobytu</TableHead>
-                <TableHead>Osoby</TableHead>
-                <TableHead>Vytvořeno</TableHead>
+                <TableHead>Datum příjezdu</TableHead>
+                <TableHead>Datum odjezdu</TableHead>
                 <TableHead>Stav</TableHead>
+                <TableHead>Akce</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {reservations.map((reservation) => (
                 <TableRow key={reservation.id}>
-                  <TableCell className="font-medium">{reservation.name}</TableCell>
+                  <TableCell>{reservation.name}</TableCell>
+                  <TableCell>{format(reservation.startDate, 'P', { locale: cs })}</TableCell>
+                  <TableCell>{format(reservation.endDate, 'P', { locale: cs })}</TableCell>
                   <TableCell>
-                    <div>{reservation.email}</div>
-                    <div className="text-sm text-muted-foreground">{reservation.phone}</div>
+                    <div className="flex items-center gap-2">
+                      <span className={`w-3 h-3 rounded-full ${
+                        reservation.status === 'confirmed' ? 'bg-green-500' :
+                        reservation.status === 'pending' ? 'bg-amber-500' : 'bg-red-500'
+                      }`}></span>
+                      {reservation.status === 'confirmed' ? 'Potvrzeno' :
+                       reservation.status === 'pending' ? 'Čeká na potvrzení' : 'Zrušeno'}
+                    </div>
                   </TableCell>
                   <TableCell>
-                    {format(reservation.startDate, "d. MMMM", { locale: cs })} - {format(reservation.endDate, "d. MMMM yyyy", { locale: cs })}
-                  </TableCell>
-                  <TableCell>{reservation.people}</TableCell>
-                  <TableCell>{format(reservation.created, "d.M.yyyy", { locale: cs })}</TableCell>
-                  <TableCell>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(reservation.status)}`}>
-                      {reservation.status === "confirmed" && "Potvrzeno"}
-                      {reservation.status === "pending" && "Čeká na potvrzení"}
-                      {reservation.status === "cancelled" && "Zrušeno"}
-                    </span>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleViewDetails(reservation)}
+                      >
+                        Detail
+                      </Button>
+                      {reservation.status === 'pending' && (
+                        <Button 
+                          variant="default" 
+                          size="sm"
+                          className="bg-green-600 hover:bg-green-700"
+                          onClick={() => handleStatusChange(reservation.id, 'confirmed')}
+                        >
+                          Potvrdit
+                        </Button>
+                      )}
+                      {reservation.status !== 'cancelled' && (
+                        <Button 
+                          variant="destructive" 
+                          size="sm"
+                          onClick={() => handleStatusChange(reservation.id, 'cancelled')}
+                        >
+                          Zrušit
+                        </Button>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
-  );
-};
-
-const AdminSidebar = () => {
-  return (
-    <Sidebar>
-      <SidebarHeader className="border-b">
-        <div className="px-2 py-2">
-          <h2 className="text-xl font-bold">Admin Panel</h2>
-        </div>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Navigace</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/">
-                    <Home />
-                    <span>Přejít na web</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive>
-                  <Link to="/admin">
-                    <Calendar />
-                    <span>Rezervace</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/admin/clients">
-                    <Users />
-                    <span>Klienti</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+        </CardContent>
+      </Card>
+      
+      {selectedReservation && (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Detail rezervace</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Jméno</Label>
+                  <Input value={selectedReservation.name} readOnly className="mt-1" />
+                </div>
+                <div>
+                  <Label>Počet osob</Label>
+                  <Input value={selectedReservation.people} readOnly className="mt-1" />
+                </div>
+              </div>
+              <div>
+                <Label>Email</Label>
+                <Input value={selectedReservation.email} readOnly className="mt-1" />
+              </div>
+              <div>
+                <Label>Telefon</Label>
+                <Input value={selectedReservation.phone} readOnly className="mt-1" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Datum příjezdu</Label>
+                  <Input value={format(selectedReservation.startDate, 'P', { locale: cs })} readOnly className="mt-1" />
+                </div>
+                <div>
+                  <Label>Datum odjezdu</Label>
+                  <Input value={format(selectedReservation.endDate, 'P', { locale: cs })} readOnly className="mt-1" />
+                </div>
+              </div>
+              <div>
+                <Label>Stav rezervace</Label>
+                <div className="flex items-center gap-2 mt-2">
+                  <span className={`w-3 h-3 rounded-full ${
+                    selectedReservation.status === 'confirmed' ? 'bg-green-500' :
+                    selectedReservation.status === 'pending' ? 'bg-amber-500' : 'bg-red-500'
+                  }`}></span>
+                  {selectedReservation.status === 'confirmed' ? 'Potvrzeno' :
+                   selectedReservation.status === 'pending' ? 'Čeká na potvrzení' : 'Zrušeno'}
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={() => setIsDialogOpen(false)}>Zavřít</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
   );
 };
 

@@ -118,39 +118,7 @@ const DateRangeCalendar = ({
           departureDate: (date) => isDepartureDate(date),
           fullyReserved: (date) => isFullyReserved(date),
         }}
-        modifiersStyles={{
-          hoverRange: { backgroundColor: 'rgba(94, 107, 93, 0.1)' },
-          arrivalSelected: { 
-            backgroundColor: 'rgb(72, 96, 70)', 
-            color: 'white',
-            fontWeight: 'bold' 
-          },
-          arrivalDate: { 
-            position: 'relative',
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              right: 0,
-              width: '50%',
-              height: '100%',
-              backgroundColor: 'rgba(234, 56, 76, 0.4)',
-            }
-          },
-          departureDate: {
-            position: 'relative',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              left: 0,
-              width: '50%',
-              height: '100%',
-              backgroundColor: 'rgba(234, 56, 76, 0.4)',
-            }
-          },
-          fullyReserved: { 
-            backgroundColor: 'rgba(234, 56, 76, 0.4)', 
-          },
-        }}
+        // Remove modifiersStyles as it's not working correctly with the custom CSS
         disabled={(date) => {
           // Disable dates that are already reserved
           if (disabledDates.some(
