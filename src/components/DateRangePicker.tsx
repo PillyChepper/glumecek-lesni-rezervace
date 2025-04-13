@@ -157,7 +157,7 @@ const DateRangePicker = ({
               />
             </div>
             
-            <PopoverContent className="w-[800px] p-0" align="start" sideOffset={5}>
+            <PopoverContent className="w-[620px] p-0" align="start" sideOffset={5}>
               <DateRangeCalendar
                 selectedDate={selectingDeparture ? dateRange.to : dateRange.from}
                 onSelect={handleDateSelect}

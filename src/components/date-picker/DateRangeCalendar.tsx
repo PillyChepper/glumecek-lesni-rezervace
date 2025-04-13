@@ -1,3 +1,4 @@
+
 import { Calendar } from "@/components/ui/calendar";
 import { isSameDay, isAfter, isBefore, isWithinInterval } from "date-fns";
 import { useMemo } from "react";
@@ -97,7 +98,7 @@ const DateRangeCalendar = ({
   };
 
   return (
-    <div className="p-0 w-full max-w-full" style={calendarStyles as React.CSSProperties}>
+    <div className="p-0 w-full" style={calendarStyles as React.CSSProperties}>
       <Calendar
         mode="single"
         selected={selectedDate}
