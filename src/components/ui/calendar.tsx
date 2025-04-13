@@ -91,13 +91,17 @@ function Calendar({
                 customClass,
                 "h-9 w-9 p-0 font-normal aria-selected:opacity-100 relative"
               )}
+              data-arrival={isArrivalDate ? "true" : undefined}
+              data-departure={isDepartureDate ? "true" : undefined}
+              data-reserved={isFullyReserved ? "true" : undefined}
             >
               {date.getDate()}
             </button>
           );
         },
-        // Fix for the Caption component - completely remove any reference to className
-        Caption: ({ displayMonth }) => {
+        // Fix for the Caption component without using className
+        Caption: (props) => {
+          const { displayMonth } = props;
           return (
             <div className="flex justify-center pt-1 relative items-center">
               <h2 className="text-sm font-medium">
