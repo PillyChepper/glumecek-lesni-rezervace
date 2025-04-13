@@ -1,14 +1,16 @@
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { DatePicker } from "@/components/ui/date-picker";
-import { 
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { cs } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 
 export type DateRange = {
   from: Date | undefined;
@@ -19,48 +21,63 @@ interface DateRangePickerProps {
   dateRange: DateRange;
   onDateChange: (range: DateRange) => void;
   disabledDates?: Date[];
-  onSearch?: () => void;
+  onReservationClick?: () => void;
 }
 
 const DateRangePicker = ({
   dateRange,
   onDateChange,
   disabledDates = [],
-  onSearch,
+  onReservationClick,
 }: DateRangePickerProps) => {
+  const [open, setOpen] = useState(false);
   const [selectingDeparture, setSelectingDeparture] = useState(false);
-  const [showContactForm, setShowContactForm] = useState(false);
-
-  const handleFromChange = (date: Date | undefined) => {
-    // When arrival date is selected, automatically set up for selecting departure
-    if (date) {
-      setSelectingDeparture(true);
+  
+  const handleDateSelect = (date: Date | undefined) => {
+    if (!selectingDeparture) {
+      // Selecting arrival date
       onDateChange({
         from: date,
         to: undefined,
       });
+      setSelectingDeparture(true);
     } else {
-      setSelectingDeparture(false);
-      onDateChange({
-        from: undefined, 
-        to: undefined
-      });
+      // Selecting departure date
+      if (date && dateRange.from && date >= dateRange.from) {
+        onDateChange({
+          ...dateRange,
+          to: date,
+        });
+        setOpen(false);
+        setSelectingDeparture(false);
+      }
     }
-  };
-
-  const handleToChange = (date: Date | undefined) => {
-    if (date) {
-      setSelectingDeparture(false);
-    }
-    onDateChange({
-      ...dateRange,
-      to: date,
-    });
   };
 
   const handleReservationClick = () => {
-    if (onSearch) {
-      onSearch();
+    if (onReservationClick) {
+      onReservationClick();
+    }
+  };
+
+  const handleArrivalTriggerClick = () => {
+    setSelectingDeparture(false);
+    setOpen(true);
+  };
+
+  const handleDepartureTriggerClick = () => {
+    if (dateRange.from) {
+      setSelectingDeparture(true);
+      setOpen(true);
+    }
+  };
+
+  // Close the popover when clicking outside
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (!newOpen) {
+      // Reset selecting state when closing
+      setSelectingDeparture(false);
     }
   };
 
@@ -71,49 +88,86 @@ const DateRangePicker = ({
       </h2>
       
       <div className="flex flex-col md:flex-row gap-4">
-        <DatePicker
-          date={dateRange.from}
-          setDate={handleFromChange}
-          label="Vyberte den příjezdu"
-          placeholder="Příjezd"
-          disabledDates={disabledDates}
-          className="flex-1"
-          selectedForRange={dateRange.from && !selectingDeparture}
-          isSelecting={!dateRange.from || !selectingDeparture}
-          autoOpen={false}
-        />
-        
-        <DatePicker
-          date={dateRange.to}
-          setDate={handleToChange}
-          label="Vyberte den odjezdu"
-          placeholder="Odjezd"
-          disabledDates={[
-            ...disabledDates,
-            // Disable dates before arrival date for departure selection
-            ...(dateRange.from 
-              ? [
-                  ...Array.from(
-                    { length: dateRange.from.getDate() },
-                    (_, i) => new Date(
-                      dateRange.from!.getFullYear(),
-                      dateRange.from!.getMonth(),
-                      i + 1
-                    )
-                  )
-                ] 
-              : [])
-          ]}
-          className="flex-1"
-          selectedForRange={dateRange.to && !selectingDeparture}
-          isSelecting={selectingDeparture}
-          minDate={dateRange.from}
-          autoOpen={selectingDeparture}
-        />
+        <Popover open={open} onOpenChange={handleOpenChange}>
+          <div className="flex flex-col md:flex-row gap-4 flex-1">
+            <PopoverTrigger asChild>
+              <Button
+                onClick={handleArrivalTriggerClick}
+                variant={"outline"}
+                className={cn(
+                  "w-full justify-start text-left font-normal",
+                  !dateRange.from && "text-muted-foreground",
+                  !selectingDeparture && open && "ring-2 ring-forest-400 ring-offset-2",
+                  "h-12"
+                )}
+              >
+                {dateRange.from ? (
+                  format(dateRange.from, "P", { locale: cs })
+                ) : (
+                  <span>Příjezd</span>
+                )}
+                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            
+            <Button
+              variant={"outline"}
+              onClick={handleDepartureTriggerClick}
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !dateRange.to && "text-muted-foreground",
+                selectingDeparture && open && "ring-2 ring-forest-400 ring-offset-2",
+                "h-12"
+              )}
+              disabled={!dateRange.from}
+            >
+              {dateRange.to ? (
+                format(dateRange.to, "P", { locale: cs })
+              ) : (
+                <span>Odjezd</span>
+              )}
+              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+            </Button>
+            
+            <PopoverContent className="w-auto p-0" align="start">
+              <div className="p-2 text-center text-sm font-medium">
+                {selectingDeparture ? "Vyberte den odjezdu" : "Vyberte den příjezdu"}
+              </div>
+              <Calendar
+                mode="single"
+                selected={selectingDeparture ? dateRange.to : dateRange.from}
+                onSelect={handleDateSelect}
+                disabled={(date) => {
+                  // Disable dates that are already reserved
+                  if (disabledDates.some(
+                    (disabledDate) =>
+                      disabledDate.getDate() === date.getDate() &&
+                      disabledDate.getMonth() === date.getMonth() &&
+                      disabledDate.getFullYear() === date.getFullYear()
+                  )) {
+                    return true;
+                  }
+                  
+                  // When selecting departure date, disable dates before arrival date
+                  if (selectingDeparture && dateRange.from) {
+                    return date < dateRange.from;
+                  }
+                  
+                  return false;
+                }}
+                locale={cs}
+                numberOfMonths={2}
+                showOutsideDays={false}
+                className="pointer-events-auto border-t"
+              />
+            </PopoverContent>
+          </div>
+        </Popover>
         
         <Button 
           onClick={handleReservationClick}
           className="bg-forest-600 hover:bg-forest-700 h-12 md:w-[180px]"
+          disabled={!dateRange.from || !dateRange.to}
         >
           REZERVOVAT
         </Button>

@@ -1,7 +1,5 @@
 
-import { Link } from 'react-router-dom';
 import Section from '@/components/Section';
-import { Button } from '@/components/ui/button';
 
 const PricingSection = () => {
   return (
@@ -41,17 +39,6 @@ const PricingSection = () => {
               <span className="font-medium">do 11:00</span>
             </div>
           </div>
-        </div>
-        
-        <div className="mt-8 text-center">
-          <p className="mb-4">
-            Máte zájem o pobyt v našem lesním domku? Rezervujte si svůj termín!
-          </p>
-          <Link to="/rezervace">
-            <Button size="lg" className="bg-forest-600 hover:bg-forest-700">
-              Přejít na rezervace
-            </Button>
-          </Link>
         </div>
       </div>
     </Section>
