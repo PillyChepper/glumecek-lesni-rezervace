@@ -108,7 +108,7 @@ const DateRangeCalendar = ({
   };
 
   return (
-    <div className="p-0 w-full max-w-[600px]" style={calendarStyles as React.CSSProperties}>
+    <div className="p-0 w-full max-w-full" style={calendarStyles as React.CSSProperties}>
       <Calendar
         mode="single"
         selected={selectedDate}
@@ -128,3 +128,4 @@ const DateRangeCalendar = ({
 };
 
 export default DateRangeCalendar;
+
