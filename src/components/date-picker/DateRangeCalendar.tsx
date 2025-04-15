@@ -15,6 +15,7 @@ interface DateRangeCalendarProps {
   onDayMouseEnter?: (day: Date) => void;
   onDayMouseLeave?: () => void;
   hoverDate?: Date;
+  departureDate?: Date;
 }
 
 const DateRangeCalendar = ({
@@ -26,6 +27,7 @@ const DateRangeCalendar = ({
   onDayMouseEnter,
   onDayMouseLeave,
   hoverDate,
+  departureDate,
 }: DateRangeCalendarProps) => {
   const disabledDatesMap = useMemo(() => {
     const map = new Map<string, boolean>();
@@ -46,12 +48,11 @@ const DateRangeCalendar = ({
   };
   
   const isInRange = (day: Date) => {
-    if (selectedDate && arrivalDate && !isDateDisabled(day)) {
-      if (isAfter(selectedDate, arrivalDate)) {
-        return isWithinInterval(day, { start: arrivalDate, end: selectedDate });
-      } else if (isBefore(selectedDate, arrivalDate)) {
-        return isWithinInterval(day, { start: selectedDate, end: arrivalDate });
-      }
+    if (arrivalDate && departureDate && !isDateDisabled(day)) {
+      return isWithinInterval(day, { 
+        start: isBefore(arrivalDate, departureDate) ? arrivalDate : departureDate,
+        end: isAfter(departureDate, arrivalDate) ? departureDate : arrivalDate
+      });
     }
     return false;
   };
@@ -72,7 +73,7 @@ const DateRangeCalendar = ({
   };
 
   const isDepartureDate = (day: Date) => {
-    return selectedDate ? isSameDay(day, selectedDate) : false;
+    return departureDate ? isSameDay(day, departureDate) : false;
   };
   
   const modifiers = useMemo(() => {
@@ -83,7 +84,7 @@ const DateRangeCalendar = ({
       departureSelected: (day: Date) => isDepartureDate(day),
       fullyReserved: (day: Date) => isDateDisabled(day),
     };
-  }, [arrivalDate, selectedDate, hoverDate, disabledDatesMap]);
+  }, [arrivalDate, departureDate, hoverDate, disabledDatesMap]);
 
   const modifiersStyles = {
     selectedRange: {

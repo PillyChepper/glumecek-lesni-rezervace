@@ -165,6 +165,7 @@ const DateRangePicker = ({
                 onDayMouseLeave={handleDayMouseLeave}
                 isSelectingDeparture={selectingDeparture}
                 arrivalDate={dateRange.from}
+                departureDate={dateRange.to}
                 disabledDates={disabledDates}
                 hoverDate={hoverDate}
               />
