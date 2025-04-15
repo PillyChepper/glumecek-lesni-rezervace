@@ -43,28 +43,24 @@ function Calendar({
         row: "flex w-full mt-2",
         cell: cn(
           "h-9 w-9 text-center text-sm p-0 relative bg-white rounded-md",
-          "[&:has([aria-selected].day-range-end)]:rounded-r-md",
-          "[&:has([aria-selected])]:bg-forest-200",
-          "first:[&:has([aria-selected])]:rounded-l-md",
-          "last:[&:has([aria-selected])]:rounded-r-md",
-          "[&:has(.day-hoverRange)]:bg-forest-200 [&:has(.day-hoverRange)]:rounded-md",
-          "[&:has(.day-arrivalSelected)]:bg-forest-600 [&:has(.day-arrivalSelected)]:text-white [&:has(.day-arrivalSelected)]:rounded-md",
-          "[&:has(.day-departureSelected)]:bg-forest-600 [&:has(.day-departureSelected)]:text-white [&:has(.day-departureSelected)]:rounded-md",
+          "[&:has(.day-hoverRange)]:bg-forest-200 [&:has(.day-hoverRange)]:rounded-md [&:has(.day-hoverRange)]:overflow-hidden",
+          "[&:has(.day-arrivalSelected)]:bg-forest-600 [&:has(.day-arrivalSelected)]:text-white [&:has(.day-arrivalSelected)]:rounded-md [&:has(.day-arrivalSelected)]:overflow-hidden",
+          "[&:has(.day-departureSelected)]:bg-forest-600 [&:has(.day-departureSelected)]:text-white [&:has(.day-departureSelected)]:rounded-md [&:has(.day-departureSelected)]:overflow-hidden",
+          "[&:has([aria-selected])]:bg-forest-200 [&:has([aria-selected])]:rounded-md",
           "[&:has(.day-fullyReserved)]:bg-red-200 [&:has(.day-fullyReserved)]:rounded-md"
         ),
         day: cn(
           buttonVariants({ variant: "ghost" }),
           "h-9 w-9 p-0 font-normal aria-selected:opacity-100 rounded-md"
         ),
-        day_range_end: "day-range-end",
         day_selected:
-          "bg-forest-600 text-white hover:bg-forest-700 hover:text-white focus:bg-forest-700 focus:text-white",
+          "bg-forest-600 text-white hover:bg-forest-700 hover:text-white focus:bg-forest-700 focus:text-white rounded-md",
         day_today: "bg-accent text-accent-foreground",
         day_outside:
           "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
         day_disabled: "text-muted-foreground opacity-50",
         day_range_middle:
-          "aria-selected:bg-forest-200 aria-selected:text-forest-900",
+          "aria-selected:bg-forest-200 aria-selected:text-forest-900 rounded-md",
         day_hidden: "invisible",
         ...classNames,
       }}
