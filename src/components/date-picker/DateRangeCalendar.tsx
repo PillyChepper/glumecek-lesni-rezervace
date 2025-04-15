@@ -1,4 +1,3 @@
-
 import { Calendar } from "@/components/ui/calendar";
 import { isSameDay, isAfter, isBefore, isWithinInterval } from "date-fns";
 import { useMemo } from "react";
@@ -90,29 +89,29 @@ const DateRangeCalendar = ({
     selectedRange: {
       backgroundColor: "rgb(226, 232, 226)", // forest-200 (lighter green)
       color: "rgb(30, 34, 30)", // forest-900
-      borderRadius: "9999px", // rounded-full
+      borderRadius: "0.375rem", // rounded-md equivalent
     },
     hoverRange: {
       backgroundColor: "rgb(226, 232, 226)", // forest-200 (lighter green)
       color: "rgb(30, 34, 30)", // forest-900
-      borderRadius: "9999px", // rounded-full
+      borderRadius: "0.375rem", // rounded-md equivalent
     },
     arrivalSelected: {
       color: "white",
       backgroundColor: "rgb(74, 84, 74)", // forest-600
       fontWeight: "bold",
-      borderRadius: "9999px", // rounded-full
+      borderRadius: "0.375rem", // rounded-md equivalent
     },
     departureSelected: {
       color: "white",
       backgroundColor: "rgb(74, 84, 74)", // forest-600
       fontWeight: "bold",
-      borderRadius: "9999px", // rounded-full
+      borderRadius: "0.375rem", // rounded-md equivalent
     },
     fullyReserved: {
       backgroundColor: "rgb(254, 226, 226)", // Light red
       color: "rgb(127, 29, 29)", // Darker red
-      borderRadius: "9999px", // rounded-full
+      borderRadius: "0.375rem", // rounded-md equivalent
     },
   };
 

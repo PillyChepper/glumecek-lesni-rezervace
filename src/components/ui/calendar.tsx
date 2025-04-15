@@ -41,19 +41,19 @@ function Calendar({
           "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
         row: "flex w-full mt-2",
         cell: cn(
-          "h-9 w-9 text-center text-sm p-0 relative bg-white rounded-full",
-          "[&:has([aria-selected].day-range-end)]:rounded-r-full",
+          "h-9 w-9 text-center text-sm p-0 relative bg-white rounded-md",
+          "[&:has([aria-selected].day-range-end)]:rounded-r-md",
           "[&:has([aria-selected])]:bg-forest-200",
-          "first:[&:has([aria-selected])]:rounded-l-full",
-          "last:[&:has([aria-selected])]:rounded-r-full",
-          "[&:has(.day-hoverRange)]:bg-forest-200 [&:has(.day-hoverRange)]:rounded-full",
-          "[&:has(.day-arrivalSelected)]:bg-forest-600 [&:has(.day-arrivalSelected)]:text-white [&:has(.day-arrivalSelected)]:rounded-full",
-          "[&:has(.day-departureSelected)]:bg-forest-600 [&:has(.day-departureSelected)]:text-white [&:has(.day-departureSelected)]:rounded-full",
-          "[&:has(.day-fullyReserved)]:bg-red-200 [&:has(.day-fullyReserved)]:rounded-full"
+          "first:[&:has([aria-selected])]:rounded-l-md",
+          "last:[&:has([aria-selected])]:rounded-r-md",
+          "[&:has(.day-hoverRange)]:bg-forest-200 [&:has(.day-hoverRange)]:rounded-md",
+          "[&:has(.day-arrivalSelected)]:bg-forest-600 [&:has(.day-arrivalSelected)]:text-white [&:has(.day-arrivalSelected)]:rounded-md",
+          "[&:has(.day-departureSelected)]:bg-forest-600 [&:has(.day-departureSelected)]:text-white [&:has(.day-departureSelected)]:rounded-md",
+          "[&:has(.day-fullyReserved)]:bg-red-200 [&:has(.day-fullyReserved)]:rounded-md"
         ),
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-9 w-9 p-0 font-normal aria-selected:opacity-100 rounded-full"
+          "h-9 w-9 p-0 font-normal aria-selected:opacity-100 rounded-md"
         ),
         day_range_end: "day-range-end",
         day_selected:
