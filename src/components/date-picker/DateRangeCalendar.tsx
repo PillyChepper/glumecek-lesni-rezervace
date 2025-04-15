@@ -1,3 +1,4 @@
+
 import { Calendar } from "@/components/ui/calendar";
 import { isSameDay, isAfter, isBefore, isWithinInterval, startOfDay } from "date-fns";
 import { useMemo } from "react";
@@ -109,10 +110,7 @@ const DateRangeCalendar = ({
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap]);
 
   const disabledDatesFunc = (date: Date) => {
-    if (isDateDisabled(date)) {
-      return true;
-    }
-    return false;
+    return isDateDisabled(date);
   };
 
   return (

@@ -51,7 +51,7 @@ function Calendar({
         day_today: "bg-accent text-accent-foreground",
         day_outside:
           "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
-        day_disabled: "text-muted-foreground opacity-50 day-fullyReserved",
+        day_disabled: "text-muted-foreground opacity-50",
         day_range_middle:
           "aria-selected:bg-forest-200 aria-selected:text-forest-900 rounded-md",
         day_hidden: "invisible",
@@ -71,7 +71,6 @@ function Calendar({
         arrivalDate: "day-arrivalDate",
         departureDate: "day-departureDate",
         fullyReserved: "day-fullyReserved",
-        disabled: "day-fullyReserved",
       }}
       locale={cs}
       weekStartsOn={1}
