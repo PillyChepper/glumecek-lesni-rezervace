@@ -91,7 +91,11 @@ const DateRangeCalendar = ({
       backgroundColor: "rgb(240, 253, 244)", // Light forest green
     },
     hoverRange: {
-      backgroundColor: "rgb(240, 253, 244)", // Light forest green
+      backgroundColor: "transparent", // Remove the background color on hover
+      "& .rdp-day_selected": {
+        backgroundColor: "rgb(74, 84, 74)", // forest-600
+        color: "white",
+      }
     },
     arrivalSelected: {
       color: "white",
