@@ -45,6 +45,17 @@ const DateRangeCalendar = ({
     return disabledDatesMap.has(date.toDateString());
   };
   
+  const isInRange = (day: Date) => {
+    if (selectedDate && arrivalDate && !isDateDisabled(day)) {
+      if (isAfter(selectedDate, arrivalDate)) {
+        return isWithinInterval(day, { start: arrivalDate, end: selectedDate });
+      } else if (isBefore(selectedDate, arrivalDate)) {
+        return isWithinInterval(day, { start: selectedDate, end: arrivalDate });
+      }
+    }
+    return false;
+  };
+
   const isInHoverRange = (day: Date) => {
     if (isSelectingDeparture && arrivalDate && hoverDate && !isDateDisabled(day)) {
       if (isAfter(hoverDate, arrivalDate)) {
@@ -59,52 +70,53 @@ const DateRangeCalendar = ({
   const isArrivalDate = (day: Date) => {
     return arrivalDate ? isSameDay(day, arrivalDate) : false;
   };
+
+  const isDepartureDate = (day: Date) => {
+    return selectedDate ? isSameDay(day, selectedDate) : false;
+  };
   
   const modifiers = useMemo(() => {
     return {
-      hoverRange: (day: Date) => isInHoverRange(day) && !isArrivalDate(day),
+      hoverRange: (day: Date) => isInHoverRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
+      selectedRange: (day: Date) => isInRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       arrivalSelected: (day: Date) => isArrivalDate(day),
+      departureSelected: (day: Date) => isDepartureDate(day),
       fullyReserved: (day: Date) => isDateDisabled(day),
-      arrivalDate: (day: Date) => isArrivalDate(day),
-      departureDate: (day: Date) => selectedDate && isSameDay(day, selectedDate),
     };
   }, [arrivalDate, selectedDate, hoverDate, disabledDatesMap]);
 
-  const calendarStyles = {
-    ".arrival-date": {
-      position: "relative",
+  const modifiersStyles = {
+    selectedRange: {
+      backgroundColor: "rgb(240, 253, 244)", // Light forest green
     },
-    ".arrival-date::after": {
-      content: '""',
-      position: "absolute",
-      right: 0,
-      width: "50%",
-      height: "100%",
-      backgroundColor: "rgb(240, 253, 244)",
-      zIndex: -1,
+    hoverRange: {
+      backgroundColor: "rgb(240, 253, 244)", // Light forest green
     },
-    ".departure-date": {
-      position: "relative",
+    arrivalSelected: {
+      color: "white",
+      backgroundColor: "rgb(74, 84, 74)", // forest-600
+      fontWeight: "bold",
     },
-    ".departure-date::before": {
-      content: '""',
-      position: "absolute",
-      left: 0,
-      width: "50%",
-      height: "100%",
-      backgroundColor: "rgb(240, 253, 244)",
-      zIndex: -1,
+    departureSelected: {
+      color: "white",
+      backgroundColor: "rgb(74, 84, 74)", // forest-600
+      fontWeight: "bold",
+    },
+    fullyReserved: {
+      backgroundColor: "rgb(254, 226, 226)", // Light red
+      color: "rgb(127, 29, 29)", // Darker red
     },
   };
 
   return (
-    <div className="p-0 w-full" style={calendarStyles as React.CSSProperties}>
+    <div className="p-0 w-full">
       <Calendar
         mode="single"
         selected={selectedDate}
         onSelect={onSelect}
         className="border-0 w-full"
         modifiers={modifiers}
+        modifiersStyles={modifiersStyles}
         onDayMouseEnter={onDayMouseEnter}
         onDayMouseLeave={onDayMouseLeave}
         numberOfMonths={2}
