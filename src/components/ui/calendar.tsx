@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker, DayMouseEventHandler } from "react-day-picker";
@@ -76,6 +77,7 @@ function Calendar({
       modifiersClassNames={{
         hoverRange: "day-hoverRange",
         arrivalSelected: "day-arrivalSelected",
+        departureSelected: "day-departureSelected",
         arrivalDate: "day-arrivalDate",
         departureDate: "day-departureDate",
         fullyReserved: "day-fullyReserved",

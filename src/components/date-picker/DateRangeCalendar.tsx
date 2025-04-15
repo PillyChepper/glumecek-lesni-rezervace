@@ -1,3 +1,4 @@
+
 import { Calendar } from "@/components/ui/calendar";
 import { isSameDay, isAfter, isBefore, isWithinInterval } from "date-fns";
 import { useMemo } from "react";
@@ -95,6 +96,7 @@ const DateRangeCalendar = ({
       backgroundColor: "rgb(226, 232, 226)", // forest-200 (lighter green)
       color: "rgb(30, 34, 30)", // forest-900
       borderRadius: "0.375rem", // rounded-md equivalent
+      overflow: "hidden", // Prevent any corner bleed
     },
     arrivalSelected: {
       color: "white",

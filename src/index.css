@@ -18,3 +18,11 @@
     @apply text-xl md:text-2xl font-display text-forest-700 mb-6;
   }
 }
+
+/* Date range calendar custom styles */
+.day-hoverRange {
+  background-color: rgb(226, 232, 226) !important; /* forest-200 */
+  border-radius: 0.375rem !important; /* rounded-md */
+  overflow: hidden !important;
+}
+
