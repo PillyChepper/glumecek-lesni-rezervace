@@ -65,6 +65,7 @@ function Calendar({
       onDayMouseLeave={onDayMouseLeave}
       modifiersClassNames={{
         hoverRange: "day-hoverRange",
+        selectedRange: "day-selectedRange",
         arrivalSelected: "day-arrivalSelected",
         departureSelected: "day-departureSelected",
         arrivalDate: "day-arrivalDate",

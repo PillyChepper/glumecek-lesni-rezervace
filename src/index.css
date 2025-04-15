@@ -33,6 +33,16 @@
   box-shadow: none !important;
 }
 
+/* Selected range styles */
+.day-selectedRange {
+  background-color: rgb(226, 232, 226) !important; /* forest-200 */
+  color: rgb(30, 34, 30) !important;
+  border-radius: 0.375rem !important; /* rounded-md */
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* Fix for the specific selected day styles */
 .day-arrivalSelected, .day-departureSelected {
   color: white !important;
@@ -51,7 +61,7 @@
   overflow: hidden !important;
 }
 
-.rdp-cell:has(.day-hoverRange) {
+.rdp-cell:has(.day-hoverRange), .rdp-cell:has(.day-selectedRange) {
   background-color: rgb(226, 232, 226) !important; /* forest-200 */
   border-radius: 0.375rem !important;
   box-shadow: none !important;
