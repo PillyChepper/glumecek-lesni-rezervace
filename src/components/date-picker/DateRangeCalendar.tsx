@@ -85,51 +85,6 @@ const DateRangeCalendar = ({
     };
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap]);
 
-  const modifiersStyles = {
-    selectedRange: {
-      backgroundColor: "rgb(226, 232, 226)", // forest-200 (lighter green)
-      color: "rgb(30, 34, 30)", // forest-900
-      borderRadius: "0.375rem", // rounded-md equivalent
-      overflow: "hidden", // Prevent any corner bleed
-      border: "none",
-      boxShadow: "none",
-    },
-    hoverRange: {
-      backgroundColor: "rgb(226, 232, 226)", // forest-200 (lighter green)
-      color: "rgb(30, 34, 30)", // forest-900
-      borderRadius: "0.375rem", // rounded-md equivalent
-      overflow: "hidden", // Prevent any corner bleed
-      border: "none", 
-      boxShadow: "none",
-    },
-    arrivalSelected: {
-      color: "white",
-      backgroundColor: "rgb(74, 84, 74)", // forest-600
-      fontWeight: "bold",
-      borderRadius: "0.375rem", // Ensure rounded corners for arrival date
-      overflow: "hidden",
-      border: "none",
-      boxShadow: "none",
-    },
-    departureSelected: {
-      color: "white",
-      backgroundColor: "rgb(74, 84, 74)", // forest-600
-      fontWeight: "bold",
-      borderRadius: "0.375rem", // Ensure rounded corners for departure date
-      overflow: "hidden",
-      border: "none",
-      boxShadow: "none",
-    },
-    fullyReserved: {
-      backgroundColor: "rgb(254, 226, 226)", // Light red
-      color: "rgb(127, 29, 29)", // Darker red
-      borderRadius: "0.375rem", // Consistent rounded corners
-      overflow: "hidden",
-      border: "none",
-      boxShadow: "none",
-    },
-  };
-
   return (
     <div className="p-0 w-full">
       <Calendar
@@ -138,7 +93,6 @@ const DateRangeCalendar = ({
         onSelect={onSelect}
         className="border-0 w-full"
         modifiers={modifiers}
-        modifiersStyles={modifiersStyles}
         onDayMouseEnter={onDayMouseEnter}
         onDayMouseLeave={onDayMouseLeave}
         numberOfMonths={2}

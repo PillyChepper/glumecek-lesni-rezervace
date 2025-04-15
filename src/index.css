@@ -20,18 +20,41 @@
 }
 
 /* Date range calendar custom styles */
+.rdp-day {
+  border-radius: 0.375rem !important;
+}
+
 .day-hoverRange {
   background-color: rgb(226, 232, 226) !important; /* forest-200 */
+  color: rgb(30, 34, 30) !important;
   border-radius: 0.375rem !important; /* rounded-md */
   border: none !important;
-  overflow: hidden !important;
+  outline: none !important;
   box-shadow: none !important;
 }
 
 /* Fix for the specific selected day styles */
 .day-arrivalSelected, .day-departureSelected {
+  color: white !important;
+  background-color: rgb(74, 84, 74) !important; /* forest-600 */
   border-radius: 0.375rem !important; /* rounded-md */
-  overflow: hidden !important;
   border: none !important;
+  outline: none !important;
   box-shadow: none !important;
+}
+
+/* Override any default rdp styles that might be causing the issue */
+.rdp-cell {
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  overflow: hidden !important;
+}
+
+.rdp-cell:has(.day-hoverRange) {
+  background-color: rgb(226, 232, 226) !important; /* forest-200 */
+  border-radius: 0.375rem !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
 }
