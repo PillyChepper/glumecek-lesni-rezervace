@@ -100,18 +100,18 @@ const DateRangeCalendar = ({
       color: "white",
       backgroundColor: "rgb(74, 84, 74)", // forest-600
       fontWeight: "bold",
-      borderRadius: "0.375rem", // rounded-md equivalent
+      borderRadius: "0.375rem", // Ensure rounded corners for arrival date
     },
     departureSelected: {
       color: "white",
       backgroundColor: "rgb(74, 84, 74)", // forest-600
       fontWeight: "bold",
-      borderRadius: "0.375rem", // rounded-md equivalent
+      borderRadius: "0.375rem", // Ensure rounded corners for departure date
     },
     fullyReserved: {
       backgroundColor: "rgb(254, 226, 226)", // Light red
       color: "rgb(127, 29, 29)", // Darker red
-      borderRadius: "0.375rem", // rounded-md equivalent
+      borderRadius: "0.375rem", // Consistent rounded corners
     },
   };
 
