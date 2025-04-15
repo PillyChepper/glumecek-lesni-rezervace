@@ -53,8 +53,8 @@
   box-shadow: none !important;
 }
 
-/* Style for fully reserved/disabled dates */
-.day-fullyReserved, button[disabled] {
+/* Style for fully reserved/disabled dates - only in the calendar context */
+.rdp-day.day-fullyReserved, .rdp-day[disabled] {
   background-color: rgba(234, 56, 76, 0.15) !important; /* Light red background */
   color: #ea384c !important; /* Red text */
   text-decoration: line-through !important;
@@ -78,4 +78,3 @@
   border: none !important;
   outline: none !important;
 }
-

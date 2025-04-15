@@ -35,6 +35,7 @@ const DatePickerInput = React.forwardRef<
         "w-full justify-start text-left font-normal",
         !date && "text-muted-foreground",
         isActive && "ring-2 ring-forest-400 ring-offset-2",
+        disabled && "opacity-70 cursor-not-allowed",
         "h-12",
         className
       )}
