@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 const ReservationCTASection = () => {
   return (
-    <Section id="rezervace" className="py-16">
+    <Section id="rezervace" className="py-16 px-4">
       <div className="max-w-5xl mx-auto text-center">
         <h2 className="section-title">
           Máte zájem o pobyt v našem lesním domku?
