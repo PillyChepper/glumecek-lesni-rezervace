@@ -58,6 +58,7 @@
   background-color: rgba(234, 56, 76, 0.15) !important; /* Light red background */
   color: #ea384c !important; /* Red text */
   text-decoration: line-through !important;
+  border-radius: 0.375rem !important; /* Rounded corners for disabled dates */
   opacity: 1 !important;
   cursor: not-allowed !important;
 }
@@ -77,3 +78,4 @@
   border: none !important;
   outline: none !important;
 }
+
