@@ -53,6 +53,15 @@
   box-shadow: none !important;
 }
 
+/* Style for fully reserved/disabled dates */
+.day-fullyReserved, button[disabled] {
+  background-color: rgba(234, 56, 76, 0.15) !important; /* Light red background */
+  color: #ea384c !important; /* Red text */
+  text-decoration: line-through !important;
+  opacity: 1 !important;
+  cursor: not-allowed !important;
+}
+
 /* Override any default rdp styles that might be causing the issue */
 .rdp-cell {
   box-shadow: none !important;
