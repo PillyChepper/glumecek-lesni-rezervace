@@ -47,6 +47,10 @@ const DateRangeCalendar = ({
       .sort((a, b) => a.getTime() - b.getTime())[0];
   };
   
+  const isFullyReserved = (date: Date) => {
+    return disabledDatesMap.has(date.toDateString());
+  };
+  
   const isDateDisabled = (date: Date) => {
     if (isSelectingDeparture && arrivalDate) {
       const startDate = startOfDay(arrivalDate);
@@ -62,7 +66,7 @@ const DateRangeCalendar = ({
       }
     }
     
-    return disabledDatesMap.has(date.toDateString());
+    return isFullyReserved(date);
   };
   
   const isInRange = (day: Date) => {
@@ -100,7 +104,7 @@ const DateRangeCalendar = ({
       selectedRange: (day: Date) => isInRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       arrivalSelected: (day: Date) => isArrivalDate(day),
       departureSelected: (day: Date) => isDepartureDate(day),
-      fullyReserved: (day: Date) => isDateDisabled(day),
+      fullyReserved: (day: Date) => isFullyReserved(day),
     };
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap]);
 
