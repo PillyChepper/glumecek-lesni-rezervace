@@ -88,13 +88,13 @@ const DateRangeCalendar = ({
 
   const modifiersStyles = {
     selectedRange: {
-      backgroundColor: "rgb(74, 84, 74)", // forest-600 (darker green)
-      color: "white",
+      backgroundColor: "rgb(226, 232, 226)", // forest-200 (lighter green)
+      color: "rgb(30, 34, 30)", // forest-900
       borderRadius: "9999px", // rounded-full
     },
     hoverRange: {
-      backgroundColor: "rgb(74, 84, 74)", // forest-600 (darker green)
-      color: "white",
+      backgroundColor: "rgb(226, 232, 226)", // forest-200 (lighter green)
+      color: "rgb(30, 34, 30)", // forest-900
       borderRadius: "9999px", // rounded-full
     },
     arrivalSelected: {

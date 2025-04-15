@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker, DayMouseEventHandler } from "react-day-picker";
@@ -44,11 +43,12 @@ function Calendar({
         cell: cn(
           "h-9 w-9 text-center text-sm p-0 relative bg-white rounded-full",
           "[&:has([aria-selected].day-range-end)]:rounded-r-full",
-          "[&:has([aria-selected])]:bg-forest-600",
+          "[&:has([aria-selected])]:bg-forest-200",
           "first:[&:has([aria-selected])]:rounded-l-full",
           "last:[&:has([aria-selected])]:rounded-r-full",
-          "[&:has(.day-hoverRange)]:bg-forest-600 [&:has(.day-hoverRange)]:rounded-full",
+          "[&:has(.day-hoverRange)]:bg-forest-200 [&:has(.day-hoverRange)]:rounded-full",
           "[&:has(.day-arrivalSelected)]:bg-forest-600 [&:has(.day-arrivalSelected)]:text-white [&:has(.day-arrivalSelected)]:rounded-full",
+          "[&:has(.day-departureSelected)]:bg-forest-600 [&:has(.day-departureSelected)]:text-white [&:has(.day-departureSelected)]:rounded-full",
           "[&:has(.day-fullyReserved)]:bg-red-200 [&:has(.day-fullyReserved)]:rounded-full"
         ),
         day: cn(
@@ -63,7 +63,7 @@ function Calendar({
           "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
         day_disabled: "text-muted-foreground opacity-50",
         day_range_middle:
-          "aria-selected:bg-forest-600 aria-selected:text-white",
+          "aria-selected:bg-forest-200 aria-selected:text-forest-900",
         day_hidden: "invisible",
         ...classNames,
       }}
