@@ -65,6 +65,23 @@
   cursor: not-allowed !important;
 }
 
+/* Add specific styles to ensure disabled dates appear highlighted */
+button.rdp-button_reset[disabled],
+button.rdp-day[disabled] {
+  background-color: rgba(234, 56, 76, 0.15) !important;
+  color: #ea384c !important;
+  text-decoration: line-through !important;
+  opacity: 1 !important;
+}
+
+/* Ensure disabled dates in month view get proper highlighting */
+.rdp-cell button[disabled] {
+  background-color: rgba(234, 56, 76, 0.15) !important;
+  color: #ea384c !important;
+  text-decoration: line-through !important;
+  opacity: 1 !important;
+}
+
 /* Override any default rdp styles that might be causing the issue */
 .rdp-cell {
   box-shadow: none !important;

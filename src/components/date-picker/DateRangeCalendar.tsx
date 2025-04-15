@@ -85,6 +85,15 @@ const DateRangeCalendar = ({
     };
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap]);
 
+  // Function to customize disabled dates instead of just "true"
+  const disabledDatesFunc = (date: Date) => {
+    if (isDateDisabled(date)) {
+      // Return true to mark the date as disabled
+      return true;
+    }
+    return false;
+  };
+
   return (
     <div className="p-0 w-full">
       <Calendar
@@ -97,7 +106,7 @@ const DateRangeCalendar = ({
         onDayMouseLeave={onDayMouseLeave}
         numberOfMonths={2}
         showOutsideDays={false}
-        disabled={isDateDisabled}
+        disabled={disabledDatesFunc}
         locale={cs}
         weekStartsOn={1}
       />
