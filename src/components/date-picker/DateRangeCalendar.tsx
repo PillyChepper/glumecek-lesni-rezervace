@@ -88,28 +88,31 @@ const DateRangeCalendar = ({
 
   const modifiersStyles = {
     selectedRange: {
-      backgroundColor: "rgb(240, 253, 244)", // Light forest green
+      backgroundColor: "rgb(74, 84, 74)", // forest-600 (darker green)
+      color: "white",
+      borderRadius: "9999px", // rounded-full
     },
     hoverRange: {
-      backgroundColor: "transparent", // Remove the background color on hover
-      "& .rdp-day_selected": {
-        backgroundColor: "rgb(74, 84, 74)", // forest-600
-        color: "white",
-      }
+      backgroundColor: "rgb(74, 84, 74)", // forest-600 (darker green)
+      color: "white",
+      borderRadius: "9999px", // rounded-full
     },
     arrivalSelected: {
       color: "white",
       backgroundColor: "rgb(74, 84, 74)", // forest-600
       fontWeight: "bold",
+      borderRadius: "9999px", // rounded-full
     },
     departureSelected: {
       color: "white",
       backgroundColor: "rgb(74, 84, 74)", // forest-600
       fontWeight: "bold",
+      borderRadius: "9999px", // rounded-full
     },
     fullyReserved: {
       backgroundColor: "rgb(254, 226, 226)", // Light red
       color: "rgb(127, 29, 29)", // Darker red
+      borderRadius: "9999px", // rounded-full
     },
   };
 
