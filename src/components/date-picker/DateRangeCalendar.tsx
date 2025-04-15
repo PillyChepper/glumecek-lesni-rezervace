@@ -1,6 +1,5 @@
-
 import { Calendar } from "@/components/ui/calendar";
-import { isSameDay, isAfter, isBefore, isWithinInterval } from "date-fns";
+import { isSameDay, isAfter, isBefore, isWithinInterval, startOfDay } from "date-fns";
 import { useMemo } from "react";
 import React from "react";
 import { cs } from "date-fns/locale";
@@ -42,7 +41,27 @@ const DateRangeCalendar = ({
     return map;
   }, [disabledDates]);
   
+  const getNextDisabledDate = (fromDate: Date) => {
+    return disabledDates
+      .filter(date => isAfter(date, fromDate))
+      .sort((a, b) => a.getTime() - b.getTime())[0];
+  };
+  
   const isDateDisabled = (date: Date) => {
+    if (isSelectingDeparture && arrivalDate) {
+      const startDate = startOfDay(arrivalDate);
+      const currentDate = startOfDay(date);
+      
+      if (isBefore(currentDate, startDate)) {
+        return true;
+      }
+      
+      const nextDisabledDate = getNextDisabledDate(startDate);
+      if (nextDisabledDate && isAfter(currentDate, nextDisabledDate)) {
+        return true;
+      }
+    }
+    
     return disabledDatesMap.has(date.toDateString());
   };
   
@@ -85,10 +104,8 @@ const DateRangeCalendar = ({
     };
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap]);
 
-  // Function to customize disabled dates instead of just "true"
   const disabledDatesFunc = (date: Date) => {
     if (isDateDisabled(date)) {
-      // Return true to mark the date as disabled
       return true;
     }
     return false;
