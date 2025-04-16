@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -98,10 +97,10 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 50%;
+  width: 100%;
   height: 100%;
   background-color: rgba(234, 56, 76, 0.15);
-  clip-path: polygon(0 0, 0 100%, 100% 100%, 0 0);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
   border-radius: 0.375rem 0 0 0.375rem;
   z-index: 0;
 }
@@ -120,11 +119,49 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 50%;
+  width: 100%;
   height: 100%;
   background-color: rgba(234, 56, 76, 0.15);
-  clip-path: polygon(100% 0, 0 100%, 100% 100%, 100% 0);
+  clip-path: polygon(100% 0, 100% 100%, 0 50%);
   border-radius: 0 0.375rem 0.375rem 0;
+  z-index: 0;
+}
+
+/* Style for arrival date */
+.day-arrivalSelected {
+  position: relative;
+  background: none !important;
+}
+
+.day-arrivalSelected::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(74, 84, 74);
+  clip-path: polygon(100% 0, 100% 100%, 0 50%);
+  border-radius: 0 0.375rem 0.375rem 0;
+  z-index: 0;
+}
+
+/* Style for departure date */
+.day-departureSelected {
+  position: relative;
+  background: none !important;
+}
+
+.day-departureSelected::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(74, 84, 74);
+  clip-path: polygon(0 0, 0 100%, 100% 50%);
+  border-radius: 0.375rem 0 0 0.375rem;
   z-index: 0;
 }
 
