@@ -1,4 +1,3 @@
-
 import { Calendar } from "@/components/ui/calendar";
 import { isSameDay, isAfter, isBefore, isWithinInterval, startOfDay } from "date-fns";
 import { useMemo } from "react";
@@ -29,45 +28,51 @@ const DateRangeCalendar = ({
   departureDate,
 }: DateRangeCalendarProps) => {
   const disabledDatesMap = useMemo(() => {
-    const map = new Map<string, boolean>();
+    const map = new Map<string, { morning: boolean; afternoon: boolean }>();
     
     if (disabledDates && disabledDates.length > 0) {
       disabledDates.forEach((date) => {
-        if (date) {
-          map.set(date.toDateString(), true);
-        }
+        const existingRestrictions = map.get(date.toDateString()) || { morning: false, afternoon: false };
+        map.set(date.toDateString(), { 
+          morning: true, 
+          afternoon: true 
+        });
       });
     }
     
     return map;
   }, [disabledDates]);
-  
+
   const getNextDisabledDate = (fromDate: Date) => {
     return disabledDates
       .filter(date => isAfter(date, fromDate))
       .sort((a, b) => a.getTime() - b.getTime())[0];
   };
-  
-  const isFullyReserved = (date: Date) => {
-    return disabledDatesMap.has(date.toDateString());
-  };
-  
+
   const isDateDisabled = (date: Date) => {
+    const currentDate = startOfDay(date);
+    const dateStr = currentDate.toDateString();
+    const restrictions = disabledDatesMap.get(dateStr);
+
     if (isSelectingDeparture && arrivalDate) {
-      const startDate = startOfDay(arrivalDate);
-      const currentDate = startOfDay(date);
-      
-      if (isBefore(currentDate, startDate)) {
+      if (isBefore(currentDate, arrivalDate)) {
         return true;
       }
-      
-      const nextDisabledDate = getNextDisabledDate(startDate);
-      if (nextDisabledDate && isAfter(currentDate, nextDisabledDate)) {
+
+      if (isSameDay(currentDate, arrivalDate)) {
+        return false;
+      }
+
+      if (restrictions?.morning) {
+        return true;
+      }
+    } else {
+      if (restrictions?.afternoon) {
         return true;
       }
     }
-    
-    return isFullyReserved(date);
+
+    return false;
   };
   
   const isInRange = (day: Date) => {
@@ -105,13 +110,12 @@ const DateRangeCalendar = ({
       selectedRange: (day: Date) => isInRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       arrivalSelected: (day: Date) => isArrivalDate(day),
       departureSelected: (day: Date) => isDepartureDate(day),
-      fullyReserved: (day: Date) => isFullyReserved(day),
+      fullyReserved: (day: Date) => {
+        const restrictions = disabledDatesMap.get(day.toDateString());
+        return restrictions?.morning && restrictions?.afternoon;
+      },
     };
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap]);
-
-  const disabledDatesFunc = (date: Date) => {
-    return isDateDisabled(date);
-  };
 
   return (
     <div className="p-0 w-full">
@@ -125,7 +129,7 @@ const DateRangeCalendar = ({
         onDayMouseLeave={onDayMouseLeave}
         numberOfMonths={2}
         showOutsideDays={false}
-        disabled={disabledDatesFunc}
+        disabled={isDateDisabled}
         locale={cs}
         weekStartsOn={1}
       />
