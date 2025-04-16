@@ -33,8 +33,9 @@ const DateRangeCalendar = ({
     
     if (disabledDates && disabledDates.length > 0) {
       disabledDates.forEach((date) => {
-        const existingRestrictions = map.get(date.toDateString()) || { morning: false, afternoon: false };
-        map.set(date.toDateString(), { 
+        const dateStr = date.toDateString();
+        const existingRestrictions = map.get(dateStr) || { morning: false, afternoon: false };
+        map.set(dateStr, { 
           morning: true, 
           afternoon: true 
         });

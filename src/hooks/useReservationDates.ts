@@ -65,14 +65,18 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
           
           // Fallback to hardcoded test data
           const mockDisabledDates = [
-            new Date(2025, 4, 15),
-            new Date(2025, 4, 16),
-            new Date(2025, 5, 10),
-            new Date(2025, 5, 11)
+            new Date(2025, 3, 15), // April 15, 2025
+            new Date(2025, 3, 16), // April 16, 2025
+            new Date(2025, 3, 17), // April 17, 2025
+            new Date(2025, 3, 24), // April 24, 2025
+            new Date(2025, 4, 10), // May 10, 2025
+            new Date(2025, 4, 11), // May 11, 2025
+            new Date(2025, 4, 15), // May 15, 2025
+            new Date(2025, 4, 16)  // May 16, 2025
           ];
           
           setDisabledDates(mockDisabledDates);
-          console.log('Using fallback data for disabled dates due to missing RPC function');
+          console.log('Using fallback data for disabled dates');
         }
       } catch (err) {
         console.error('Error fetching reservation dates:', err);
