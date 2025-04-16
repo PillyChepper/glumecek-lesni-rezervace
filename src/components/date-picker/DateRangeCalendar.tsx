@@ -1,3 +1,4 @@
+
 import { Calendar } from "@/components/ui/calendar";
 import { isSameDay, isAfter, isBefore, isWithinInterval, startOfDay } from "date-fns";
 import { useMemo } from "react";
@@ -114,6 +115,14 @@ const DateRangeCalendar = ({
         const restrictions = disabledDatesMap.get(day.toDateString());
         return restrictions?.morning && restrictions?.afternoon;
       },
+      morningReserved: (day: Date) => {
+        const restrictions = disabledDatesMap.get(day.toDateString());
+        return restrictions?.morning && !restrictions?.afternoon;
+      },
+      afternoonReserved: (day: Date) => {
+        const restrictions = disabledDatesMap.get(day.toDateString());
+        return !restrictions?.morning && restrictions?.afternoon;
+      }
     };
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap]);
 

@@ -71,6 +71,8 @@ function Calendar({
         arrivalDate: "day-arrivalDate",
         departureDate: "day-departureDate",
         fullyReserved: "day-fullyReserved",
+        morningReserved: "day-morningReserved",
+        afternoonReserved: "day-afternoonReserved",
       }}
       locale={cs}
       weekStartsOn={1}

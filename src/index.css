@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -44,8 +45,6 @@
 
 /* Fix for the specific selected day styles */
 .day-arrivalSelected, .day-departureSelected {
-  color: white !important;
-  background-color: rgb(74, 84, 74) !important; /* forest-600 */
   border-radius: 0.375rem !important; /* rounded-md */
   border: none !important;
   outline: none !important;
@@ -55,60 +54,88 @@
 /* Style for fully reserved/disabled dates */
 .rdp-day.day-fullyReserved, 
 .rdp-day[disabled].day-fullyReserved {
-  background-color: rgba(234, 56, 76, 0.15) !important;
-  color: #ea384c !important;
-  text-decoration: line-through !important;
+  position: relative !important;
+  background: none !important;
   border-radius: 0.375rem !important;
   opacity: 1 !important;
   cursor: not-allowed !important;
 }
 
+/* Red background for fully reserved dates */
+.rdp-day.day-fullyReserved::before, 
+.rdp-day[disabled].day-fullyReserved::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(234, 56, 76, 0.15);
+  border-radius: 0.375rem;
+  z-index: 0;
+}
+
+/* Add strikethrough for fully reserved dates */
+.rdp-day.day-fullyReserved .rdp-day_content, 
+.rdp-day[disabled].day-fullyReserved .rdp-day_content {
+  color: #ea384c !important;
+  text-decoration: line-through !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Style for morning-only reserved dates */
+.rdp-day.day-morningReserved,
+.rdp-day[disabled].day-morningReserved {
+  position: relative !important;
+  background: none !important;
+  border-radius: 0.375rem !important;
+}
+
+.rdp-day.day-morningReserved::after,
+.rdp-day[disabled].day-morningReserved::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-color: rgba(234, 56, 76, 0.15);
+  clip-path: polygon(0 0, 0 100%, 100% 100%, 0 0);
+  border-radius: 0.375rem 0 0 0.375rem;
+  z-index: 0;
+}
+
+/* Style for afternoon-only reserved dates */
+.rdp-day.day-afternoonReserved,
+.rdp-day[disabled].day-afternoonReserved {
+  position: relative !important;
+  background: none !important;
+  border-radius: 0.375rem !important;
+}
+
+.rdp-day.day-afternoonReserved::after,
+.rdp-day[disabled].day-afternoonReserved::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background-color: rgba(234, 56, 76, 0.15);
+  clip-path: polygon(100% 0, 0 100%, 100% 100%, 100% 0);
+  border-radius: 0 0.375rem 0.375rem 0;
+  z-index: 0;
+}
+
 /* Style for dates disabled due to selection logic */
-.rdp-day[disabled]:not(.day-fullyReserved) {
+.rdp-day[disabled]:not(.day-fullyReserved):not(.day-morningReserved):not(.day-afternoonReserved) {
   background-color: rgba(128, 128, 128, 0.1) !important;
   color: rgba(128, 128, 128, 0.6) !important;
   text-decoration: none !important;
   border-radius: 0.375rem !important;
   opacity: 0.7 !important;
   cursor: not-allowed !important;
-}
-
-/* Add specific styles to ensure disabled dates appear highlighted */
-button.rdp-button_reset[disabled].day-fullyReserved,
-button.rdp-day[disabled].day-fullyReserved {
-  background-color: rgba(234, 56, 76, 0.15) !important;
-  color: #ea384c !important;
-  text-decoration: line-through !important;
-  border-radius: 0.375rem !important;
-  opacity: 1 !important;
-}
-
-/* Style for dates out of range - make them look different from occupied dates */
-button.rdp-button_reset[disabled]:not(.day-fullyReserved),
-button.rdp-day[disabled]:not(.day-fullyReserved) {
-  background-color: rgba(128, 128, 128, 0.05) !important;
-  color: rgba(128, 128, 128, 0.5) !important;
-  text-decoration: none !important;
-  border-radius: 0.375rem !important;
-  opacity: 0.7 !important;
-}
-
-/* Ensure disabled dates in month view get proper highlighting */
-.rdp-cell button[disabled].day-fullyReserved {
-  background-color: rgba(234, 56, 76, 0.15) !important;
-  color: #ea384c !important;
-  text-decoration: line-through !important;
-  border-radius: 0.375rem !important;
-  opacity: 1 !important;
-}
-
-/* Custom style for dates disabled due to selection range */
-.rdp-cell button[disabled]:not(.day-fullyReserved) {
-  background-color: rgba(128, 128, 128, 0.05) !important;
-  color: rgba(128, 128, 128, 0.5) !important;
-  text-decoration: none !important;
-  border-radius: 0.375rem !important;
-  opacity: 0.7 !important;
 }
 
 /* Override any default rdp styles that might be causing the issue */
@@ -130,12 +157,12 @@ button.rdp-day[disabled]:not(.day-fullyReserved) {
 /* Diagonal split styles for arrival/departure dates */
 .day-arrivalSelected {
   position: relative;
-  background: linear-gradient(135deg, white 50%, rgb(226, 232, 226) 50%) !important;
+  background: none !important;
 }
 
 .day-departureSelected {
   position: relative;
-  background: linear-gradient(135deg, rgb(226, 232, 226) 50%, white 50%) !important;
+  background: none !important;
 }
 
 /* Add overlay for the forest color on the active part */
@@ -148,9 +175,8 @@ button.rdp-day[disabled]:not(.day-fullyReserved) {
   height: 100%;
   background-color: rgb(74, 84, 74);
   clip-path: polygon(100% 0, 0 100%, 100% 100%);
-  opacity: 0.9;
-  pointer-events: none;
   border-radius: 0 0.375rem 0.375rem 0;
+  z-index: 0;
 }
 
 .day-departureSelected::after {
@@ -162,14 +188,49 @@ button.rdp-day[disabled]:not(.day-fullyReserved) {
   height: 100%;
   background-color: rgb(74, 84, 74);
   clip-path: polygon(0 0, 0 100%, 100% 0);
-  opacity: 0.9;
-  pointer-events: none;
   border-radius: 0.375rem 0 0 0.375rem;
+  z-index: 0;
+}
+
+/* Add background for inactive part of arrival/departure dates */
+.day-arrivalSelected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-color: white;
+  clip-path: polygon(0 0, 0 100%, 100% 0);
+  border-radius: 0.375rem 0 0 0.375rem;
+  z-index: 0;
+}
+
+.day-departureSelected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background-color: white;
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  border-radius: 0 0.375rem 0.375rem 0;
+  z-index: 0;
 }
 
 /* Ensure the date number remains visible */
-.day-arrivalSelected button, .day-departureSelected button {
+.day-arrivalSelected .rdp-day_content, 
+.day-departureSelected .rdp-day_content,
+.day-morningReserved .rdp-day_content,
+.day-afternoonReserved .rdp-day_content {
   position: relative;
   z-index: 1;
-  color: white !important;
+  color: black;
+}
+
+/* Make sure arrival/departure dates have correct text color */
+.rdp-day_selected.day-arrivalSelected .rdp-day_content,
+.rdp-day_selected.day-departureSelected .rdp-day_content {
+  color: black !important;
 }
