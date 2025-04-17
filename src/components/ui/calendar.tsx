@@ -18,6 +18,7 @@ function Calendar({
   showOutsideDays = true,
   onDayMouseEnter,
   onDayMouseLeave,
+  modifiers,
   ...props
 }: CalendarProps) {
   return (
@@ -63,6 +64,9 @@ function Calendar({
       }}
       onDayMouseEnter={onDayMouseEnter}
       onDayMouseLeave={onDayMouseLeave}
+      modifiers={{
+        ...modifiers,
+      }}
       modifiersClassNames={{
         hoverRange: "day-hoverRange",
         selectedRange: "day-selectedRange",

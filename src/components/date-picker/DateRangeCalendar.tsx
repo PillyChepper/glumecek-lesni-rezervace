@@ -106,22 +106,20 @@ const DateRangeCalendar = ({
     return departureDate ? isSameDay(day, departureDate) : false;
   };
   
-  // This function directly checks if a date is in the disabledDates array
-  // This is critical for highlighting reserved dates
+  // This function explicitly checks if a date is in the disabledDates array
   const isReservedDate = (day: Date) => {
-    // Explicitly check if this day is in the disabledDates array
-    return disabledDates.some(disabledDate => 
-      isSameDay(day, disabledDate)
-    );
+    // Check if this day is in the disabledDates array by comparing dates directly
+    return disabledDates.some(disabledDate => isSameDay(day, disabledDate));
   };
   
+  // Modifiers object with proper highlighting functions
   const modifiers = useMemo(() => {
     return {
       hoverRange: (day: Date) => isInHoverRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       selectedRange: (day: Date) => isInRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       arrivalSelected: (day: Date) => isArrivalDate(day),
       departureSelected: (day: Date) => isDepartureDate(day),
-      // Use the explicit check for reserved dates
+      // Use explicit function for reserved dates
       fullyReserved: (day: Date) => isReservedDate(day),
       morningReserved: (day: Date) => {
         const restrictions = disabledDatesMap.get(day.toDateString());
@@ -133,6 +131,8 @@ const DateRangeCalendar = ({
       }
     };
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap, disabledDates]);
+
+  console.log("Disabled dates in calendar:", disabledDates);
 
   return (
     <div className="p-0 w-full">

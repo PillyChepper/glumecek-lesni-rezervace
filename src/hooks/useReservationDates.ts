@@ -80,13 +80,14 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
     }
     
     function createTestData() {
-      // Generate more test data that matches the months shown in the UI (April and May 2025)
+      // Generate specific test data for April and May 2025 to match the UI
       const testDisabledDates = [
-        // April 2025
+        // April 2025 - Marked as if they were reserved
         new Date(2025, 3, 15), // April 15, 2025
         new Date(2025, 3, 16), // April 16, 2025
         new Date(2025, 3, 17), // April 17, 2025
         new Date(2025, 3, 18), // April 18, 2025
+        new Date(2025, 3, 11), // April 11, 2025
         new Date(2025, 3, 24), // April 24, 2025
         new Date(2025, 3, 25), // April 25, 2025
         
