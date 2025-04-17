@@ -107,7 +107,10 @@ const DateRangeCalendar = ({
   };
   
   const isReservedDate = (day: Date) => {
-    return disabledDates && disabledDates.some(date => isSameDay(date, day));
+    // Explicitly check if this day is in the disabledDates array
+    return disabledDates.some(disabledDate => 
+      isSameDay(day, disabledDate)
+    );
   };
   
   const modifiers = useMemo(() => {
@@ -116,6 +119,7 @@ const DateRangeCalendar = ({
       selectedRange: (day: Date) => isInRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       arrivalSelected: (day: Date) => isArrivalDate(day),
       departureSelected: (day: Date) => isDepartureDate(day),
+      // Use the explicit check for reserved dates
       fullyReserved: (day: Date) => isReservedDate(day),
       morningReserved: (day: Date) => {
         const restrictions = disabledDatesMap.get(day.toDateString());
