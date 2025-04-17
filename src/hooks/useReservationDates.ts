@@ -55,6 +55,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
             
             // Convert to Date objects
             const bookedDates = Array.from(bookedDatesSet).map(dateStr => new Date(dateStr));
+            console.log("Loaded reservation dates from database:", bookedDates);
             setDisabledDates(bookedDates);
           } else {
             // If no data from Supabase, use our test data
@@ -99,8 +100,8 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
         new Date(2025, 4, 25)  // May 25, 2025
       ];
       
+      console.log("Setting test disabled dates:", testDisabledDates);
       setDisabledDates(testDisabledDates);
-      console.log('Test disabled dates set:', testDisabledDates);
     }
 
     fetchReservationDates();

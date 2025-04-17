@@ -34,7 +34,7 @@ const DateRangeCalendar = ({
     if (disabledDates && disabledDates.length > 0) {
       disabledDates.forEach((date) => {
         const dateStr = date.toDateString();
-        const existingRestrictions = map.get(dateStr) || { morning: false, afternoon: false };
+        // Mark both morning and afternoon as reserved for simplicity
         map.set(dateStr, { 
           morning: true, 
           afternoon: true 
@@ -106,6 +106,8 @@ const DateRangeCalendar = ({
     return departureDate ? isSameDay(day, departureDate) : false;
   };
   
+  // This function directly checks if a date is in the disabledDates array
+  // This is critical for highlighting reserved dates
   const isReservedDate = (day: Date) => {
     // Explicitly check if this day is in the disabledDates array
     return disabledDates.some(disabledDate => 
