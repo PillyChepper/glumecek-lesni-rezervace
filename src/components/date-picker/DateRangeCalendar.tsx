@@ -106,16 +106,17 @@ const DateRangeCalendar = ({
     return departureDate ? isSameDay(day, departureDate) : false;
   };
   
+  const isReservedDate = (day: Date) => {
+    return disabledDates && disabledDates.some(date => isSameDay(date, day));
+  };
+  
   const modifiers = useMemo(() => {
     return {
       hoverRange: (day: Date) => isInHoverRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       selectedRange: (day: Date) => isInRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       arrivalSelected: (day: Date) => isArrivalDate(day),
       departureSelected: (day: Date) => isDepartureDate(day),
-      fullyReserved: (day: Date) => {
-        const restrictions = disabledDatesMap.get(day.toDateString());
-        return restrictions?.morning && restrictions?.afternoon;
-      },
+      fullyReserved: (day: Date) => isReservedDate(day),
       morningReserved: (day: Date) => {
         const restrictions = disabledDatesMap.get(day.toDateString());
         return restrictions?.morning && !restrictions?.afternoon;
@@ -125,7 +126,7 @@ const DateRangeCalendar = ({
         return !restrictions?.morning && restrictions?.afternoon;
       }
     };
-  }, [arrivalDate, departureDate, hoverDate, disabledDatesMap]);
+  }, [arrivalDate, departureDate, hoverDate, disabledDatesMap, disabledDates]);
 
   return (
     <div className="p-0 w-full">

@@ -63,7 +63,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
         } catch (supabaseErr) {
           console.error('Supabase query error:', supabaseErr);
           
-          // Fallback to hardcoded test data
+          // Use more test data to ensure it's visible
           const mockDisabledDates = [
             new Date(2025, 3, 15), // April 15, 2025
             new Date(2025, 3, 16), // April 16, 2025

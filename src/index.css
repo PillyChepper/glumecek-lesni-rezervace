@@ -79,7 +79,6 @@
 .rdp-day.day-fullyReserved .rdp-day_content, 
 .rdp-day[disabled].day-fullyReserved .rdp-day_content {
   color: #ea384c !important;
-  text-decoration: line-through !important;
   position: relative;
   z-index: 1;
 }
@@ -101,7 +100,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(234, 56, 76, 0.15);
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
   border-radius: 0.375rem 0 0 0.375rem;
   z-index: 0;
 }
@@ -123,7 +122,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(234, 56, 76, 0.15);
-  clip-path: polygon(100% 0, 100% 100%, 0 50%);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
   border-radius: 0 0.375rem 0.375rem 0;
   z-index: 0;
 }
@@ -142,7 +141,7 @@
   width: 100%;
   height: 100%;
   background-color: rgb(74, 84, 74);
-  clip-path: polygon(100% 0, 100% 100%, 0 50%);
+  clip-path: polygon(50% 0, 100% 0, 100% 100%, 0 100%);
   border-radius: 0 0.375rem 0.375rem 0;
   z-index: 0;
 }
@@ -161,7 +160,7 @@
   width: 100%;
   height: 100%;
   background-color: rgb(74, 84, 74);
-  clip-path: polygon(0 0, 0 100%, 100% 50%);
+  clip-path: polygon(0 0, 50% 0, 100% 100%, 0 100%);
   border-radius: 0.375rem 0 0 0.375rem;
   z-index: 0;
 }
@@ -192,76 +191,12 @@
   outline: none !important;
 }
 
-/* Diagonal split styles for arrival/departure dates */
-.day-arrivalSelected {
-  position: relative;
-  background: none !important;
-}
-
-.day-departureSelected {
-  position: relative;
-  background: none !important;
-}
-
-/* Add overlay for the forest color on the active part */
-.day-arrivalSelected::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(74, 84, 74);
-  clip-path: polygon(100% 0, 0 100%, 100% 100%);
-  border-radius: 0 0.375rem 0.375rem 0;
-  z-index: 0;
-}
-
-.day-departureSelected::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(74, 84, 74);
-  clip-path: polygon(0 0, 0 100%, 100% 0);
-  border-radius: 0.375rem 0 0 0.375rem;
-  z-index: 0;
-}
-
-/* Add background for inactive part of arrival/departure dates */
-.day-arrivalSelected::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
-  height: 100%;
-  background-color: white;
-  clip-path: polygon(0 0, 0 100%, 100% 0);
-  border-radius: 0.375rem 0 0 0.375rem;
-  z-index: 0;
-}
-
-.day-departureSelected::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 50%;
-  height: 100%;
-  background-color: white;
-  clip-path: polygon(100% 0, 0 0, 100% 100%);
-  border-radius: 0 0.375rem 0.375rem 0;
-  z-index: 0;
-}
-
 /* Ensure the date number remains visible */
 .day-arrivalSelected .rdp-day_content, 
 .day-departureSelected .rdp-day_content,
 .day-morningReserved .rdp-day_content,
-.day-afternoonReserved .rdp-day_content {
+.day-afternoonReserved .rdp-day_content,
+.day-fullyReserved .rdp-day_content {
   position: relative;
   z-index: 1;
   color: black;
