@@ -1,7 +1,7 @@
 
 import { Calendar } from "@/components/ui/calendar";
 import { isSameDay, isAfter, isBefore, isWithinInterval, startOfDay } from "date-fns";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import React from "react";
 import { cs } from "date-fns/locale";
 
@@ -43,6 +43,13 @@ const DateRangeCalendar = ({
     }
     
     return map;
+  }, [disabledDates]);
+
+  // Log disabled dates on component render
+  useEffect(() => {
+    if (disabledDates?.length > 0) {
+      console.log("DateRangeCalendar received disabled dates:", disabledDates);
+    }
   }, [disabledDates]);
 
   const getNextDisabledDate = (fromDate: Date) => {
@@ -109,7 +116,13 @@ const DateRangeCalendar = ({
   // This function explicitly checks if a date is in the disabledDates array
   const isReservedDate = (day: Date) => {
     // Check if this day is in the disabledDates array by comparing dates directly
-    return disabledDates.some(disabledDate => isSameDay(day, disabledDate));
+    return disabledDates.some(disabledDate => {
+      const isSame = isSameDay(day, disabledDate);
+      if (isSame) {
+        console.log("Found reserved date:", day.toISOString());
+      }
+      return isSame;
+    });
   };
   
   // Modifiers object with proper highlighting functions
@@ -131,8 +144,6 @@ const DateRangeCalendar = ({
       }
     };
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap, disabledDates]);
-
-  console.log("Disabled dates in calendar:", disabledDates);
 
   return (
     <div className="p-0 w-full">

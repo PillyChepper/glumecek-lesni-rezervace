@@ -21,6 +21,11 @@ function Calendar({
   modifiers,
   ...props
 }: CalendarProps) {
+  // Log modifiers to check what's being passed
+  React.useEffect(() => {
+    console.log("Calendar component modifiers:", modifiers);
+  }, [modifiers]);
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}

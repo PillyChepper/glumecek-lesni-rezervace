@@ -80,25 +80,30 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
     }
     
     function createTestData() {
-      // Generate specific test data for April and May 2025 to match the UI
+      // Get current date to create test data relative to today
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
+      const currentDay = today.getDate();
+      
+      // Generate dates for the current month and next month
       const testDisabledDates = [
-        // April 2025 - Marked as if they were reserved
-        new Date(2025, 3, 15), // April 15, 2025
-        new Date(2025, 3, 16), // April 16, 2025
-        new Date(2025, 3, 17), // April 17, 2025
-        new Date(2025, 3, 18), // April 18, 2025
-        new Date(2025, 3, 11), // April 11, 2025
-        new Date(2025, 3, 24), // April 24, 2025
-        new Date(2025, 3, 25), // April 25, 2025
+        // Current month - dates near today
+        new Date(currentYear, currentMonth, currentDay + 2),  // 2 days from now
+        new Date(currentYear, currentMonth, currentDay + 3),  // 3 days from now
+        new Date(currentYear, currentMonth, currentDay + 4),  // 4 days from now
+        new Date(currentYear, currentMonth, currentDay + 5),  // 5 days from now
         
-        // May 2025
-        new Date(2025, 4, 5),  // May 5, 2025
-        new Date(2025, 4, 10), // May 10, 2025
-        new Date(2025, 4, 11), // May 11, 2025
-        new Date(2025, 4, 12), // May 12, 2025
-        new Date(2025, 4, 13), // May 13, 2025
-        new Date(2025, 4, 24), // May 24, 2025
-        new Date(2025, 4, 25)  // May 25, 2025
+        // More dates in current month
+        new Date(currentYear, currentMonth, currentDay + 9),  // 9 days from now
+        new Date(currentYear, currentMonth, currentDay + 10), // 10 days from now
+        
+        // Dates in next month
+        new Date(currentYear, currentMonth + 1, 5),  
+        new Date(currentYear, currentMonth + 1, 6),
+        new Date(currentYear, currentMonth + 1, 7),
+        new Date(currentYear, currentMonth + 1, 15),
+        new Date(currentYear, currentMonth + 1, 16)
       ];
       
       console.log("Setting test disabled dates:", testDisabledDates);

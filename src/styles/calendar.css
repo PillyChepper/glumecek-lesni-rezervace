@@ -33,45 +33,51 @@
 
 /* Style for fully reserved/disabled dates - CRITICAL VISIBILITY ENHANCEMENT */
 .rdp-day.day-fullyReserved, 
-.rdp-day[aria-selected].day-fullyReserved,
+button.rdp-day.day-fullyReserved,
 .rdp-day_disabled.day-fullyReserved,
-.rdp-day[disabled].day-fullyReserved {
+.rdp-day[disabled].day-fullyReserved,
+button.rdp-day[disabled].day-fullyReserved,
+button.rdp-day_disabled.day-fullyReserved {
   position: relative !important;
   background: none !important;
   border-radius: 0.375rem !important;
   opacity: 1 !important;
   cursor: not-allowed !important;
+  pointer-events: none !important;
 }
 
 /* Red background for fully reserved dates - ENHANCED VISIBILITY */
 .rdp-day.day-fullyReserved::before, 
-.rdp-day[aria-selected].day-fullyReserved::before,
+button.rdp-day.day-fullyReserved::before,
 .rdp-day_disabled.day-fullyReserved::before,
-.rdp-day[disabled].day-fullyReserved::before {
+.rdp-day[disabled].day-fullyReserved::before,
+button.rdp-day[disabled].day-fullyReserved::before {
   content: '' !important;
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  background-color: #ea384c !important; /* Solid red with full opacity */
+  background-color: rgba(234, 56, 76, 0.9) !important; /* Slightly transparent red */
   border-radius: 0.375rem !important;
   z-index: 0 !important;
 }
 
 /* Add strikethrough for fully reserved dates */
 .rdp-day.day-fullyReserved .rdp-day_content, 
-.rdp-day[aria-selected].day-fullyReserved .rdp-day_content,
+button.rdp-day.day-fullyReserved .rdp-day_content,
 .rdp-day_disabled.day-fullyReserved .rdp-day_content,
 .rdp-day[disabled].day-fullyReserved .rdp-day_content {
   color: white !important;
   font-weight: bold !important; /* Make text bold for better visibility */
   position: relative !important;
   z-index: 1 !important;
+  text-decoration: line-through !important;
 }
 
-/* Style for morning-only reserved dates - ENHANCED VISIBILITY */
+/* Style for morning-only reserved dates */
 .rdp-day.day-morningReserved,
+button.rdp-day.day-morningReserved,
 .rdp-day[disabled].day-morningReserved {
   position: relative !important;
   background: none !important;
@@ -79,6 +85,7 @@
 }
 
 .rdp-day.day-morningReserved::after,
+button.rdp-day.day-morningReserved::after,
 .rdp-day[disabled].day-morningReserved::after {
   content: '' !important;
   position: absolute !important;
@@ -86,14 +93,15 @@
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  background-color: #ea384c !important; /* Solid red */
+  background-color: rgba(234, 56, 76, 0.9) !important; /* Slightly transparent red */
   clip-path: polygon(0 0, 100% 0, 0 100%) !important;
   border-radius: 0.375rem 0 0 0.375rem !important;
   z-index: 0 !important;
 }
 
-/* Style for afternoon-only reserved dates - ENHANCED VISIBILITY */
+/* Style for afternoon-only reserved dates */
 .rdp-day.day-afternoonReserved,
+button.rdp-day.day-afternoonReserved,
 .rdp-day[disabled].day-afternoonReserved {
   position: relative !important;
   background: none !important;
@@ -101,6 +109,7 @@
 }
 
 .rdp-day.day-afternoonReserved::after,
+button.rdp-day.day-afternoonReserved::after,
 .rdp-day[disabled].day-afternoonReserved::after {
   content: '' !important;
   position: absolute !important;
@@ -108,7 +117,7 @@
   right: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  background-color: #ea384c !important; /* Solid red */
+  background-color: rgba(234, 56, 76, 0.9) !important; /* Slightly transparent red */
   clip-path: polygon(100% 0, 100% 100%, 0 100%) !important;
   border-radius: 0 0.375rem 0.375rem 0 !important;
   z-index: 0 !important;
@@ -116,40 +125,40 @@
 
 /* Style for arrival date */
 .day-arrivalSelected {
-  position: relative;
+  position: relative !important;
   background: none !important;
 }
 
 .day-arrivalSelected::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(74, 84, 74);
-  clip-path: polygon(50% 0, 100% 0, 100% 100%, 0 100%);
-  border-radius: 0 0.375rem 0.375rem 0;
-  z-index: 0;
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: rgb(74, 84, 74) !important;
+  clip-path: polygon(50% 0, 100% 0, 100% 100%, 0 100%) !important;
+  border-radius: 0 0.375rem 0.375rem 0 !important;
+  z-index: 0 !important;
 }
 
 /* Style for departure date */
 .day-departureSelected {
-  position: relative;
+  position: relative !important;
   background: none !important;
 }
 
 .day-departureSelected::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(74, 84, 74);
-  clip-path: polygon(0 0, 50% 0, 100% 100%, 0 100%);
-  border-radius: 0.375rem 0 0 0.375rem;
-  z-index: 0;
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: rgb(74, 84, 74) !important;
+  clip-path: polygon(0 0, 50% 0, 100% 100%, 0 100%) !important;
+  border-radius: 0.375rem 0 0 0.375rem !important;
+  z-index: 0 !important;
 }
 
 /* Style for dates disabled due to selection logic */
@@ -160,22 +169,6 @@
   border-radius: 0.375rem !important;
   opacity: 0.7 !important;
   cursor: not-allowed !important;
-}
-
-/* Override any default rdp styles that might be causing the issue */
-.rdp-cell {
-  box-shadow: none !important;
-  border: none !important;
-  outline: none !important;
-  overflow: hidden !important;
-}
-
-.rdp-cell:has(.day-hoverRange), .rdp-cell:has(.day-selectedRange) {
-  background-color: rgb(226, 232, 226) !important;
-  border-radius: 0.375rem !important;
-  box-shadow: none !important;
-  border: none !important;
-  outline: none !important;
 }
 
 /* Ensure the date number remains visible */
@@ -200,7 +193,55 @@
   border: 1px solid #ea384c !important;
 }
 
-/* Debugging class to help identify applied modifiers */
-.calendar-debug {
-  border: 3px solid red !important;
+/* Make this more specific to override any other styles */
+.rdp-cell .rdp-button.rdp-day.day-fullyReserved {
+  background-color: #ea384c !important;
+  color: white !important;
+  opacity: 1 !important;
+  font-weight: bold !important;
+  text-decoration: line-through !important;
+}
+
+/* !important on everything to make sure our styles override any other styles */
+body .rdp .rdp-day.day-fullyReserved,
+body .rdp button.rdp-day.day-fullyReserved {
+  background-color: #ea384c !important;
+  color: white !important;
+  font-weight: bold !important;
+  opacity: 1 !important;
+}
+
+/* Ensure line-through effect on disabled dates */
+body .rdp .rdp-day.day-fullyReserved .rdp-day_content,
+body .rdp button.rdp-day.day-fullyReserved .rdp-day_content {
+  text-decoration: line-through !important;
+  opacity: 1 !important;
+}
+
+/* Force morning reserved styles to be visible */
+body .rdp button.rdp-day.day-morningReserved::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: #ea384c !important;
+  clip-path: polygon(0 0, 100% 0, 0 100%) !important;
+  opacity: 1 !important;
+  z-index: 0 !important;
+}
+
+/* Force afternoon reserved styles to be visible */
+body .rdp button.rdp-day.day-afternoonReserved::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: #ea384c !important;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%) !important;
+  opacity: 1 !important;
+  z-index: 0 !important;
 }
