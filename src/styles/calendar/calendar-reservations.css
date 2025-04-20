@@ -15,7 +15,8 @@ button.rdp-day.day-fullyReserved,
 /* Reserved date background */
 .rdp-day.day-fullyReserved::before,
 button.rdp-day.day-fullyReserved::before,
-.rdp-day_disabled.day-fullyReserved::before {
+.rdp-day_disabled.day-fullyReserved::before,
+.rdp-day[disabled].day-fullyReserved::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -27,7 +28,8 @@ button.rdp-day.day-fullyReserved::before,
 /* Reserved date text */
 .rdp-day.day-fullyReserved .rdp-day_content,
 button.rdp-day.day-fullyReserved .rdp-day_content,
-.rdp-day_disabled.day-fullyReserved .rdp-day_content {
+.rdp-day_disabled.day-fullyReserved .rdp-day_content,
+.rdp-day[disabled].day-fullyReserved .rdp-day_content {
   color: white;
   font-weight: bold;
   position: relative;

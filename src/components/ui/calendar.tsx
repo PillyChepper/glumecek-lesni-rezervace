@@ -82,6 +82,7 @@ function Calendar({
         fullyReserved: "day-fullyReserved",
         morningReserved: "day-morningReserved",
         afternoonReserved: "day-afternoonReserved",
+        ...classNames?.modifiers,
       }}
       locale={cs}
       weekStartsOn={1}
