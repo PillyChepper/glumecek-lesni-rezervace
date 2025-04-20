@@ -7,4 +7,6 @@
 @import './styles/components.css';
 
 /* Import calendar styles */
-@import './styles/calendar.css';
+@import './styles/calendar/base-calendar.css';
+@import './styles/calendar/calendar-range.css';
+@import './styles/calendar/calendar-reservations.css';

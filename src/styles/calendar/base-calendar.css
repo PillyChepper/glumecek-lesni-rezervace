@@ -1,0 +1,28 @@
+
+/* Base calendar day styles */
+.rdp-day {
+  border-radius: 0.375rem !important;
+  position: relative !important;
+}
+
+/* Today's date style */
+.rdp-day_today:not(.rdp-day_outside) {
+  font-weight: bold !important;
+  border: 1px solid #ea384c !important;
+}
+
+/* Disabled date styles */
+.rdp-day[disabled]:not(.day-fullyReserved):not(.day-morningReserved):not(.day-afternoonReserved) {
+  background-color: rgba(128, 128, 128, 0.1) !important;
+  color: rgba(128, 128, 128, 0.6) !important;
+  text-decoration: none !important;
+  border-radius: 0.375rem !important;
+  opacity: 0.7 !important;
+  cursor: not-allowed !important;
+}
+
+/* Ensure date content visibility */
+.rdp-day_content {
+  position: relative !important;
+  z-index: 1 !important;
+}

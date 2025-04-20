@@ -1,0 +1,26 @@
+
+/* Range selection styles */
+.day-hoverRange,
+.day-selectedRange {
+  background-color: rgb(226, 232, 226) !important; /* forest-200 */
+  color: rgb(30, 34, 30) !important;
+  border-radius: 0.375rem !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Selected dates styles */
+.day-arrivalSelected,
+.day-departureSelected {
+  border-radius: 0.375rem !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Selected dates text color */
+.rdp-day_selected.day-arrivalSelected .rdp-day_content,
+.rdp-day_selected.day-departureSelected .rdp-day_content {
+  color: white !important;
+}
