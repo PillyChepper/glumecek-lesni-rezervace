@@ -154,17 +154,6 @@ const DateRangeCalendar = ({
     return mods;
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap, disabledDates]);
 
-  // Provide explicit CSS class mapping for each modifier
-  const modifiersClassNames = {
-    hoverRange: "day-hoverRange",
-    selectedRange: "day-selectedRange",
-    arrivalSelected: "day-arrivalSelected",
-    departureSelected: "day-departureSelected",
-    fullyReserved: "day-fullyReserved",
-    morningReserved: "day-morningReserved",
-    afternoonReserved: "day-afternoonReserved"
-  };
-
   return (
     <div className="p-0 w-full">
       <Calendar
@@ -173,7 +162,15 @@ const DateRangeCalendar = ({
         onSelect={onSelect}
         className="border-0 w-full"
         modifiers={modifiers}
-        modifiersClassNames={modifiersClassNames}
+        modifiersClassNames={{
+          hoverRange: "day-hoverRange",
+          selectedRange: "day-selectedRange",
+          arrivalSelected: "day-arrivalSelected",
+          departureSelected: "day-departureSelected",
+          fullyReserved: "day-fullyReserved",
+          morningReserved: "day-morningReserved",
+          afternoonReserved: "day-afternoonReserved"
+        }}
         onDayMouseEnter={onDayMouseEnter}
         onDayMouseLeave={onDayMouseLeave}
         numberOfMonths={2}

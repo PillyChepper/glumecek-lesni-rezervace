@@ -47,3 +47,12 @@ button.rdp-day.day-departureSelected {
   background-color: rgb(226, 232, 226); /* forest-200 */
   color: rgb(30, 34, 30);
 }
+
+/* Make sure the selection is visible */
+.rdp-day_selected.day-arrivalSelected .rdp-day_content,
+.rdp-day_selected.day-departureSelected .rdp-day_content,
+.rdp-day.day-arrivalSelected .rdp-day_content,
+.rdp-day.day-departureSelected .rdp-day_content {
+  color: white !important;
+  font-weight: bold;
+}
