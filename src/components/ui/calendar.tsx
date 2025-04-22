@@ -21,9 +21,9 @@ function Calendar({
   modifiers,
   ...props
 }: CalendarProps) {
-  // Log modifiers to check what's being passed
+  // Debug what modifiers we're getting
   React.useEffect(() => {
-    console.log("Calendar component modifiers:", modifiers);
+    console.log("Calendar component received modifiers:", modifiers);
   }, [modifiers]);
 
   return (
@@ -80,6 +80,7 @@ function Calendar({
         fullyReserved: "day-fullyReserved",
         morningReserved: "day-morningReserved",
         afternoonReserved: "day-afternoonReserved",
+        ...props.modifiersClassNames,
       }}
       locale={cs}
       weekStartsOn={1}

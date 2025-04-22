@@ -45,7 +45,6 @@ const DateRangeCalendar = ({
     return map;
   }, [disabledDates]);
 
-  // Log disabled dates on component render
   useEffect(() => {
     if (disabledDates?.length > 0) {
       console.log("DateRangeCalendar received disabled dates:", disabledDates);
@@ -113,9 +112,7 @@ const DateRangeCalendar = ({
     return departureDate ? isSameDay(day, departureDate) : false;
   };
   
-  // This function explicitly checks if a date is in the disabledDates array
   const isReservedDate = (day: Date) => {
-    // Check if this day is in the disabledDates array by comparing dates directly
     return disabledDates.some(disabledDate => {
       const isSame = isSameDay(day, disabledDate);
       if (isSame) {
@@ -132,7 +129,6 @@ const DateRangeCalendar = ({
       selectedRange: (day: Date) => isInRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       arrivalSelected: (day: Date) => isArrivalDate(day),
       departureSelected: (day: Date) => isDepartureDate(day),
-      // Use explicit function for reserved dates
       fullyReserved: (day: Date) => isReservedDate(day),
       morningReserved: (day: Date) => {
         const restrictions = disabledDatesMap.get(day.toDateString());
@@ -145,17 +141,26 @@ const DateRangeCalendar = ({
     };
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap, disabledDates]);
 
-  // Add logs to check modifiers
+  // Enhanced debugging to help trace the issue
   useEffect(() => {
-    console.log("DateRangeCalendar modifiers:", modifiers);
+    console.log("DateRangeCalendar modifiers object:", modifiers);
+    
     if (arrivalDate) {
-      console.log("Arrival date is set:", arrivalDate);
+      console.log("Arrival date is set:", arrivalDate.toISOString());
+      // Test the modifier function directly
+      const isArrivalHighlighted = modifiers.arrivalSelected(arrivalDate);
+      console.log("Is arrival date highlighted by modifier?", isArrivalHighlighted);
     }
+    
     if (departureDate) {
-      console.log("Departure date is set:", departureDate);
+      console.log("Departure date is set:", departureDate.toISOString());
+      // Test the modifier function directly
+      const isDepartureHighlighted = modifiers.departureSelected(departureDate);
+      console.log("Is departure date highlighted by modifier?", isDepartureHighlighted);
     }
+    
     if (hoverDate) {
-      console.log("Hover date is set:", hoverDate);
+      console.log("Hover date is set:", hoverDate.toISOString());
     }
   }, [modifiers, arrivalDate, departureDate, hoverDate]);
 
