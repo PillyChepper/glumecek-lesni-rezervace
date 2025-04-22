@@ -1,8 +1,9 @@
 
 /* Range selection styles */
-.day-hoverRange,
 .rdp-day.day-hoverRange,
-.rdp-day_selected.day-hoverRange {
+.rdp-day_selected.day-hoverRange,
+.rdp-day.day-hoverRange button,
+.rdp-day_selected.day-hoverRange button {
   background-color: rgb(226, 232, 226); /* forest-200 */
   color: rgb(30, 34, 30);
   border-radius: 0.375rem;
@@ -11,9 +12,10 @@
   box-shadow: none;
 }
 
-.day-selectedRange,
 .rdp-day.day-selectedRange,
-.rdp-day_selected.day-selectedRange {
+.rdp-day_selected.day-selectedRange,
+.rdp-day.day-selectedRange button,
+.rdp-day_selected.day-selectedRange button {
   background-color: rgb(226, 232, 226); /* forest-200 */
   color: rgb(30, 34, 30);
   border-radius: 0.375rem;
@@ -23,9 +25,10 @@
 }
 
 /* Selected dates styles */
-.day-arrivalSelected,
 .rdp-day.day-arrivalSelected,
-.rdp-day_selected.day-arrivalSelected {
+.rdp-day_selected.day-arrivalSelected,
+.rdp-day.day-arrivalSelected button,
+.rdp-day_selected.day-arrivalSelected button {
   background-color: rgb(76, 125, 76); /* forest-600 */
   border-radius: 0.375rem;
   border: none;
@@ -33,9 +36,10 @@
   box-shadow: none;
 }
 
-.day-departureSelected,
 .rdp-day.day-departureSelected,
-.rdp-day_selected.day-departureSelected {
+.rdp-day_selected.day-departureSelected,
+.rdp-day.day-departureSelected button,
+.rdp-day_selected.day-departureSelected button {
   background-color: rgb(76, 125, 76); /* forest-600 */
   border-radius: 0.375rem;
   border: none;

@@ -145,6 +145,20 @@ const DateRangeCalendar = ({
     };
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap, disabledDates]);
 
+  // Add logs to check modifiers
+  useEffect(() => {
+    console.log("DateRangeCalendar modifiers:", modifiers);
+    if (arrivalDate) {
+      console.log("Arrival date is set:", arrivalDate);
+    }
+    if (departureDate) {
+      console.log("Departure date is set:", departureDate);
+    }
+    if (hoverDate) {
+      console.log("Hover date is set:", hoverDate);
+    }
+  }, [modifiers, arrivalDate, departureDate, hoverDate]);
+
   return (
     <div className="p-0 w-full">
       <Calendar

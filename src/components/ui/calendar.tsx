@@ -69,9 +69,7 @@ function Calendar({
       }}
       onDayMouseEnter={onDayMouseEnter}
       onDayMouseLeave={onDayMouseLeave}
-      modifiers={{
-        ...modifiers,
-      }}
+      modifiers={modifiers}
       modifiersClassNames={{
         hoverRange: "day-hoverRange",
         selectedRange: "day-selectedRange",

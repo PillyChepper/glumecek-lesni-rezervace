@@ -26,3 +26,15 @@
   position: relative;
   z-index: 1;
 }
+
+.rdp .day-arrivalSelected, 
+.rdp .day-departureSelected {
+  background-color: rgb(76, 125, 76); /* forest-600 */
+  color: white;
+}
+
+.rdp .day-hoverRange,
+.rdp .day-selectedRange {
+  background-color: rgb(226, 232, 226); /* forest-200 */
+  color: rgb(30, 34, 30);
+}
