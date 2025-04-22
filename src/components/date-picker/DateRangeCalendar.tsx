@@ -45,11 +45,18 @@ const DateRangeCalendar = ({
     return map;
   }, [disabledDates]);
 
+  // Debug information for the component
   useEffect(() => {
+    console.log("DateRangeCalendar render. Selected date:", selectedDate);
+    console.log("Arrival date:", arrivalDate);
+    console.log("Departure date:", departureDate);
+    console.log("Is selecting departure:", isSelectingDeparture);
+    console.log("Hover date:", hoverDate);
+    
     if (disabledDates?.length > 0) {
-      console.log("DateRangeCalendar received disabled dates:", disabledDates);
+      console.log("Disabled dates count:", disabledDates.length);
     }
-  }, [disabledDates]);
+  }, [selectedDate, arrivalDate, departureDate, isSelectingDeparture, hoverDate, disabledDates]);
 
   const getNextDisabledDate = (fromDate: Date) => {
     return disabledDates
@@ -105,26 +112,22 @@ const DateRangeCalendar = ({
   };
   
   const isArrivalDate = (day: Date) => {
-    return arrivalDate ? isSameDay(day, arrivalDate) : false;
+    if (!arrivalDate) return false;
+    return isSameDay(day, arrivalDate);
   };
 
   const isDepartureDate = (day: Date) => {
-    return departureDate ? isSameDay(day, departureDate) : false;
+    if (!departureDate) return false;
+    return isSameDay(day, departureDate);
   };
   
   const isReservedDate = (day: Date) => {
-    return disabledDates.some(disabledDate => {
-      const isSame = isSameDay(day, disabledDate);
-      if (isSame) {
-        console.log("Found reserved date:", day.toISOString());
-      }
-      return isSame;
-    });
+    return disabledDates.some(disabledDate => isSameDay(day, disabledDate));
   };
   
   // Modifiers object with proper highlighting functions
   const modifiers = useMemo(() => {
-    return {
+    const mods = {
       hoverRange: (day: Date) => isInHoverRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       selectedRange: (day: Date) => isInRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       arrivalSelected: (day: Date) => isArrivalDate(day),
@@ -139,30 +142,28 @@ const DateRangeCalendar = ({
         return !restrictions?.morning && restrictions?.afternoon;
       }
     };
+    
+    // Debug check for specific dates
+    if (arrivalDate) {
+      console.log(`Arrival date (${arrivalDate.toDateString()}) modifier check:`, mods.arrivalSelected(arrivalDate));
+    }
+    if (departureDate) {
+      console.log(`Departure date (${departureDate.toDateString()}) modifier check:`, mods.departureSelected(departureDate));
+    }
+    
+    return mods;
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap, disabledDates]);
 
-  // Enhanced debugging to help trace the issue
-  useEffect(() => {
-    console.log("DateRangeCalendar modifiers object:", modifiers);
-    
-    if (arrivalDate) {
-      console.log("Arrival date is set:", arrivalDate.toISOString());
-      // Test the modifier function directly
-      const isArrivalHighlighted = modifiers.arrivalSelected(arrivalDate);
-      console.log("Is arrival date highlighted by modifier?", isArrivalHighlighted);
-    }
-    
-    if (departureDate) {
-      console.log("Departure date is set:", departureDate.toISOString());
-      // Test the modifier function directly
-      const isDepartureHighlighted = modifiers.departureSelected(departureDate);
-      console.log("Is departure date highlighted by modifier?", isDepartureHighlighted);
-    }
-    
-    if (hoverDate) {
-      console.log("Hover date is set:", hoverDate.toISOString());
-    }
-  }, [modifiers, arrivalDate, departureDate, hoverDate]);
+  // Provide explicit CSS class mapping for each modifier
+  const modifiersClassNames = {
+    hoverRange: "day-hoverRange",
+    selectedRange: "day-selectedRange",
+    arrivalSelected: "day-arrivalSelected",
+    departureSelected: "day-departureSelected",
+    fullyReserved: "day-fullyReserved",
+    morningReserved: "day-morningReserved",
+    afternoonReserved: "day-afternoonReserved"
+  };
 
   return (
     <div className="p-0 w-full">
@@ -172,6 +173,7 @@ const DateRangeCalendar = ({
         onSelect={onSelect}
         className="border-0 w-full"
         modifiers={modifiers}
+        modifiersClassNames={modifiersClassNames}
         onDayMouseEnter={onDayMouseEnter}
         onDayMouseLeave={onDayMouseLeave}
         numberOfMonths={2}

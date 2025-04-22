@@ -19,12 +19,14 @@ function Calendar({
   onDayMouseEnter,
   onDayMouseLeave,
   modifiers,
+  modifiersClassNames,
   ...props
 }: CalendarProps) {
   // Debug what modifiers we're getting
   React.useEffect(() => {
     console.log("Calendar component received modifiers:", modifiers);
-  }, [modifiers]);
+    console.log("Calendar component received modifiersClassNames:", modifiersClassNames);
+  }, [modifiers, modifiersClassNames]);
 
   return (
     <DayPicker
@@ -80,7 +82,7 @@ function Calendar({
         fullyReserved: "day-fullyReserved",
         morningReserved: "day-morningReserved",
         afternoonReserved: "day-afternoonReserved",
-        ...props.modifiersClassNames,
+        ...modifiersClassNames,
       }}
       locale={cs}
       weekStartsOn={1}

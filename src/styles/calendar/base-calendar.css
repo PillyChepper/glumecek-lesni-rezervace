@@ -29,13 +29,15 @@
 
 /* Selected date styles - These work together with calendar-range.css */
 .rdp-day.day-arrivalSelected,
-.rdp-day_selected.day-arrivalSelected {
+.rdp-day_selected.day-arrivalSelected,
+button.rdp-day.day-arrivalSelected {
   background-color: rgb(76, 125, 76) !important; /* forest-600 */
   color: white !important;
 }
 
 .rdp-day.day-departureSelected,
-.rdp-day_selected.day-departureSelected {
+.rdp-day_selected.day-departureSelected,
+button.rdp-day.day-departureSelected {
   background-color: rgb(76, 125, 76) !important; /* forest-600 */
   color: white !important;
 }
