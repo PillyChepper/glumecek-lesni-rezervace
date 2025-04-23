@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker, DayMouseEventHandler } from "react-day-picker";
@@ -29,6 +30,7 @@ function Calendar({
 
   return (
     <DayPicker
+      mode="range"
       showOutsideDays={showOutsideDays}
       className={cn("p-3 pointer-events-auto w-full bg-white", className)}
       classNames={{
@@ -59,7 +61,6 @@ function Calendar({
         day_outside:
           "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
         day_disabled: "text-muted-foreground opacity-50",
-        day_range_middle: "day-selectedRange",
         day_hidden: "invisible",
         ...classNames,
       }}
@@ -71,21 +72,34 @@ function Calendar({
       onDayMouseLeave={onDayMouseLeave}
       modifiers={modifiers}
       modifiersClassNames={{
-        hoverRange: "day-hoverRange",
-        selectedRange: "day-selectedRange",
-        arrivalSelected: "day-arrivalSelected",
-        departureSelected: "day-departureSelected",
-        arrivalDate: "day-arrivalDate",
-        departureDate: "day-departureDate",
+        range_start: "day-arrivalSelected",
+        range_end: "day-departureSelected",
+        range_middle: "day-between",
         fullyReserved: "day-fullyReserved",
         morningReserved: "day-morningReserved",
         afternoonReserved: "day-afternoonReserved",
         ...modifiersClassNames,
       }}
       modifiersStyles={{
+        range_start: {
+          backgroundColor: "#166534", // Tailwind forest-700 (darker green)
+          color: "#fff",
+          borderRadius: "0.375rem",
+        },
         range_middle: {
-          backgroundColor: "rgb(226, 232, 226)", // forest-200
-          borderRadius: "0.375rem", // rounded-md
+          backgroundColor: "#d1fae5", // Tailwind green-100 (lighter green)
+          color: "#166534",
+          borderRadius: "0.375rem",
+        },
+        range_end: {
+          backgroundColor: "#166534", // Tailwind forest-700 (darker green)
+          color: "#fff",
+          borderRadius: "0.375rem",
+        },
+        fullyReserved: {
+          backgroundColor: "#dc2626", // Tailwind red-600
+          color: "#fff",
+          borderRadius: "0.375rem",
         },
         ...props.modifiersStyles,
       }}
