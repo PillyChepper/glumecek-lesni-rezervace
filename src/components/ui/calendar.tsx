@@ -81,6 +81,7 @@ function Calendar({
         fullyReserved: "day-fullyReserved",
         morningReserved: "day-morningReserved",
         afternoonReserved: "day-afternoonReserved",
+        range_middle: "day-selectedRange", // Add this line to map range_middle to day-selectedRange
         ...modifiersClassNames,
       }}
       locale={cs}
