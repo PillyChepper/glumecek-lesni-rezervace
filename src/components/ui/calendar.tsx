@@ -18,19 +18,10 @@ function Calendar({
   showOutsideDays = true,
   onDayMouseEnter,
   onDayMouseLeave,
-  modifiers,
-  modifiersClassNames,
   ...props
 }: CalendarProps) {
-  // Debug what modifiers we're getting
-  React.useEffect(() => {
-    console.log("Calendar component received modifiers:", modifiers);
-    console.log("Calendar component received modifiersClassNames:", modifiersClassNames);
-  }, [modifiers, modifiersClassNames]);
-
   return (
     <DayPicker
-      mode="range"
       showOutsideDays={showOutsideDays}
       className={cn("p-3 pointer-events-auto w-full bg-white", className)}
       classNames={{
@@ -61,6 +52,8 @@ function Calendar({
         day_outside:
           "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
         day_disabled: "text-muted-foreground opacity-50",
+        day_range_middle:
+          "aria-selected:bg-forest-200 aria-selected:text-forest-900 rounded-md",
         day_hidden: "invisible",
         ...classNames,
       }}
@@ -70,38 +63,14 @@ function Calendar({
       }}
       onDayMouseEnter={onDayMouseEnter}
       onDayMouseLeave={onDayMouseLeave}
-      modifiers={modifiers}
       modifiersClassNames={{
-        range_start: "day-arrivalSelected",
-        range_end: "day-departureSelected",
-        range_middle: "day-between",
+        hoverRange: "day-hoverRange",
+        selectedRange: "day-selectedRange",
+        arrivalSelected: "day-arrivalSelected",
+        departureSelected: "day-departureSelected",
+        arrivalDate: "day-arrivalDate",
+        departureDate: "day-departureDate",
         fullyReserved: "day-fullyReserved",
-        morningReserved: "day-morningReserved",
-        afternoonReserved: "day-afternoonReserved",
-        ...modifiersClassNames,
-      }}
-      modifiersStyles={{
-        range_start: {
-          backgroundColor: "#166534", // Tailwind forest-700 (darker green)
-          color: "#fff",
-          borderRadius: "0.375rem",
-        },
-        range_middle: {
-          backgroundColor: "#d1fae5", // Tailwind green-100 (lighter green)
-          color: "#166534",
-          borderRadius: "0.375rem",
-        },
-        range_end: {
-          backgroundColor: "#166534", // Tailwind forest-700 (darker green)
-          color: "#fff",
-          borderRadius: "0.375rem",
-        },
-        fullyReserved: {
-          backgroundColor: "#dc2626", // Tailwind red-600
-          color: "#fff",
-          borderRadius: "0.375rem",
-        },
-        ...props.modifiersStyles,
       }}
       locale={cs}
       weekStartsOn={1}

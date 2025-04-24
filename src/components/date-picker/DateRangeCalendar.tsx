@@ -1,7 +1,7 @@
 
 import { Calendar } from "@/components/ui/calendar";
 import { isSameDay, isAfter, isBefore, isWithinInterval, startOfDay } from "date-fns";
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import React from "react";
 import { cs } from "date-fns/locale";
 
@@ -29,65 +29,45 @@ const DateRangeCalendar = ({
   departureDate,
 }: DateRangeCalendarProps) => {
   const disabledDatesMap = useMemo(() => {
-    const map = new Map<string, { morning: boolean; afternoon: boolean }>();
+    const map = new Map<string, boolean>();
     
     if (disabledDates && disabledDates.length > 0) {
       disabledDates.forEach((date) => {
-        const dateStr = date.toDateString();
-        // Mark both morning and afternoon as reserved for simplicity
-        map.set(dateStr, { 
-          morning: true, 
-          afternoon: true 
-        });
+        if (date) {
+          map.set(date.toDateString(), true);
+        }
       });
     }
     
     return map;
   }, [disabledDates]);
-
-  // Debug information for the component
-  useEffect(() => {
-    console.log("DateRangeCalendar render. Selected date:", selectedDate);
-    console.log("Arrival date:", arrivalDate);
-    console.log("Departure date:", departureDate);
-    console.log("Is selecting departure:", isSelectingDeparture);
-    console.log("Hover date:", hoverDate);
-    
-    if (disabledDates?.length > 0) {
-      console.log("Disabled dates count:", disabledDates.length);
-    }
-  }, [selectedDate, arrivalDate, departureDate, isSelectingDeparture, hoverDate, disabledDates]);
-
+  
   const getNextDisabledDate = (fromDate: Date) => {
     return disabledDates
       .filter(date => isAfter(date, fromDate))
       .sort((a, b) => a.getTime() - b.getTime())[0];
   };
-
+  
+  const isFullyReserved = (date: Date) => {
+    return disabledDatesMap.has(date.toDateString());
+  };
+  
   const isDateDisabled = (date: Date) => {
-    const currentDate = startOfDay(date);
-    const dateStr = currentDate.toDateString();
-    const restrictions = disabledDatesMap.get(dateStr);
-
     if (isSelectingDeparture && arrivalDate) {
-      if (isBefore(currentDate, arrivalDate)) {
+      const startDate = startOfDay(arrivalDate);
+      const currentDate = startOfDay(date);
+      
+      if (isBefore(currentDate, startDate)) {
         return true;
       }
-
-      if (isSameDay(currentDate, arrivalDate)) {
-        return false;
-      }
-
-      if (restrictions?.morning) {
-        return true;
-      }
-    } else {
-      if (restrictions?.afternoon) {
+      
+      const nextDisabledDate = getNextDisabledDate(startDate);
+      if (nextDisabledDate && isAfter(currentDate, nextDisabledDate)) {
         return true;
       }
     }
-
-    return false;
+    
+    return isFullyReserved(date);
   };
   
   const isInRange = (day: Date) => {
@@ -112,47 +92,26 @@ const DateRangeCalendar = ({
   };
   
   const isArrivalDate = (day: Date) => {
-    if (!arrivalDate) return false;
-    return isSameDay(day, arrivalDate);
+    return arrivalDate ? isSameDay(day, arrivalDate) : false;
   };
 
   const isDepartureDate = (day: Date) => {
-    if (!departureDate) return false;
-    return isSameDay(day, departureDate);
+    return departureDate ? isSameDay(day, departureDate) : false;
   };
   
-  const isReservedDate = (day: Date) => {
-    return disabledDates.some(disabledDate => isSameDay(day, disabledDate));
-  };
-  
-  // Modifiers object with proper highlighting functions
   const modifiers = useMemo(() => {
-    const mods = {
+    return {
       hoverRange: (day: Date) => isInHoverRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       selectedRange: (day: Date) => isInRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
       arrivalSelected: (day: Date) => isArrivalDate(day),
       departureSelected: (day: Date) => isDepartureDate(day),
-      fullyReserved: (day: Date) => isReservedDate(day),
-      morningReserved: (day: Date) => {
-        const restrictions = disabledDatesMap.get(day.toDateString());
-        return restrictions?.morning && !restrictions?.afternoon;
-      },
-      afternoonReserved: (day: Date) => {
-        const restrictions = disabledDatesMap.get(day.toDateString());
-        return !restrictions?.morning && restrictions?.afternoon;
-      }
+      fullyReserved: (day: Date) => isFullyReserved(day),
     };
-    
-    // Debug check for specific dates
-    if (arrivalDate) {
-      console.log(`Arrival date (${arrivalDate.toDateString()}) modifier check:`, mods.arrivalSelected(arrivalDate));
-    }
-    if (departureDate) {
-      console.log(`Departure date (${departureDate.toDateString()}) modifier check:`, mods.departureSelected(departureDate));
-    }
-    
-    return mods;
-  }, [arrivalDate, departureDate, hoverDate, disabledDatesMap, disabledDates]);
+  }, [arrivalDate, departureDate, hoverDate, disabledDatesMap]);
+
+  const disabledDatesFunc = (date: Date) => {
+    return isDateDisabled(date);
+  };
 
   return (
     <div className="p-0 w-full">
@@ -162,20 +121,11 @@ const DateRangeCalendar = ({
         onSelect={onSelect}
         className="border-0 w-full"
         modifiers={modifiers}
-        modifiersClassNames={{
-          hoverRange: "day-hoverRange",
-          selectedRange: "day-selectedRange",
-          arrivalSelected: "day-arrivalSelected",
-          departureSelected: "day-departureSelected",
-          fullyReserved: "day-fullyReserved",
-          morningReserved: "day-morningReserved",
-          afternoonReserved: "day-afternoonReserved"
-        }}
         onDayMouseEnter={onDayMouseEnter}
         onDayMouseLeave={onDayMouseLeave}
         numberOfMonths={2}
         showOutsideDays={false}
-        disabled={isDateDisabled}
+        disabled={disabledDatesFunc}
         locale={cs}
         weekStartsOn={1}
       />
