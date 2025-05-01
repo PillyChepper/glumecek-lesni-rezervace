@@ -1,7 +1,7 @@
 
 import Section from '@/components/Section';
 import Feature from '@/components/Feature';
-import { Utensils, Droplets, Wifi, Thermometer, PawPrint, MapPin } from 'lucide-react';
+import { Utensils, Droplets, WifiOff, Thermometer, PawPrint, MapPin } from 'lucide-react';
 
 const AccommodationSection = () => {
   return (
@@ -23,9 +23,9 @@ const AccommodationSection = () => {
           description="Vlastní koupelna s teplou vodou a ekologickými toaletními potřebami."
         />
         <Feature 
-          icon={<Wifi size={32} />}
-          title="Wi-Fi připojení"
-          description="Pro ty, kteří potřebují zůstat ve spojení i uprostřed lesa."
+          icon={<WifiOff size={32} />}
+          title="Digitální detox"
+          description="Odpojte se od online světa a užijte si skutečnou přítomnost v přírodě."
         />
         <Feature 
           icon={<Thermometer size={32} />}
