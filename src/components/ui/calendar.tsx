@@ -71,6 +71,29 @@ function Calendar({
         arrivalDate: "day-arrivalDate",
         departureDate: "day-departureDate",
         fullyReserved: "day-fullyReserved",
+        range_middle: "day-selectedRange",
+      }}
+      modifiersStyles={{
+        range_start: {
+          backgroundColor: "#166534",
+          color: "#fff",
+          borderRadius: "0.375rem",
+        },
+        range_middle: {
+          backgroundColor: "#d1fae5",
+          color: "#166534",
+          borderRadius: "0.375rem",
+        },
+        range_end: {
+          backgroundColor: "#166534",
+          color: "#fff",
+          borderRadius: "0.375rem",
+        },
+        fullyReserved: {
+          backgroundColor: "#dc2626",
+          color: "#fff",
+          borderRadius: "0.375rem",
+        },
       }}
       locale={cs}
       weekStartsOn={1}
