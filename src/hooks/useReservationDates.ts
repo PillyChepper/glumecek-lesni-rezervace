@@ -83,6 +83,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
               // Skip cancelled reservations (double check even though we filtered in the query)
               if (reservation.status === 'cancelled') return;
               
+              // Ensure proper date parsing
               const arrivalDate = new Date(reservation.arrival_date);
               const departureDate = new Date(reservation.departure_date);
               
@@ -90,19 +91,24 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
               
               // Generate all dates between arrival and departure (inclusive)
               const currentDate = new Date(arrivalDate);
-              while (currentDate <= departureDate) {
-                bookedDatesSet.add(currentDate.toISOString().split('T')[0]);
+              
+              // Use a while loop with a date copy to prevent infinite loops
+              while (currentDate.getTime() <= departureDate.getTime()) {
+                // Add date string with proper formatting
+                const dateStr = currentDate.toISOString().split('T')[0];
+                bookedDatesSet.add(dateStr);
+                
+                // Increment day safely
                 currentDate.setDate(currentDate.getDate() + 1);
               }
             });
             
             // Convert to Date objects with normalized time (start of day)
             const bookedDates = Array.from(bookedDatesSet).map(dateStr => {
-              const date = new Date(dateStr);
-              return startOfDay(date);
+              return startOfDay(new Date(dateStr));
             });
             
-            console.log('Fetched real booked dates from database:', bookedDates);
+            console.log('Processed booked dates:', bookedDates.length, 'dates');
             setDisabledDates(bookedDates);
           } else {
             console.log('No booked dates found in database, using sample data');
