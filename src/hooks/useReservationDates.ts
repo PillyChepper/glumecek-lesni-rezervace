@@ -91,8 +91,8 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
               const maxDays = 100; // Safety limit
               let dayCount = 0;
               
-              // Include the departure date in the booked dates
-              while (currentDateCopy.getTime() <= departureDate.getTime() && dayCount < maxDays) {
+              // Include all dates from arrival through departure
+              while ((currentDateCopy.getTime() <= departureDate.getTime()) && dayCount < maxDays) {
                 // Format date without time component for consistency
                 const dateStr = currentDateCopy.toISOString().split('T')[0];
                 bookedDatesSet.add(dateStr);

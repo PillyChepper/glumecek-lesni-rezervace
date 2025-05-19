@@ -54,9 +54,6 @@ const DateRangeCalendar = ({
   const isFullyReserved = (date: Date) => {
     const normalizedDate = startOfDay(new Date(date)).toISOString();
     const isReserved = disabledDatesMap.has(normalizedDate);
-    if (isReserved) {
-      console.log(`Date ${normalizedDate} is marked as fully reserved`);
-    }
     return isReserved;
   };
   
@@ -186,8 +183,6 @@ const DateRangeCalendar = ({
     }
     return isDateDisabled(date);
   };
-
-  console.log('Number of disabled dates in calendar:', disabledDates.length);
 
   return (
     <div className="p-0 w-full">
