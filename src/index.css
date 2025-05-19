@@ -51,6 +51,8 @@
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
+  pointer-events: auto !important; /* Ensure it can be clicked */
+  cursor: pointer !important;
 }
 
 /* Style for fully reserved/disabled dates */
@@ -65,7 +67,7 @@
 }
 
 /* Style for dates disabled due to selection logic */
-.rdp-day[disabled]:not(.day-fullyReserved) {
+.rdp-day[disabled]:not(.day-fullyReserved):not(.day-arrivalDate) {
   background-color: rgba(128, 128, 128, 0.1) !important;
   color: rgba(128, 128, 128, 0.6) !important;
   text-decoration: none !important;
@@ -85,8 +87,8 @@ button.rdp-day[disabled].day-fullyReserved {
 }
 
 /* Style for dates out of range - make them look different from occupied dates */
-button.rdp-button_reset[disabled]:not(.day-fullyReserved),
-button.rdp-day[disabled]:not(.day-fullyReserved) {
+button.rdp-button_reset[disabled]:not(.day-fullyReserved):not(.day-arrivalDate),
+button.rdp-day[disabled]:not(.day-fullyReserved):not(.day-arrivalDate) {
   background-color: rgba(128, 128, 128, 0.05) !important;
   color: rgba(128, 128, 128, 0.5) !important;
   text-decoration: none !important;
@@ -104,7 +106,7 @@ button.rdp-day[disabled]:not(.day-fullyReserved) {
 }
 
 /* Custom style for dates disabled due to selection range */
-.rdp-cell button[disabled]:not(.day-fullyReserved) {
+.rdp-cell button[disabled]:not(.day-fullyReserved):not(.day-arrivalDate) {
   background-color: rgba(128, 128, 128, 0.05) !important;
   color: rgba(128, 128, 128, 0.5) !important;
   text-decoration: none !important;
@@ -128,8 +130,18 @@ button.rdp-day[disabled]:not(.day-fullyReserved) {
   outline: none !important;
 }
 
+/* Ensure arrival date can be clicked on/unselected even when "disabled" */
+button.rdp-day.day-arrivalDate,
+button.rdp-button_reset.day-arrivalDate {
+  opacity: 1 !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
 /* Hover over arrival date to indicate it can be unselected */
-button.rdp-day.day-arrivalDate:hover {
+button.rdp-day.day-arrivalDate:hover,
+button.rdp-button_reset.day-arrivalDate:hover {
   opacity: 0.8 !important; 
   cursor: pointer !important;
+  background-color: #0f5027 !important; /* Slightly darker on hover */
 }

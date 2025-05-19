@@ -68,8 +68,8 @@ const DateRangeCalendar = ({
     // If arrival date is set, find the range of selectable departure dates
     if (arrivalDate && !departureDate) {
       // Can't select dates before arrival
-      if (isBefore(date, arrivalDate)) return true;
-
+      if (isBefore(date, arrivalDate)) return false; // Allow clicking on arrival date
+      
       // Check if any date in between arrival and the hovered date is reserved
       const dateToCheck = hoverDate && isAfter(hoverDate, arrivalDate) ? hoverDate : date;
       
@@ -77,7 +77,7 @@ const DateRangeCalendar = ({
       const minDepartureDate = addDays(arrivalDate, minDays - 1);
       
       // Ensure minimum stay
-      if (isBefore(date, minDepartureDate)) {
+      if (isBefore(date, minDepartureDate) && !isEqual(date, arrivalDate)) {
         return true;
       }
       
@@ -176,7 +176,12 @@ const DateRangeCalendar = ({
     fullyReserved: disabledDates
   };
 
+  // Make sure to not disable the arrival date when it's already selected
   const disabledDaysFunc = (date: Date) => {
+    // Special case: Don't disable the arrival date if it's selected
+    if (arrivalDate && isEqual(date, arrivalDate)) {
+      return false;
+    }
     return isDateDisabled(date);
   };
 
