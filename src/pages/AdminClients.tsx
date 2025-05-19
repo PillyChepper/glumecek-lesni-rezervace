@@ -16,6 +16,7 @@ type Client = {
   reservation_count: number;
   last_reservation: string;
   has_pet: boolean;
+  created_at: string; // Add created_at to the Client type
 };
 
 const AdminClients = () => {
@@ -26,7 +27,7 @@ const AdminClients = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("reservations")
-        .select("first_name, last_name, email, phone, number_of_pets")
+        .select("first_name, last_name, email, phone, number_of_pets, created_at") // Include created_at in the select
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -59,7 +60,8 @@ const AdminClients = () => {
             phone: reservation.phone,
             reservation_count: 1,
             last_reservation: reservation.created_at,
-            has_pet: hasPet
+            has_pet: hasPet,
+            created_at: reservation.created_at // Include created_at in the new client object
           });
         }
       });
