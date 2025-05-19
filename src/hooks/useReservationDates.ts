@@ -89,17 +89,20 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
               
               console.log(`Processing reservation: ${arrivalDate.toISOString()} - ${departureDate.toISOString()}`);
               
-              // Generate all dates between arrival and departure (inclusive)
+              // Generate all dates between arrival and departure (inclusive of both dates)
               let currentDateCopy = new Date(arrivalDate);
               
               // Use a safe approach to prevent potential infinite loops
               const maxDays = 100; // Safety limit
               let dayCount = 0;
               
+              // Important change: Include the departure date in the booked dates
+              // Using <= instead of < to include the departure date
               while (currentDateCopy.getTime() <= departureDate.getTime() && dayCount < maxDays) {
                 // Format date without time component for consistency
                 const dateStr = currentDateCopy.toISOString().split('T')[0];
                 bookedDatesSet.add(dateStr);
+                console.log(`Adding booked date: ${dateStr}`);
                 
                 // Create a new date object for the next day to avoid reference issues
                 const nextDay = new Date(currentDateCopy);
