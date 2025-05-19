@@ -1,4 +1,6 @@
 
+import { startOfDay } from 'date-fns';
+
 // This is a utility file to provide sample booked dates for development/testing
 // when the database is not accessible or RLS blocks access
 
