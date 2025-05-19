@@ -23,10 +23,6 @@ const PricingSection = () => {
               <span className="font-medium">2 noci</span>
             </div>
             <div className="flex justify-between items-center">
-              <span>Příplatek za další osobu</span>
-              <span className="font-medium">500 Kč / noc</span>
-            </div>
-            <div className="flex justify-between items-center">
               <span>Domácí mazlíček</span>
               <span className="font-medium">200 Kč / pobyt</span>
             </div>
