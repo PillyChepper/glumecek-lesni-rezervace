@@ -1,136 +1,203 @@
 
+import { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
-import { isSameDay, isAfter, isBefore, isWithinInterval, startOfDay } from "date-fns";
-import { useMemo } from "react";
-import React from "react";
-import { cs } from "date-fns/locale";
+import { startOfDay, isAfter, isBefore, isEqual, addDays } from "date-fns";
+import { DateRange } from "@/components/DateRangePicker";
 
 interface DateRangeCalendarProps {
-  selectedDate?: Date;
-  onSelect: (date: Date | undefined) => void;
-  arrivalDate?: Date;
-  isSelectingDeparture?: boolean;
+  value: DateRange;
+  onChange: (value: DateRange) => void;
   disabledDates?: Date[];
-  onDayMouseEnter?: (day: Date) => void;
-  onDayMouseLeave?: () => void;
-  hoverDate?: Date;
-  departureDate?: Date;
+  minDays?: number;
 }
 
 const DateRangeCalendar = ({
-  selectedDate,
-  onSelect,
-  arrivalDate,
-  isSelectingDeparture = false,
+  value,
+  onChange,
   disabledDates = [],
-  onDayMouseEnter,
-  onDayMouseLeave,
-  hoverDate,
-  departureDate,
+  minDays = 2,
 }: DateRangeCalendarProps) => {
-  const disabledDatesMap = useMemo(() => {
+  const today = startOfDay(new Date());
+  const [arrivalDate, setArrivalDate] = useState<Date | undefined>(value.from);
+  const [departureDate, setDepartureDate] = useState<Date | undefined>(value.to);
+  const [hoverDate, setHoverDate] = useState<Date | undefined>(undefined);
+  const [disabledDatesMap, setDisabledDatesMap] = useState<Map<string, boolean>>(
+    new Map()
+  );
+
+  // Process disabled dates into a Map for faster lookups
+  useEffect(() => {
     const map = new Map<string, boolean>();
     
     if (disabledDates && disabledDates.length > 0) {
       console.log('Processing disabled dates:', disabledDates);
       disabledDates.forEach((date) => {
         if (date) {
+          // Store as ISO strings for consistent comparison
           map.set(startOfDay(date).toISOString(), true);
         }
       });
     }
     
-    return map;
+    setDisabledDatesMap(map);
+    console.log(`Processed ${map.size} disabled dates`);
   }, [disabledDates]);
   
-  const getNextDisabledDate = (fromDate: Date) => {
-    return disabledDates
-      .filter(date => isAfter(date, fromDate))
-      .sort((a, b) => a.getTime() - b.getTime())[0];
+  const onDayMouseEnter = (date: Date) => {
+    if (!arrivalDate || departureDate) return;
+    setHoverDate(date);
   };
   
   const isFullyReserved = (date: Date) => {
     const normalizedDate = startOfDay(date).toISOString();
-    return disabledDatesMap.has(normalizedDate);
+    const isReserved = disabledDatesMap.has(normalizedDate);
+    if (isReserved) {
+      console.log(`Date ${normalizedDate} is marked as fully reserved`);
+    }
+    return isReserved;
   };
   
   const isDateDisabled = (date: Date) => {
-    if (isSelectingDeparture && arrivalDate) {
-      const startDate = startOfDay(arrivalDate);
-      const currentDate = startOfDay(date);
+    // Don't allow selection of past dates
+    if (isBefore(date, today)) return true;
+    
+    // Don't allow selection of fully reserved dates
+    if (isFullyReserved(date)) return true;
+    
+    // If arrival date is set, find the range of selectable departure dates
+    if (arrivalDate && !departureDate) {
+      // Can't select dates before arrival
+      if (isBefore(date, arrivalDate)) return true;
+
+      // Check if any date in between arrival and the hovered date is reserved
+      const dateToCheck = hoverDate && isAfter(hoverDate, arrivalDate) ? hoverDate : date;
       
-      if (isBefore(currentDate, startDate)) {
+      // The minimum departure date based on minDays
+      const minDepartureDate = addDays(arrivalDate, minDays - 1);
+      
+      // Ensure minimum stay
+      if (isBefore(date, minDepartureDate)) {
         return true;
       }
       
-      const nextDisabledDate = getNextDisabledDate(startDate);
-      if (nextDisabledDate && isAfter(currentDate, nextDisabledDate)) {
-        return true;
+      // Check all dates between arrival and departure for reservations
+      let currentDate = addDays(arrivalDate, 1);
+      while (isBefore(currentDate, dateToCheck) || isEqual(currentDate, dateToCheck)) {
+        if (isFullyReserved(currentDate)) {
+          return true;
+        }
+        currentDate = addDays(currentDate, 1);
       }
     }
     
-    return isFullyReserved(date);
-  };
-  
-  const isInRange = (day: Date) => {
-    if (arrivalDate && departureDate && !isDateDisabled(day)) {
-      return isWithinInterval(day, { 
-        start: isBefore(arrivalDate, departureDate) ? arrivalDate : departureDate,
-        end: isAfter(departureDate, arrivalDate) ? departureDate : arrivalDate
-      });
-    }
     return false;
   };
 
-  const isInHoverRange = (day: Date) => {
-    if (isSelectingDeparture && arrivalDate && hoverDate && !isDateDisabled(day)) {
-      if (isAfter(hoverDate, arrivalDate)) {
-        return isWithinInterval(day, { start: arrivalDate, end: hoverDate });
-      } else if (isBefore(hoverDate, arrivalDate)) {
-        return isWithinInterval(day, { start: hoverDate, end: arrivalDate });
+  const onDayClick = (date: Date) => {
+    if (isFullyReserved(date)) {
+      console.log(`Cannot select reserved date: ${date}`);
+      return;
+    }
+    
+    if (!arrivalDate) {
+      setArrivalDate(date);
+      onChange({ from: date, to: undefined });
+      return;
+    }
+    
+    if (!departureDate) {
+      if (isBefore(date, arrivalDate)) {
+        // If clicked date is before arrival, make it the new arrival
+        setArrivalDate(date);
+        onChange({ from: date, to: undefined });
+        return;
       }
+      
+      // Ensure min stay and no reserved dates in between
+      const minDepartureDate = addDays(arrivalDate, minDays - 1);
+      if (isBefore(date, minDepartureDate)) {
+        console.log(`Selected departure date doesn't meet minimum stay of ${minDays} days`);
+        return;
+      }
+      
+      // Check for reserved dates between arrival and departure
+      let hasReservedDates = false;
+      let currentDate = addDays(arrivalDate, 1);
+      while (isBefore(currentDate, date)) {
+        if (isFullyReserved(currentDate)) {
+          hasReservedDates = true;
+          break;
+        }
+        currentDate = addDays(currentDate, 1);
+      }
+      
+      if (hasReservedDates) {
+        console.log("Cannot select this range because there are reserved dates in between");
+        return;
+      }
+      
+      setDepartureDate(date);
+      onChange({ from: arrivalDate, to: date });
+      return;
     }
-    return false;
-  };
-  
-  const isArrivalDate = (day: Date) => {
-    return arrivalDate ? isSameDay(day, arrivalDate) : false;
+    
+    // Reset if both dates were already selected
+    setArrivalDate(date);
+    setDepartureDate(undefined);
+    onChange({ from: date, to: undefined });
   };
 
-  const isDepartureDate = (day: Date) => {
-    return departureDate ? isSameDay(day, departureDate) : false;
+  const onDayMouseLeave = () => {
+    setHoverDate(undefined);
   };
   
-  const modifiers = useMemo(() => {
-    return {
-      hoverRange: (day: Date) => isInHoverRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
-      selectedRange: (day: Date) => isInRange(day) && !isArrivalDate(day) && !isDepartureDate(day),
-      arrivalSelected: (day: Date) => isArrivalDate(day),
-      departureSelected: (day: Date) => isDepartureDate(day),
-      fullyReserved: (day: Date) => isFullyReserved(day),
-    };
-  }, [arrivalDate, departureDate, hoverDate, disabledDatesMap]);
+  useEffect(() => {
+    setArrivalDate(value.from);
+    setDepartureDate(value.to);
+  }, [value.from, value.to]);
+  
+  const modifiers = {
+    hoverRange: !departureDate && arrivalDate && hoverDate && {
+      from: arrivalDate,
+      to: hoverDate,
+    },
+    selectedRange: arrivalDate && departureDate && {
+      from: arrivalDate,
+      to: departureDate,
+    },
+    arrivalSelected: arrivalDate && {
+      date: arrivalDate,
+    },
+    departureSelected: departureDate && {
+      date: departureDate,
+    },
+    fullyReserved: (date: Date) => {
+      return isFullyReserved(date);
+    }
+  };
 
   const disabledDaysFunc = (date: Date) => {
     const isDisabled = isDateDisabled(date);
     return isDisabled;
   };
 
-  console.log('Number of disabled dates:', disabledDates.length);
+  console.log('Number of disabled dates in calendar:', disabledDates.length);
 
   return (
     <div className="p-0 w-full">
       <Calendar
-        mode="single"
-        selected={selectedDate}
-        onSelect={onSelect}
-        className="border-0 w-full"
-        modifiers={modifiers}
+        mode="range"
+        selected={{
+          from: arrivalDate,
+          to: departureDate,
+        }}
+        onDayClick={onDayClick}
         onDayMouseEnter={onDayMouseEnter}
         onDayMouseLeave={onDayMouseLeave}
         numberOfMonths={2}
         showOutsideDays={false}
         disabled={disabledDaysFunc}
+        modifiers={modifiers}
         locale={cs}
         weekStartsOn={1}
       />

@@ -3,11 +3,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { useReservationDates } from './useReservationDates';
 
 export function useReservationDatesWithRefresh(startDate?: Date, endDate?: Date) {
-  const { disabledDates, loading, error } = useReservationDates(startDate, endDate);
   const [refreshCounter, setRefreshCounter] = useState(0);
+  const { disabledDates, loading, error, isSupabaseConnected } = useReservationDates(startDate, endDate);
   
   // Function to force a refresh of the reservation dates
   const refreshDates = useCallback(() => {
+    console.log('Manually refreshing reservation dates');
     setRefreshCounter(prev => prev + 1);
   }, []);
   
@@ -31,6 +32,7 @@ export function useReservationDatesWithRefresh(startDate?: Date, endDate?: Date)
     disabledDates, 
     loading, 
     error,
+    isSupabaseConnected,
     refreshDates 
   };
 }
