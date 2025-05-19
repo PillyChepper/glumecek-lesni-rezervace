@@ -18,7 +18,7 @@ export type Database = {
           first_name: string
           id: string
           last_name: string
-          number_of_guests: number
+          number_of_guests: number | null
           number_of_pets: number
           phone: string
           special_requests: string | null
@@ -32,7 +32,7 @@ export type Database = {
           first_name: string
           id?: string
           last_name: string
-          number_of_guests?: number
+          number_of_guests?: number | null
           number_of_pets?: number
           phone: string
           special_requests?: string | null
@@ -46,7 +46,7 @@ export type Database = {
           first_name?: string
           id?: string
           last_name?: string
-          number_of_guests?: number
+          number_of_guests?: number | null
           number_of_pets?: number
           phone?: string
           special_requests?: string | null

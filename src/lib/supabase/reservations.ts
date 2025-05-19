@@ -9,7 +9,7 @@ export interface Reservation {
   phone: string;
   arrival_date: string;
   departure_date: string;
-  number_of_guests: number;
+  number_of_guests?: number; // Now optional
   number_of_pets: number;
   special_requests?: string;
   status: 'pending' | 'confirmed' | 'cancelled' | string; // Added string to accept any value from database

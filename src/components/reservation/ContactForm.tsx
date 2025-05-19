@@ -30,13 +30,11 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
     setEmail,
     phone,
     setPhone,
-    numOfGuests,
     hasPet,
     setHasPet,
     specialRequests,
     setSpecialRequests,
     isSubmitting,
-    handleGuestChange,
     handleFormSubmit
   } = useReservationForm(dateRange, onSubmit);
 
@@ -78,8 +76,6 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
                 />
                 
                 <ReservationGuestOptions 
-                  numOfGuests={numOfGuests}
-                  handleGuestChange={handleGuestChange}
                   hasPet={hasPet}
                   setHasPet={setHasPet}
                 />
@@ -124,8 +120,6 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
                 <div>
                   <h3 className="font-medium mb-2">Detaily pobytu</h3>
                   <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="text-muted-foreground">Počet osob:</div>
-                    <div>{numOfGuests}</div>
                     <div className="text-muted-foreground">Pejsek:</div>
                     <div>{hasPet ? 'Ano' : 'Ne'}</div>
                     {specialRequests && (

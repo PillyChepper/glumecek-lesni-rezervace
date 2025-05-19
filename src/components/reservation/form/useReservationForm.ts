@@ -10,7 +10,6 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [numOfGuests, setNumOfGuests] = useState<number>(2);
   const [hasPet, setHasPet] = useState(false);
   const [specialRequests, setSpecialRequests] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,10 +17,6 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
   
   const { toast } = useToast();
   const navigate = useNavigate();
-
-  const handleGuestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNumOfGuests(Number(e.target.value));
-  };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +49,6 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
         phone,
         arrival_date: dateRange.from.toISOString(),
         departure_date: dateRange.to.toISOString(),
-        number_of_guests: numOfGuests,
         number_of_pets: hasPet ? 1 : 0,
         special_requests: specialRequests
       });
@@ -74,7 +68,6 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
       setLastName('');
       setEmail('');
       setPhone('');
-      setNumOfGuests(2);
       setHasPet(false);
       setSpecialRequests('');
       
@@ -101,7 +94,6 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
     setEmail,
     phone,
     setPhone,
-    numOfGuests,
     hasPet,
     setHasPet,
     specialRequests,
@@ -109,7 +101,6 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
     isSubmitting,
     isConfirming,
     setIsConfirming,
-    handleGuestChange,
     handleFormSubmit
   };
 };
