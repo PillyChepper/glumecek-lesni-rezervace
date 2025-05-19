@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { startOfDay } from 'date-fns';
 
 // Define the interface for the data returned by the RPC function
 interface UnavailableDateResponse {
@@ -29,7 +30,6 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
         
         // Try to fetch from Supabase
         try {
-          // Instead of using RPC which doesn't exist yet, query the reservations table directly
           // Filter out reservations with status 'cancelled'
           const { data: reservationsData, error: reservationsError } = await supabase
             .from('reservations')
@@ -59,10 +59,16 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
               }
             });
             
-            // Convert to Date objects
-            const bookedDates = Array.from(bookedDatesSet).map(dateStr => new Date(dateStr));
+            // Convert to Date objects with normalized time (start of day)
+            const bookedDates = Array.from(bookedDatesSet).map(dateStr => {
+              const date = new Date(dateStr);
+              return startOfDay(date);
+            });
+            
+            console.log('Fetched booked dates:', bookedDates);
             setDisabledDates(bookedDates);
           } else {
+            console.log('No booked dates found');
             setDisabledDates([]);
           }
         } catch (supabaseErr) {
@@ -79,8 +85,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
           ];
           
           setDisabledDates(mockDisabledDates);
-          // Don't set error for the fallback, just log it
-          console.log('Using fallback data for disabled dates due to missing RPC function');
+          console.log('Using fallback data for disabled dates');
         }
       } catch (err) {
         console.error('Error fetching reservation dates:', err);

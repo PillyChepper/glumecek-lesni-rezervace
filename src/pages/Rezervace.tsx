@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { DateRange } from '@/components/DateRangePicker';
 import Footer from '@/components/Footer';
@@ -17,7 +17,14 @@ const Rezervace = () => {
   const [showContactForm, setShowContactForm] = useState(false);
   
   const { toast } = useToast();
-  const { disabledDates, loading } = useReservationDatesWithRefresh();
+  const { disabledDates, loading, error } = useReservationDatesWithRefresh();
+  
+  // Debug log disabledDates
+  useEffect(() => {
+    if (disabledDates.length > 0) {
+      console.log('Rezervace page - Disabled dates:', disabledDates);
+    }
+  }, [disabledDates]);
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

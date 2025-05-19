@@ -32,9 +32,10 @@ const DateRangeCalendar = ({
     const map = new Map<string, boolean>();
     
     if (disabledDates && disabledDates.length > 0) {
+      console.log('Processing disabled dates:', disabledDates);
       disabledDates.forEach((date) => {
         if (date) {
-          map.set(date.toDateString(), true);
+          map.set(startOfDay(date).toISOString(), true);
         }
       });
     }
@@ -49,7 +50,8 @@ const DateRangeCalendar = ({
   };
   
   const isFullyReserved = (date: Date) => {
-    return disabledDatesMap.has(date.toDateString());
+    const normalizedDate = startOfDay(date).toISOString();
+    return disabledDatesMap.has(normalizedDate);
   };
   
   const isDateDisabled = (date: Date) => {
@@ -109,9 +111,12 @@ const DateRangeCalendar = ({
     };
   }, [arrivalDate, departureDate, hoverDate, disabledDatesMap]);
 
-  const disabledDatesFunc = (date: Date) => {
-    return isDateDisabled(date);
+  const disabledDaysFunc = (date: Date) => {
+    const isDisabled = isDateDisabled(date);
+    return isDisabled;
   };
+
+  console.log('Number of disabled dates:', disabledDates.length);
 
   return (
     <div className="p-0 w-full">
@@ -125,7 +130,7 @@ const DateRangeCalendar = ({
         onDayMouseLeave={onDayMouseLeave}
         numberOfMonths={2}
         showOutsideDays={false}
-        disabled={disabledDatesFunc}
+        disabled={disabledDaysFunc}
         locale={cs}
         weekStartsOn={1}
       />
