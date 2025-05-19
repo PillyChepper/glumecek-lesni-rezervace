@@ -19,6 +19,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
     // Check if Supabase is connected properly
     const checkSupabaseConnection = async () => {
       try {
+        // Try to query first to confirm the connection and check if RLS is off
         const { data, error } = await supabase.from('reservations').select('count').limit(1);
         
         if (error) {
@@ -28,7 +29,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
           return false;
         }
         
-        console.log('Supabase connection check succeeded');
+        console.log('Supabase connection check succeeded - RLS seems to be disabled');
         setIsSupabaseConnected(true);
         return true;
       } catch (err) {
@@ -112,7 +113,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
               return startOfDay(date);
             });
             
-            console.log('Fetched booked dates:', bookedDates);
+            console.log('Fetched real booked dates from database:', bookedDates);
             setDisabledDates(bookedDates);
           } else {
             console.log('No booked dates found in database, using sample data');

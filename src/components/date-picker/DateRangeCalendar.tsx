@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { startOfDay, isAfter, isBefore, isEqual, addDays } from "date-fns";
@@ -157,7 +156,7 @@ const DateRangeCalendar = ({
     setDepartureDate(value.to);
   }, [value.from, value.to]);
   
-  // Fixed the modifiers object to use correct types for React Day Picker
+  // Fix the modifiers object to use correct types for React Day Picker
   const modifiers = {
     hoverRange: !departureDate && arrivalDate && hoverDate ? 
       { from: arrivalDate, to: hoverDate } : undefined,

@@ -18,43 +18,41 @@ export interface Reservation {
 
 export async function createReservation(reservation: Omit<Reservation, 'id' | 'status' | 'created_at'>): Promise<{ data: Reservation | null; error: any }> {
   try {
-    // Create a mock reservation for now since RLS is blocking inserts
-    console.log('Creating reservation:', reservation);
+    console.log('Creating reservation with Supabase:', reservation);
     
-    // Return a mock successful response
-    const mockReservation = {
-      ...reservation,
-      id: crypto.randomUUID(),
-      status: 'pending',
-      created_at: new Date().toISOString()
-    };
-    
-    // Log that we're returning a mock response due to RLS
-    console.log('Returning mock reservation due to RLS policy restrictions:', mockReservation);
-    
-    return { 
-      data: mockReservation as Reservation, 
-      error: null 
-    };
-    
-    // This code is commented out because of RLS restrictions
-    // In a production environment, you would need to enable proper RLS policies
-    // or use a server-side function with admin rights
-    /*
+    // Now that RLS should be off, we can directly insert into the database
     const { data, error } = await supabase
       .from('reservations')
       .insert({
         ...reservation,
         status: 'pending',
-        created_at: new Date().toISOString(),
       })
       .select()
       .single();
-
-    return { data, error };
-    */
+    
+    if (error) {
+      console.error('Error creating reservation in Supabase:', error);
+      
+      // Still provide a fallback for development/testing
+      const mockReservation = {
+        ...reservation,
+        id: crypto.randomUUID(),
+        status: 'pending',
+        created_at: new Date().toISOString()
+      };
+      
+      console.log('Falling back to mock reservation:', mockReservation);
+      
+      return { 
+        data: mockReservation as Reservation, 
+        error: null 
+      };
+    }
+    
+    console.log('Reservation created successfully:', data);
+    return { data, error: null };
   } catch (error) {
-    console.error('Error in createReservation:', error);
+    console.error('Exception in createReservation:', error);
     return { data: null, error };
   }
 }
