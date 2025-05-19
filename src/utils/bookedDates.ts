@@ -11,7 +11,10 @@ export const sampleBookedDates = [
   new Date(2025, 4, 20), // May 20, 2025 (Today is May 19, so this is upcoming)
   new Date(2025, 4, 21), // May 21, 2025
   new Date(2025, 4, 22), // May 22, 2025
-  new Date(2025, 4, 25), // May 25, 2025 - Including this date as it should be blocked for your reservation
+  
+  // Important: Explicitly creating a new Date object for May 25, 2025 to ensure it's properly marked
+  new Date(2025, 4, 25, 0, 0, 0, 0), // May 25, 2025 - This date should be blocked
+  
   new Date(2025, 4, 26), // May 26, 2025
   new Date(2025, 4, 27), // May 27, 2025
   
@@ -38,5 +41,5 @@ export const sampleBookedDates = [
 
 // Export as a function to get consistent dates regardless of when the code runs
 export function getBookedDates(): Date[] {
-  return sampleBookedDates;
+  return sampleBookedDates.map(date => startOfDay(new Date(date)));
 }

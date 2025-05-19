@@ -34,8 +34,10 @@ const DateRangeCalendar = ({
       console.log('Processing disabled dates:', disabledDates);
       disabledDates.forEach((date) => {
         if (date) {
-          // Store as ISO strings for consistent comparison
-          map.set(startOfDay(date).toISOString(), true);
+          // Normalize dates by removing the time component
+          const normalizedDate = startOfDay(new Date(date));
+          map.set(normalizedDate.toISOString(), true);
+          console.log(`Disabled date added to map: ${normalizedDate.toISOString()}`);
         }
       });
     }
@@ -50,7 +52,7 @@ const DateRangeCalendar = ({
   };
   
   const isFullyReserved = (date: Date) => {
-    const normalizedDate = startOfDay(date).toISOString();
+    const normalizedDate = startOfDay(new Date(date)).toISOString();
     const isReserved = disabledDatesMap.has(normalizedDate);
     if (isReserved) {
       console.log(`Date ${normalizedDate} is marked as fully reserved`);
