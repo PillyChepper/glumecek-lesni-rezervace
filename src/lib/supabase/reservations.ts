@@ -21,7 +21,7 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
   try {
     console.log('Creating reservation with Supabase:', reservation);
     
-    // Always use credit_card as the payment method
+    // Always use credit_card as the payment method and set status to pending
     const reservationData = {
       ...reservation,
       payment_method: 'credit_card', // Fixed payment method to match database constraint
@@ -37,7 +37,7 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
     if (error) {
       console.error('Error creating reservation in Supabase:', error);
       
-      // Still provide a fallback for development/testing
+      // Fallback for development/testing
       const mockReservation = {
         ...reservation,
         id: crypto.randomUUID(),

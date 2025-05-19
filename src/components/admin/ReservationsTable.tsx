@@ -1,4 +1,3 @@
-
 import { format } from "date-fns";
 import { cs } from "date-fns/locale";
 import { Check, X } from "lucide-react";
@@ -51,7 +50,8 @@ export const ReservationsTable = ({
   const confirmedReservations = reservations.filter(r => r.status === 'confirmed');
   const cancelledReservations = reservations.filter(r => r.status === 'cancelled');
   
-  // Sort all reservations by arrival date
+  // Sort all reservations by arrival date - now we'll display newest dates at top
+  // This matches the sorting done in the fetch function, but we keep the pending ones at the top
   const sortedReservations = [
     ...pendingReservations,
     ...confirmedReservations,
@@ -69,6 +69,9 @@ export const ReservationsTable = ({
   if (error) {
     return <div className="text-center text-red-500 p-4">{error}</div>;
   }
+
+  console.log("Total reservations:", reservations.length);
+  console.log("Pending reservations:", pendingReservations.length);
 
   return (
     <div className="space-y-4">

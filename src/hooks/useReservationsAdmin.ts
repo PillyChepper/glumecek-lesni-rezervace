@@ -22,7 +22,7 @@ export function useReservationsAdmin() {
       const { data, error } = await supabase
         .from('reservations')
         .select('*')
-        .order('arrival_date', { ascending: true });
+        .order('arrival_date', { ascending: false }); // Changed to descending order (newest dates at top)
       
       if (error) {
         console.error('Error fetching reservations:', error);
