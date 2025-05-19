@@ -14,6 +14,7 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
   const [hasPet, setHasPet] = useState(false);
   const [specialRequests, setSpecialRequests] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
   
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -107,6 +108,8 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
     specialRequests,
     setSpecialRequests,
     isSubmitting,
+    isConfirming,
+    setIsConfirming,
     handleGuestChange,
     handleFormSubmit
   };

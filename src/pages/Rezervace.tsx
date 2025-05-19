@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import ReservationDatePicker from '@/components/reservation/ReservationDatePicker';
 import ReservationSummary from '@/components/reservation/ReservationSummary';
 import ContactForm from '@/components/reservation/ContactForm';
+import BookingSteps, { BookingStep } from '@/components/reservation/BookingSteps';
 import { useReservationDatesWithRefresh } from '@/hooks/useReservationDatesWithRefresh';
 import { Spinner } from '@/components/ui/spinner';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -18,6 +19,7 @@ const Rezervace = () => {
     to: undefined,
   });
   const [showContactForm, setShowContactForm] = useState(false);
+  const [currentStep, setCurrentStep] = useState<BookingStep>('dates');
   
   const { toast } = useToast();
   const { disabledDates, loading, error, refreshDates, isSupabaseConnected } = useReservationDatesWithRefresh();
@@ -47,10 +49,17 @@ const Rezervace = () => {
     // Just reset the state in this component
     setShowContactForm(false);
     setDateRange({ from: undefined, to: undefined });
+    setCurrentStep('dates');
   };
 
   const handleReservationClick = () => {
     setShowContactForm(true);
+    setCurrentStep('contact');
+  };
+  
+  const handleBackToDateSelection = () => {
+    setShowContactForm(false);
+    setCurrentStep('dates');
   };
   
   // Display connection status to help debug
@@ -63,6 +72,8 @@ const Rezervace = () => {
       <div className="pt-24 pb-16 px-4">
         <div className="max-w-7xl mx-auto">
           <h1 className="section-title text-center mb-8">Rezervace pobytu</h1>
+          
+          <BookingSteps currentStep={currentStep} />
           
           {error && (
             <Alert variant="destructive" className="mb-6">
@@ -94,17 +105,19 @@ const Rezervace = () => {
             </div>
           )}
           
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <Spinner className="h-8 w-8 text-forest-600" />
-            </div>
-          ) : (
-            <ReservationDatePicker
-              dateRange={dateRange}
-              onDateChange={setDateRange}
-              onReservationClick={handleReservationClick}
-              disabledDates={disabledDates}
-            />
+          {!showContactForm && (
+            loading ? (
+              <div className="flex justify-center items-center h-64">
+                <Spinner className="h-8 w-8 text-forest-600" />
+              </div>
+            ) : (
+              <ReservationDatePicker
+                dateRange={dateRange}
+                onDateChange={setDateRange}
+                onReservationClick={handleReservationClick}
+                disabledDates={disabledDates}
+              />
+            )
           )}
 
           {dateRange.from && dateRange.to && (
@@ -112,10 +125,22 @@ const Rezervace = () => {
           )}
           
           {showContactForm && (
-            <ContactForm 
-              dateRange={dateRange}
-              onSubmit={handleSubmit}
-            />
+            <>
+              <div className="mb-4">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-forest-600" 
+                  onClick={handleBackToDateSelection}
+                >
+                  ← Zpět k výběru termínu
+                </Button>
+              </div>
+              <ContactForm 
+                dateRange={dateRange}
+                onSubmit={handleSubmit}
+              />
+            </>
           )}
         </div>
       </div>

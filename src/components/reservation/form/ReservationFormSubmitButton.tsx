@@ -12,7 +12,7 @@ const ReservationFormSubmitButton = ({ isSubmitting }: ReservationFormSubmitButt
       type="submit"
       disabled={isSubmitting}
     >
-      {isSubmitting ? "Odesílání..." : "Dokončit rezervaci"}
+      {isSubmitting ? "Odesílání..." : "Odeslat rezervaci"}
     </Button>
   );
 };
