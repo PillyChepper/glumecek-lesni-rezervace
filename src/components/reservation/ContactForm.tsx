@@ -6,10 +6,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { DateRange } from '@/components/DateRangePicker';
 import { useToast } from '@/components/ui/use-toast';
 import { createReservation } from '@/lib/supabase/reservations';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface ContactFormProps {
   dateRange: DateRange;
@@ -22,9 +22,8 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [numOfGuests, setNumOfGuests] = useState<number>(2);
-  const [numOfPets, setNumOfPets] = useState<number>(0);
+  const [hasPets, setHasPets] = useState<string>('no');
   const [specialRequests, setSpecialRequests] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<string>('bank-transfer');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { toast } = useToast();
@@ -32,10 +31,6 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
 
   const handleGuestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNumOfGuests(Number(e.target.value));
-  };
-  
-  const handlePetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNumOfPets(Number(e.target.value));
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -70,9 +65,9 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
         arrival_date: dateRange.from.toISOString(),
         departure_date: dateRange.to.toISOString(),
         number_of_guests: numOfGuests,
-        number_of_pets: numOfPets,
+        number_of_pets: hasPets === 'yes' ? 1 : 0,
         special_requests: specialRequests,
-        payment_method: paymentMethod
+        payment_method: 'qr-code'
       });
       
       if (error) throw error;
@@ -91,9 +86,8 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
       setEmail('');
       setPhone('');
       setNumOfGuests(2);
-      setNumOfPets(0);
+      setHasPets('no');
       setSpecialRequests('');
-      setPaymentMethod('bank-transfer');
       
       // Navigate to homepage after submission
       navigate('/', { replace: true });
@@ -177,14 +171,15 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="pets">Počet mazlíčků</Label>
-                <Input 
-                  id="pets" 
-                  type="number" 
-                  min={0}
-                  max={2}
-                  value={numOfPets}
-                  onChange={handlePetChange}
-                />
+                <Select value={hasPets} onValueChange={setHasPets}>
+                  <SelectTrigger id="pets">
+                    <SelectValue placeholder="Vyberte" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="no">Ne</SelectItem>
+                    <SelectItem value="yes">Ano</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             
@@ -198,18 +193,8 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
               />
             </div>
             
-            <div className="space-y-2">
-              <Label>Způsob platby</Label>
-              <RadioGroup value={paymentMethod} onValueChange={(value: 'bank-transfer' | 'cash') => setPaymentMethod(value)}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="bank-transfer" id="bank-transfer" />
-                  <Label htmlFor="bank-transfer">Bankovní převod</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="cash" id="cash" />
-                  <Label htmlFor="cash">Hotovost při příjezdu</Label>
-                </div>
-              </RadioGroup>
+            <div className="p-3 bg-gray-50 rounded-md">
+              <p className="text-sm text-forest-700">Platba bude provedena pomocí QR kódu po potvrzení rezervace.</p>
             </div>
           </CardContent>
           <CardFooter>
