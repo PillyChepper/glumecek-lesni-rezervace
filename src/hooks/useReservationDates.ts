@@ -83,32 +83,39 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
               // Skip cancelled reservations (double check even though we filtered in the query)
               if (reservation.status === 'cancelled') return;
               
-              // Ensure proper date parsing
+              // Parse the dates properly
               const arrivalDate = new Date(reservation.arrival_date);
               const departureDate = new Date(reservation.departure_date);
               
               console.log(`Processing reservation: ${arrivalDate.toISOString()} - ${departureDate.toISOString()}`);
               
               // Generate all dates between arrival and departure (inclusive)
-              const currentDate = new Date(arrivalDate);
+              let currentDateCopy = new Date(arrivalDate);
               
-              // Use a while loop with a date copy to prevent infinite loops
-              while (currentDate.getTime() <= departureDate.getTime()) {
-                // Add date string with proper formatting
-                const dateStr = currentDate.toISOString().split('T')[0];
+              // Use a safe approach to prevent potential infinite loops
+              const maxDays = 100; // Safety limit
+              let dayCount = 0;
+              
+              while (currentDateCopy.getTime() <= departureDate.getTime() && dayCount < maxDays) {
+                // Format date without time component for consistency
+                const dateStr = currentDateCopy.toISOString().split('T')[0];
                 bookedDatesSet.add(dateStr);
                 
-                // Increment day safely
-                currentDate.setDate(currentDate.getDate() + 1);
+                // Create a new date object for the next day to avoid reference issues
+                const nextDay = new Date(currentDateCopy);
+                nextDay.setDate(nextDay.getDate() + 1);
+                currentDateCopy = nextDay;
+                
+                dayCount++;
               }
             });
             
-            // Convert to Date objects with normalized time (start of day)
+            // Convert string dates to Date objects
             const bookedDates = Array.from(bookedDatesSet).map(dateStr => {
               return startOfDay(new Date(dateStr));
             });
             
-            console.log('Processed booked dates:', bookedDates.length, 'dates');
+            console.log('Processed booked dates:', bookedDates.length, 'dates:', bookedDates);
             setDisabledDates(bookedDates);
           } else {
             console.log('No booked dates found in database, using sample data');
@@ -135,7 +142,22 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
     }
 
     fetchReservationDates();
-  }, [startDate, endDate]);
+    
+    // Set up event listener for reservation changes
+    const handleReservationChange = () => {
+      console.log('Reservation change detected, refreshing dates');
+      fetchReservationDates();
+    };
+    
+    window.addEventListener('reservation-changed', handleReservationChange);
+    window.addEventListener('reservation-cancelled', handleReservationChange);
+    
+    // Clean up event listener
+    return () => {
+      window.removeEventListener('reservation-changed', handleReservationChange);
+      window.removeEventListener('reservation-cancelled', handleReservationChange);
+    };
+  }, []);
 
   return { disabledDates, loading, error, isSupabaseConnected };
 }

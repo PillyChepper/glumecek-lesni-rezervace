@@ -53,6 +53,13 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
     }
     
     console.log('Reservation created successfully:', data);
+    
+    // Dispatch event to notify other components that a reservation has been created
+    const event = new CustomEvent('reservation-changed', { 
+      detail: { reservation: data } 
+    });
+    window.dispatchEvent(event);
+    
     return { data, error: null };
   } catch (error) {
     console.error('Exception in createReservation:', error);
@@ -87,6 +94,14 @@ export async function updateReservationStatus(id: string, status: 'pending' | 'c
     .eq('id', id)
     .select()
     .single();
+
+  // Dispatch event to notify other components that a reservation status has changed
+  if (!error) {
+    const event = new CustomEvent('reservation-changed', { 
+      detail: { reservation: data } 
+    });
+    window.dispatchEvent(event);
+  }
 
   return { data, error };
 }

@@ -25,7 +25,7 @@ import {
   SidebarTrigger,
   SidebarInset
 } from "@/components/ui/sidebar";
-import { Calendar, Home, Users, Check, X } from "lucide-react";
+import { Calendar, Home, Users, Check, X, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Reservation, updateReservationStatus } from "@/lib/supabase/reservations";
 import { Spinner } from "@/components/ui/spinner";
@@ -53,18 +53,47 @@ const Admin = () => {
 
   useEffect(() => {
     fetchReservations();
+    
+    // Subscribe to reservation changes using Supabase realtime
+    const channel = supabase
+      .channel('public:reservations')
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'reservations' 
+        }, 
+        (payload) => {
+          console.log('Reservation changed:', payload);
+          fetchReservations();
+        }
+      )
+      .subscribe();
+      
+    // Clean up the subscription
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   async function fetchReservations() {
     try {
       setLoading(true);
+      setError(null);
+      
+      console.log('Fetching reservations...');
+      
       const { data, error } = await supabase
         .from('reservations')
         .select('*')
         .order('arrival_date', { ascending: true });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching reservations:', error);
+        throw error;
+      }
       
+      console.log('Fetched reservations:', data?.length || 0);
       setReservations(data || []);
     } catch (err) {
       console.error('Error fetching reservations:', err);
@@ -148,7 +177,18 @@ const Admin = () => {
         <SidebarInset className="px-4 py-6 md:px-8">
           <div className="flex justify-between items-center mb-6">
             <h1 className="section-title">Rezervace</h1>
-            <SidebarTrigger />
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={fetchReservations}
+                className="flex items-center gap-1"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Obnovit
+              </Button>
+              <SidebarTrigger />
+            </div>
           </div>
 
           {loading ? (
