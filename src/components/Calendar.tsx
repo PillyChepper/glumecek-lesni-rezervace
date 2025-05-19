@@ -6,19 +6,21 @@ import { useToast } from '@/components/ui/use-toast';
 import DateRangePicker, { DateRange } from '@/components/DateRangePicker';
 import { format } from 'date-fns';
 import { cs } from 'date-fns/locale';
+import { useReservationDates } from '@/hooks/useReservationDates';
+import { Spinner } from '@/components/ui/spinner';
 
 type CalendarProps = {
-  disabledDates?: Date[];
   onBookingComplete?: (booking: DateRange) => void;
 };
 
-const ReservationCalendar = ({ disabledDates = [], onBookingComplete }: CalendarProps) => {
+const ReservationCalendar = ({ onBookingComplete }: CalendarProps) => {
   const [dateRange, setDateRange] = useState<DateRange>({
     from: undefined,
     to: undefined,
   });
   
   const { toast } = useToast();
+  const { disabledDates, loading, error } = useReservationDates();
 
   const handleReservationSubmit = () => {
     if (!dateRange.from || !dateRange.to) {
@@ -65,11 +67,23 @@ const ReservationCalendar = ({ disabledDates = [], onBookingComplete }: Calendar
         <CardDescription className="text-center text-lg">Vyberte datum příjezdu a odjezdu</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center">
-        <DateRangePicker 
-          dateRange={dateRange}
-          onDateChange={setDateRange}
-          disabledDates={disabledDates}
-        />
+        {loading ? (
+          <div className="flex justify-center items-center h-32">
+            <Spinner className="h-8 w-8 text-forest-600" />
+          </div>
+        ) : (
+          <DateRangePicker 
+            dateRange={dateRange}
+            onDateChange={setDateRange}
+            disabledDates={disabledDates}
+          />
+        )}
+
+        {error && (
+          <div className="mt-4 p-3 bg-red-100 text-red-800 rounded-md text-sm">
+            {error}
+          </div>
+        )}
 
         {dateRange.from && dateRange.to && (
           <div className="mt-6 w-full">

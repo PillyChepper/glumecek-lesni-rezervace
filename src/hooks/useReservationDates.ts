@@ -2,12 +2,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { startOfDay } from 'date-fns';
-import { getBookedDates } from '@/utils/bookedDates';
-
-// Define the interface for the data returned by the RPC function
-interface UnavailableDateResponse {
-  booked_date: string;
-}
 
 export function useReservationDates(startDate?: Date, endDate?: Date) {
   const [disabledDates, setDisabledDates] = useState<Date[]>([]);
@@ -19,23 +13,23 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
     // Check if Supabase is connected properly
     const checkSupabaseConnection = async () => {
       try {
-        // Try to query first to confirm the connection and check if RLS is off
+        // Try to query first to confirm the connection
         const { data, error } = await supabase.from('reservations').select('count').limit(1);
         
         if (error) {
           console.error('Supabase connection check failed:', error);
           setIsSupabaseConnected(false);
-          setError('Could not connect to the database. Using sample booked dates.');
+          setError('Could not connect to the database. Please try again later.');
           return false;
         }
         
-        console.log('Supabase connection check succeeded - RLS seems to be disabled');
+        console.log('Supabase connection check succeeded');
         setIsSupabaseConnected(true);
         return true;
       } catch (err) {
         console.error('Unexpected error checking Supabase connection:', err);
         setIsSupabaseConnected(false);
-        setError('Could not connect to the database due to an unexpected error. Using sample booked dates.');
+        setError('Could not connect to the database due to an unexpected error.');
         return false;
       }
     };
@@ -48,19 +42,17 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
         // Check connection first
         const connected = await checkSupabaseConnection();
         
-        // If not connected or we get errors, use sample data
+        // If not connected, show error but don't fall back to sample data
         if (!connected) {
-          console.log('Using sample booked dates due to connection issues');
-          const sampleDates = getBookedDates();
-          console.log('Sample booked dates:', sampleDates);
-          setDisabledDates(sampleDates);
+          console.log('Database connection issues');
+          setDisabledDates([]);
           setLoading(false);
           return;
         }
 
         console.log('Fetching ALL reservations from the database');
         
-        // Try to fetch from Supabase - FETCH ALL RESERVATIONS, not just within a date range
+        // Try to fetch from Supabase
         try {
           // Filter out reservations with status 'cancelled'
           const { data: reservationsData, error: reservationsError } = await supabase
@@ -70,7 +62,10 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
 
           if (reservationsError) {
             console.error('Error fetching reservations:', reservationsError);
-            throw reservationsError;
+            setError('Error fetching reservation data.');
+            setDisabledDates([]);
+            setLoading(false);
+            return;
           }
 
           console.log('Raw reservations data:', reservationsData);
@@ -96,8 +91,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
               const maxDays = 100; // Safety limit
               let dayCount = 0;
               
-              // Important change: Include the departure date in the booked dates
-              // Using <= instead of < to include the departure date
+              // Include the departure date in the booked dates
               while (currentDateCopy.getTime() <= departureDate.getTime() && dayCount < maxDays) {
                 // Format date without time component for consistency
                 const dateStr = currentDateCopy.toISOString().split('T')[0];
@@ -121,24 +115,18 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
             console.log('Processed booked dates:', bookedDates.length, 'dates:', bookedDates);
             setDisabledDates(bookedDates);
           } else {
-            console.log('No booked dates found in database, using sample data');
-            const sampleDates = getBookedDates();
-            setDisabledDates(sampleDates);
+            console.log('No booked dates found in database');
+            setDisabledDates([]);
           }
         } catch (supabaseErr) {
           console.error('Supabase query error:', supabaseErr);
-          
-          // Fallback to sample data
-          const sampleDates = getBookedDates();
-          setDisabledDates(sampleDates);
-          console.log('Using sample data for booked dates');
-          setError('Error fetching reservation data. Using sample booked dates for display.');
+          setError('Error fetching reservation data.');
+          setDisabledDates([]);
         }
       } catch (err) {
         console.error('Error fetching reservation dates:', err);
-        setError('Failed to load reservation dates. Using sample dates.');
-        const sampleDates = getBookedDates();
-        setDisabledDates(sampleDates);
+        setError('Failed to load reservation dates.');
+        setDisabledDates([]);
       } finally {
         setLoading(false);
       }

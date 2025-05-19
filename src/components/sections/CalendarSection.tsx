@@ -15,6 +15,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { useReservationDatesWithRefresh } from '@/hooks/useReservationDatesWithRefresh';
+import { Spinner } from '@/components/ui/spinner';
 
 const CalendarSection = () => {
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -28,13 +30,7 @@ const CalendarSection = () => {
   const [phone, setPhone] = useState('');
   
   const navigate = useNavigate();
-
-  const disabledDates = [
-    new Date(2025, 3, 15),
-    new Date(2025, 3, 16),
-    new Date(2025, 3, 17),
-    new Date(2025, 3, 18),
-  ];
+  const { disabledDates, loading, error } = useReservationDatesWithRefresh();
 
   const handleReservationClick = () => {
     // Only open contact form dialog if both dates are selected
@@ -71,12 +67,24 @@ const CalendarSection = () => {
   return (
     <Section id="kalendar">
       <div className="max-w-5xl mx-auto">
-        <DateRangePicker 
-          dateRange={dateRange}
-          onDateChange={setDateRange}
-          disabledDates={disabledDates}
-          onReservationClick={handleReservationClick}
-        />
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <Spinner className="h-8 w-8 text-forest-600" />
+          </div>
+        ) : (
+          <DateRangePicker 
+            dateRange={dateRange}
+            onDateChange={setDateRange}
+            disabledDates={disabledDates}
+            onReservationClick={handleReservationClick}
+          />
+        )}
+
+        {error && (
+          <div className="mt-4 p-4 bg-red-100 text-red-800 rounded-md">
+            {error}
+          </div>
+        )}
 
         <Dialog open={showContactForm} onOpenChange={setShowContactForm}>
           <DialogContent className="sm:max-w-md">
