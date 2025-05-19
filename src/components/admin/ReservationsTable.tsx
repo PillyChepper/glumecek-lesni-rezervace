@@ -46,6 +46,18 @@ export const ReservationsTable = ({
     }
   };
 
+  // Filter reservations to group by status
+  const pendingReservations = reservations.filter(r => r.status === 'pending');
+  const confirmedReservations = reservations.filter(r => r.status === 'confirmed');
+  const cancelledReservations = reservations.filter(r => r.status === 'cancelled');
+  
+  // Sort all reservations by arrival date
+  const sortedReservations = [
+    ...pendingReservations,
+    ...confirmedReservations,
+    ...cancelledReservations
+  ];
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -59,78 +71,89 @@ export const ReservationsTable = ({
   }
 
   return (
-    <Table>
-      <TableCaption>Seznam všech rezervací</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Jméno</TableHead>
-          <TableHead>Kontakt</TableHead>
-          <TableHead>Datum pobytu</TableHead>
-          <TableHead>Osoby</TableHead>
-          <TableHead>Vytvořeno</TableHead>
-          <TableHead>Stav</TableHead>
-          <TableHead>Akce</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {reservations.length === 0 ? (
+    <div className="space-y-4">
+      {pendingReservations.length > 0 && (
+        <div className="px-2 py-1 bg-yellow-50 text-yellow-800 rounded inline-block text-sm font-medium">
+          {pendingReservations.length} rezervací čeká na potvrzení
+        </div>
+      )}
+      
+      <Table>
+        <TableCaption>Seznam všech rezervací</TableCaption>
+        <TableHeader>
           <TableRow>
-            <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-              Zatím nejsou žádné rezervace
-            </TableCell>
+            <TableHead>Jméno</TableHead>
+            <TableHead>Kontakt</TableHead>
+            <TableHead>Datum pobytu</TableHead>
+            <TableHead>Osoby</TableHead>
+            <TableHead>Vytvořeno</TableHead>
+            <TableHead>Stav</TableHead>
+            <TableHead>Akce</TableHead>
           </TableRow>
-        ) : (
-          reservations.map((reservation) => (
-            <TableRow key={reservation.id}>
-              <TableCell className="font-medium">
-                {reservation.first_name} {reservation.last_name}
-              </TableCell>
-              <TableCell>
-                <div>{reservation.email}</div>
-                <div className="text-sm text-muted-foreground">{reservation.phone}</div>
-              </TableCell>
-              <TableCell>
-                {format(new Date(reservation.arrival_date), "d. MMMM", { locale: cs })} - {format(new Date(reservation.departure_date), "d. MMMM yyyy", { locale: cs })}
-              </TableCell>
-              <TableCell>{reservation.number_of_guests}</TableCell>
-              <TableCell>
-                {reservation.created_at && format(new Date(reservation.created_at), "d.M.yyyy", { locale: cs })}
-              </TableCell>
-              <TableCell>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(reservation.status)}`}>
-                  {getStatusText(reservation.status)}
-                </span>
-              </TableCell>
-              <TableCell>
-                <div className="flex space-x-2">
-                  {reservation.status === 'pending' && (
-                    <>
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="flex items-center text-green-600 border-green-600 hover:bg-green-50"
-                        onClick={() => onStatusChange(reservation.id!, 'confirm')}
-                      >
-                        <Check className="h-4 w-4 mr-1" />
-                        Potvrdit
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="flex items-center text-red-600 border-red-600 hover:bg-red-50"
-                        onClick={() => onStatusChange(reservation.id!, 'cancel')}
-                      >
-                        <X className="h-4 w-4 mr-1" />
-                        Zamítnout
-                      </Button>
-                    </>
-                  )}
-                </div>
+        </TableHeader>
+        <TableBody>
+          {sortedReservations.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                Zatím nejsou žádné rezervace
               </TableCell>
             </TableRow>
-          ))
-        )}
-      </TableBody>
-    </Table>
+          ) : (
+            sortedReservations.map((reservation) => (
+              <TableRow 
+                key={reservation.id}
+                className={reservation.status === 'pending' ? 'bg-yellow-50' : ''}
+              >
+                <TableCell className="font-medium">
+                  {reservation.first_name} {reservation.last_name}
+                </TableCell>
+                <TableCell>
+                  <div>{reservation.email}</div>
+                  <div className="text-sm text-muted-foreground">{reservation.phone}</div>
+                </TableCell>
+                <TableCell>
+                  {format(new Date(reservation.arrival_date), "d. MMMM", { locale: cs })} - {format(new Date(reservation.departure_date), "d. MMMM yyyy", { locale: cs })}
+                </TableCell>
+                <TableCell>{reservation.number_of_guests}</TableCell>
+                <TableCell>
+                  {reservation.created_at && format(new Date(reservation.created_at), "d.M.yyyy", { locale: cs })}
+                </TableCell>
+                <TableCell>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(reservation.status)}`}>
+                    {getStatusText(reservation.status)}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    {reservation.status === 'pending' && (
+                      <>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="flex items-center text-green-600 border-green-600 hover:bg-green-50"
+                          onClick={() => onStatusChange(reservation.id!, 'confirm')}
+                        >
+                          <Check className="h-4 w-4 mr-1" />
+                          Potvrdit
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="flex items-center text-red-600 border-red-600 hover:bg-red-50"
+                          onClick={() => onStatusChange(reservation.id!, 'cancel')}
+                        >
+                          <X className="h-4 w-4 mr-1" />
+                          Zamítnout
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
