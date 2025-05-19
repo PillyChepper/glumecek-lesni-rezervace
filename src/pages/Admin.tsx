@@ -51,32 +51,8 @@ const Admin = () => {
   const [selectedReservation, setSelectedReservation] = useState<{id: string, action: 'confirm' | 'cancel'} | null>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    fetchReservations();
-    
-    // Subscribe to reservation changes using Supabase realtime
-    const channel = supabase
-      .channel('public:reservations')
-      .on('postgres_changes', 
-        { 
-          event: '*', 
-          schema: 'public', 
-          table: 'reservations' 
-        }, 
-        (payload) => {
-          console.log('Reservation changed:', payload);
-          fetchReservations();
-        }
-      )
-      .subscribe();
-      
-    // Clean up the subscription
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
-  async function fetchReservations() {
+  // Function to fetch reservations from Supabase
+  const fetchReservations = async () => {
     try {
       setLoading(true);
       setError(null);
@@ -93,7 +69,7 @@ const Admin = () => {
         throw error;
       }
       
-      console.log('Fetched reservations:', data?.length || 0);
+      console.log('Fetched reservations:', data?.length || 0, data);
       setReservations(data || []);
     } catch (err) {
       console.error('Error fetching reservations:', err);
@@ -101,7 +77,48 @@ const Admin = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
+
+  useEffect(() => {
+    // Initial fetch
+    fetchReservations();
+    
+    // Subscribe to changes in the reservations table
+    const channel = supabase
+      .channel('public:reservations')
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'reservations' 
+        }, 
+        (payload) => {
+          console.log('Reservation changed via realtime:', payload);
+          // Refresh the data when a change is detected
+          fetchReservations();
+        }
+      )
+      .subscribe((status) => {
+        console.log('Realtime subscription status:', status);
+      });
+      
+    // Listen for reservation-changed events from other components
+    const handleReservationChange = () => {
+      console.log('Reservation change event received, refreshing...');
+      fetchReservations();
+    };
+    
+    window.addEventListener('reservation-changed', handleReservationChange);
+    window.addEventListener('reservation-cancelled', handleReservationChange);
+    
+    // Clean up the subscription and event listeners
+    return () => {
+      console.log('Cleaning up Admin component subscriptions');
+      supabase.removeChannel(channel);
+      window.removeEventListener('reservation-changed', handleReservationChange);
+      window.removeEventListener('reservation-cancelled', handleReservationChange);
+    };
+  }, []);
 
   const handleStatusUpdate = async () => {
     if (!selectedReservation) return;

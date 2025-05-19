@@ -24,7 +24,8 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
     // Always use credit_card as the payment method
     const reservationData = {
       ...reservation,
-      payment_method: 'credit_card' // Changed from 'cash' to 'credit_card'
+      payment_method: 'credit_card', // Fixed payment method to match database constraint
+      status: 'pending' // Ensure status is set explicitly
     };
     
     const { data, error } = await supabase
