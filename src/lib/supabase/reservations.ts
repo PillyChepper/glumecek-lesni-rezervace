@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 
 export interface Reservation {
@@ -20,11 +21,10 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
   try {
     console.log('Creating reservation with Supabase:', reservation);
     
-    // Fix payment_method to use a valid value that matches database constraints
-    // Using 'cash' as it's likely one of the allowed values
+    // Always use credit_card as the payment method
     const reservationData = {
       ...reservation,
-      payment_method: 'cash' // Changed from 'qr-code' to 'cash'
+      payment_method: 'credit_card' // Changed from 'cash' to 'credit_card'
     };
     
     const { data, error } = await supabase
