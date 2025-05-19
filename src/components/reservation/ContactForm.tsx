@@ -11,6 +11,7 @@ import { useReservationForm } from './form/useReservationForm';
 import { BookingStep } from './BookingSteps';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { ArrowRight } from 'lucide-react';
 
 interface ContactFormProps {
   dateRange: DateRange;
@@ -90,10 +91,11 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
               </CardContent>
               <CardFooter>
                 <Button 
-                  className="w-full bg-forest-600 hover:bg-forest-700"
+                  className="w-full bg-[#4a544a] hover:bg-[#3d443d] text-white"
                   onClick={handleContinueToConfirm}
                   disabled={!firstName || !lastName || !email || !phone}
                 >
+                  <ArrowRight className="h-4 w-4 mr-1" />
                   Pokračovat k potvrzení
                 </Button>
               </CardFooter>
