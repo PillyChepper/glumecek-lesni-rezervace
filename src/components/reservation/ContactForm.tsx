@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { DateRange } from '@/components/DateRangePicker';
 import { useToast } from '@/components/ui/use-toast';
 import { createReservation } from '@/lib/supabase/reservations';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface ContactFormProps {
   dateRange: DateRange;
@@ -22,7 +22,7 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [numOfGuests, setNumOfGuests] = useState<number>(2);
-  const [hasPets, setHasPets] = useState<string>('no');
+  const [hasPet, setHasPet] = useState(false);
   const [specialRequests, setSpecialRequests] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -65,7 +65,7 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
         arrival_date: dateRange.from.toISOString(),
         departure_date: dateRange.to.toISOString(),
         number_of_guests: numOfGuests,
-        number_of_pets: hasPets === 'yes' ? 1 : 0,
+        number_of_pets: hasPet ? 1 : 0,
         special_requests: specialRequests,
         payment_method: 'qr-code'
       });
@@ -86,7 +86,7 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
       setEmail('');
       setPhone('');
       setNumOfGuests(2);
-      setHasPets('no');
+      setHasPet(false);
       setSpecialRequests('');
       
       // Navigate to homepage after submission
@@ -169,17 +169,13 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
                   onChange={handleGuestChange}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="pets">Počet mazlíčků</Label>
-                <Select value={hasPets} onValueChange={setHasPets}>
-                  <SelectTrigger id="pets">
-                    <SelectValue placeholder="Vyberte" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="no">Ne</SelectItem>
-                    <SelectItem value="yes">Ano</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="flex items-center space-x-2 h-full pt-8">
+                <Checkbox 
+                  id="pet" 
+                  checked={hasPet}
+                  onCheckedChange={(checked) => setHasPet(checked === true)} 
+                />
+                <Label htmlFor="pet" className="cursor-pointer">Přijedu s pejskem</Label>
               </div>
             </div>
             
