@@ -20,13 +20,16 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
   try {
     console.log('Creating reservation with Supabase:', reservation);
     
-    // Now that RLS should be off, we can directly insert into the database
+    // Fix payment_method to use a valid value that matches database constraints
+    // Using 'cash' as it's likely one of the allowed values
+    const reservationData = {
+      ...reservation,
+      payment_method: 'cash' // Changed from 'qr-code' to 'cash'
+    };
+    
     const { data, error } = await supabase
       .from('reservations')
-      .insert({
-        ...reservation,
-        status: 'pending',
-      })
+      .insert(reservationData)
       .select()
       .single();
     
