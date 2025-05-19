@@ -58,26 +58,15 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
           return;
         }
 
-        // Set default date range to next 3 months if not provided
-        const start = startDate || new Date();
-        let end = endDate;
+        console.log('Fetching ALL reservations from the database');
         
-        if (!end) {
-          end = new Date();
-          end.setMonth(end.getMonth() + 3);
-        }
-        
-        console.log(`Fetching reservations from ${start.toISOString()} to ${end.toISOString()}`);
-        
-        // Try to fetch from Supabase
+        // Try to fetch from Supabase - FETCH ALL RESERVATIONS, not just within a date range
         try {
           // Filter out reservations with status 'cancelled'
           const { data: reservationsData, error: reservationsError } = await supabase
             .from('reservations')
             .select('arrival_date, departure_date, status')
-            .gte('departure_date', start.toISOString())
-            .lte('arrival_date', end.toISOString())
-            .neq('status', 'cancelled'); // Exclude cancelled reservations
+            .neq('status', 'cancelled'); // Only exclude cancelled reservations
 
           if (reservationsError) {
             console.error('Error fetching reservations:', reservationsError);
