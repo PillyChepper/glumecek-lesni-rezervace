@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { startOfDay, isAfter, isBefore, isEqual, addDays } from "date-fns";
+import { cs } from "date-fns/locale";
 import { DateRange } from "@/components/DateRangePicker";
 
 interface DateRangeCalendarProps {
@@ -156,29 +157,19 @@ const DateRangeCalendar = ({
     setDepartureDate(value.to);
   }, [value.from, value.to]);
   
+  // Fixed the modifiers object to use correct types for React Day Picker
   const modifiers = {
-    hoverRange: !departureDate && arrivalDate && hoverDate && {
-      from: arrivalDate,
-      to: hoverDate,
-    },
-    selectedRange: arrivalDate && departureDate && {
-      from: arrivalDate,
-      to: departureDate,
-    },
-    arrivalSelected: arrivalDate && {
-      date: arrivalDate,
-    },
-    departureSelected: departureDate && {
-      date: departureDate,
-    },
-    fullyReserved: (date: Date) => {
-      return isFullyReserved(date);
-    }
+    hoverRange: !departureDate && arrivalDate && hoverDate ? 
+      { from: arrivalDate, to: hoverDate } : undefined,
+    selectedRange: arrivalDate && departureDate ? 
+      { from: arrivalDate, to: departureDate } : undefined,
+    arrivalDate: arrivalDate,
+    departureDate: departureDate,
+    fullyReserved: disabledDates
   };
 
   const disabledDaysFunc = (date: Date) => {
-    const isDisabled = isDateDisabled(date);
-    return isDisabled;
+    return isDateDisabled(date);
   };
 
   console.log('Number of disabled dates in calendar:', disabledDates.length);

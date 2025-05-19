@@ -159,15 +159,10 @@ const DateRangePicker = ({
             
             <PopoverContent className="w-[620px] p-0" align="start" sideOffset={5}>
               <DateRangeCalendar
-                selectedDate={selectingDeparture ? dateRange.to : dateRange.from}
-                onSelect={handleDateSelect}
-                onDayMouseEnter={handleDayMouseEnter}
-                onDayMouseLeave={handleDayMouseLeave}
-                isSelectingDeparture={selectingDeparture}
-                arrivalDate={dateRange.from}
-                departureDate={dateRange.to}
+                value={dateRange}
+                onChange={onDateChange}
                 disabledDates={disabledDates}
-                hoverDate={hoverDate}
+                minDays={2}
               />
             </PopoverContent>
           </div>
