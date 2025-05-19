@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Menu, X, Shield } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -38,9 +37,9 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <Link to="/" className="text-forest-800 font-display text-xl md:text-2xl font-semibold">
+        <a href="/" className="text-forest-800 font-display text-xl md:text-2xl font-semibold">
           Glumeček
-        </Link>
+        </a>
         
         <div className="hidden md:flex items-center space-x-6">
           {isHomePage ? (
