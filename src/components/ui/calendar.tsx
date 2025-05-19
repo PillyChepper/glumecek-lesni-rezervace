@@ -66,8 +66,6 @@ function Calendar({
       modifiersClassNames={{
         hoverRange: "day-hoverRange",
         selectedRange: "day-selectedRange",
-        arrivalSelected: "day-arrivalSelected",
-        departureSelected: "day-departureSelected",
         arrivalDate: "day-arrivalDate",
         departureDate: "day-departureDate",
         fullyReserved: "day-fullyReserved",
@@ -75,7 +73,7 @@ function Calendar({
       }}
       modifiersStyles={{
         range_start: {
-          backgroundColor: "#166534",
+          backgroundColor: "#166534", // Darker green for arrival date
           color: "#fff",
           borderRadius: "0.375rem",
         },
@@ -85,12 +83,22 @@ function Calendar({
           borderRadius: "0.375rem",
         },
         range_end: {
-          backgroundColor: "#166534",
+          backgroundColor: "#166534", // Same dark green for departure date
           color: "#fff",
           borderRadius: "0.375rem",
         },
         fullyReserved: {
           backgroundColor: "#dc2626",
+          color: "#fff",
+          borderRadius: "0.375rem",
+        },
+        arrivalDate: {
+          backgroundColor: "#166534", // Darker green for arrival date
+          color: "#fff",
+          borderRadius: "0.375rem",
+        },
+        departureDate: {
+          backgroundColor: "#166534", // Same dark green for departure date
           color: "#fff",
           borderRadius: "0.375rem",
         },

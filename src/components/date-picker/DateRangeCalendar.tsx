@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { startOfDay, isAfter, isBefore, isEqual, addDays } from "date-fns";
@@ -102,6 +103,14 @@ const DateRangeCalendar = ({
     if (!arrivalDate) {
       setArrivalDate(date);
       onChange({ from: date, to: undefined });
+      return;
+    }
+    
+    // If clicking the same date as arrival, unselect it
+    if (arrivalDate && isEqual(date, arrivalDate)) {
+      setArrivalDate(undefined);
+      setDepartureDate(undefined);
+      onChange({ from: undefined, to: undefined });
       return;
     }
     
