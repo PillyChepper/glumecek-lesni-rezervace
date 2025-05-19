@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { startOfDay } from 'date-fns';
+import { getBookedDates } from '@/utils/bookedDates';
 
 // Define the interface for the data returned by the RPC function
 interface UnavailableDateResponse {
@@ -23,7 +24,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
         if (error) {
           console.error('Supabase connection check failed:', error);
           setIsSupabaseConnected(false);
-          setError('Could not connect to the database. Please check if Supabase is active.');
+          setError('Could not connect to the database. Using sample booked dates.');
           return false;
         }
         
@@ -33,7 +34,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
       } catch (err) {
         console.error('Unexpected error checking Supabase connection:', err);
         setIsSupabaseConnected(false);
-        setError('Could not connect to the database due to an unexpected error.');
+        setError('Could not connect to the database due to an unexpected error. Using sample booked dates.');
         return false;
       }
     };
@@ -45,7 +46,13 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
       try {
         // Check connection first
         const connected = await checkSupabaseConnection();
+        
+        // If not connected or we get errors, use sample data
         if (!connected) {
+          console.log('Using sample booked dates due to connection issues');
+          const sampleDates = getBookedDates();
+          console.log('Sample booked dates:', sampleDates);
+          setDisabledDates(sampleDates);
           setLoading(false);
           return;
         }
@@ -108,30 +115,24 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
             console.log('Fetched booked dates:', bookedDates);
             setDisabledDates(bookedDates);
           } else {
-            console.log('No booked dates found');
-            setDisabledDates([]);
+            console.log('No booked dates found in database, using sample data');
+            const sampleDates = getBookedDates();
+            setDisabledDates(sampleDates);
           }
         } catch (supabaseErr) {
           console.error('Supabase query error:', supabaseErr);
           
-          // Fallback to hardcoded test data for debugging purposes
-          const mockDisabledDates = [
-            new Date(2025, 4, 15), // May 15, 2025
-            new Date(2025, 4, 16), // May 16, 2025
-            new Date(2025, 4, 17), // May 17, 2025
-            new Date(2025, 5, 10), // June 10, 2025
-            new Date(2025, 5, 11), // June 11, 2025
-            new Date(2025, 5, 12)  // June 12, 2025
-          ];
-          
-          setDisabledDates(mockDisabledDates);
-          console.log('Using fallback data for disabled dates');
-          setError('Error fetching reservation data. Using fallback dates for display.');
+          // Fallback to sample data
+          const sampleDates = getBookedDates();
+          setDisabledDates(sampleDates);
+          console.log('Using sample data for booked dates');
+          setError('Error fetching reservation data. Using sample booked dates for display.');
         }
       } catch (err) {
         console.error('Error fetching reservation dates:', err);
-        setError('Failed to load reservation dates');
-        setDisabledDates([]);
+        setError('Failed to load reservation dates. Using sample dates.');
+        const sampleDates = getBookedDates();
+        setDisabledDates(sampleDates);
       } finally {
         setLoading(false);
       }
