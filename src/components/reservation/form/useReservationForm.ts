@@ -56,8 +56,7 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
         departure_date: dateRange.to.toISOString(),
         number_of_guests: numOfGuests,
         number_of_pets: hasPet ? 1 : 0,
-        special_requests: specialRequests,
-        payment_method: 'credit_card' // Changed back to 'credit_card' now that the database constraint allows it
+        special_requests: specialRequests
       });
       
       if (error) throw error;

@@ -12,7 +12,6 @@ export interface Reservation {
   number_of_guests: number;
   number_of_pets: number;
   special_requests?: string;
-  payment_method: string; // Changed from union type to string to match database
   status: 'pending' | 'confirmed' | 'cancelled' | string; // Added string to accept any value from database
   created_at?: string;
 }
@@ -21,10 +20,8 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
   try {
     console.log('Creating reservation with Supabase:', reservation);
     
-    // Now use credit_card as the payment method since database constraint has been updated
     const reservationData = {
       ...reservation,
-      payment_method: 'credit_card', // Changed back to 'credit_card' now that the database allows it
       status: 'pending' // Ensure status is set explicitly
     };
     

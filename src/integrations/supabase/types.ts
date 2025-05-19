@@ -20,7 +20,6 @@ export type Database = {
           last_name: string
           number_of_guests: number
           number_of_pets: number
-          payment_method: string
           phone: string
           special_requests: string | null
           status: string
@@ -35,7 +34,6 @@ export type Database = {
           last_name: string
           number_of_guests?: number
           number_of_pets?: number
-          payment_method: string
           phone: string
           special_requests?: string | null
           status?: string
@@ -50,7 +48,6 @@ export type Database = {
           last_name?: string
           number_of_guests?: number
           number_of_pets?: number
-          payment_method?: string
           phone?: string
           special_requests?: string | null
           status?: string
