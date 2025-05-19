@@ -57,7 +57,7 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
         number_of_guests: numOfGuests,
         number_of_pets: hasPet ? 1 : 0,
         special_requests: specialRequests,
-        payment_method: 'credit_card' // Changed from 'cash' to 'credit_card'
+        payment_method: 'cash' // Changed from 'credit_card' to 'cash' to match database constraint
       });
       
       if (error) throw error;
