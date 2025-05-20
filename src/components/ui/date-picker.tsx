@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DatePickerProps {
   date: Date | undefined;
@@ -42,6 +43,7 @@ export function DatePicker({
   onDayMouseLeave,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
+  const isMobile = useIsMobile();
 
   // Function to handle calendar state changes
   const handleSelect = (selectedDate: Date | undefined) => {
@@ -89,7 +91,12 @@ export function DatePicker({
             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 max-w-[600px]" align="start">
+        <PopoverContent 
+          className="w-auto p-0 max-w-[600px]" 
+          align="start" 
+          alignOffset={isMobile ? -30 : 0}
+          side={isMobile ? "bottom" : "bottom"}
+        >
           <div className="p-2 text-center text-sm font-medium">
             {label}
           </div>
@@ -99,9 +106,9 @@ export function DatePicker({
             onSelect={handleSelect}
             disabled={isDateDisabled}
             locale={cs}
-            numberOfMonths={2}
+            numberOfMonths={isMobile ? 1 : 2}
             showOutsideDays={false}
-            className="pointer-events-auto border-t w-full"
+            className="pointer-events-auto border-t w-full max-h-[70vh] overflow-y-auto"
             fromDate={minDate}
             onDayMouseEnter={onDayMouseEnter}
             onDayMouseLeave={onDayMouseLeave}

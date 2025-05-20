@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/popover";
 import DatePickerInput from "./date-picker/DatePickerInput";
 import DateRangeCalendar from "./date-picker/DateRangeCalendar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export type DateRange = {
   from: Date | undefined;
@@ -30,6 +31,7 @@ const DateRangePicker = ({
   const [open, setOpen] = useState(false);
   const [selectingDeparture, setSelectingDeparture] = useState(false);
   const [hoverDate, setHoverDate] = useState<Date | undefined>(undefined);
+  const isMobile = useIsMobile();
   
   const handleDateSelect = (date: Date | undefined) => {
     if (!selectingDeparture) {
@@ -157,7 +159,13 @@ const DateRangePicker = ({
               />
             </div>
             
-            <PopoverContent className="w-[620px] p-0" align="start" sideOffset={5}>
+            <PopoverContent 
+              className="w-[calc(100vw-32px)] md:w-[620px] p-0" 
+              align="start" 
+              sideOffset={5}
+              alignOffset={isMobile ? -50 : 0}
+              side={isMobile ? "bottom" : "bottom"}
+            >
               <DateRangeCalendar
                 value={dateRange}
                 onChange={onDateChange}

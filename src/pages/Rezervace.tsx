@@ -55,6 +55,8 @@ const Rezervace = () => {
   const handleReservationClick = () => {
     setShowContactForm(true);
     setCurrentStep('contact');
+    // Scroll to the top when showing contact form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
   const handleBackToDateSelection = () => {

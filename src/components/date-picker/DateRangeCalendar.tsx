@@ -4,6 +4,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { startOfDay, isAfter, isBefore, isEqual, addDays, format } from "date-fns";
 import { cs } from "date-fns/locale";
 import { DateRange } from "@/components/DateRangePicker";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DateRangeCalendarProps {
   value: DateRange;
@@ -25,6 +26,7 @@ const DateRangeCalendar = ({
   const [disabledDatesMap, setDisabledDatesMap] = useState<Map<string, boolean>>(
     new Map()
   );
+  const isMobile = useIsMobile();
 
   // Process disabled dates into a Map for faster lookups
   useEffect(() => {
@@ -201,7 +203,7 @@ const DateRangeCalendar = ({
   };
 
   return (
-    <div className="p-0 w-full">
+    <div className="p-0 w-full overflow-y-auto max-h-[80vh] pb-8">
       <Calendar
         mode="range"
         selected={{
@@ -211,7 +213,7 @@ const DateRangeCalendar = ({
         onDayClick={onDayClick}
         onDayMouseEnter={onDayMouseEnter}
         onDayMouseLeave={onDayMouseLeave}
-        numberOfMonths={2}
+        numberOfMonths={isMobile ? 1 : 2}
         showOutsideDays={false}
         disabled={disabledDaysFunc}
         modifiers={modifiers}

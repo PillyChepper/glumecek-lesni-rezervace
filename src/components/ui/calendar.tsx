@@ -72,8 +72,12 @@ function Calendar({
         IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
       }}
-      onDayMouseEnter={onDayMouseEnter as any}
-      onDayMouseLeave={onDayMouseLeave as any}
+      onDayMouseEnter={(day: Date, modifiers: any, e: React.MouseEvent) => {
+        if (onDayMouseEnter) onDayMouseEnter(day, modifiers, e);
+      }}
+      onDayMouseLeave={(day: Date, modifiers: any, e: React.MouseEvent) => {
+        if (onDayMouseLeave) onDayMouseLeave(day, modifiers, e);
+      }}
       modifiersClassNames={{
         hoverRange: "day-hoverRange",
         selectedRange: "day-selectedRange",
