@@ -1,15 +1,15 @@
 
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DayPicker, DayMouseEventHandler } from "react-day-picker";
+import { DayPicker, DayClickEventHandler } from "react-day-picker";
 import { cs } from "date-fns/locale";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
-  onDayMouseEnter?: DayMouseEventHandler;
-  onDayMouseLeave?: DayMouseEventHandler;
+  onDayMouseEnter?: (day: Date, modifiers: any, e: React.MouseEvent) => void;
+  onDayMouseLeave?: (day: Date, modifiers: any, e: React.MouseEvent) => void;
 };
 
 function Calendar({
@@ -23,10 +23,10 @@ function Calendar({
   // Add additional debug logging to help troubleshoot date selection issues
   const enhancedProps = {
     ...props,
-    onDayClick: (day: Date, modifiers: any) => {
-      console.log(`Calendar day clicked: ${day.toISOString()}`, modifiers);
+    onDayClick: (day: Date, modifiers: any, e: React.MouseEvent) => {
+      console.log(`Calendar day clicked: ${day.toISOString()}`, modifiers, e);
       if (props.onDayClick) {
-        props.onDayClick(day, modifiers);
+        props.onDayClick(day, modifiers, e);
       }
     },
   };
@@ -72,8 +72,8 @@ function Calendar({
         IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
       }}
-      onDayMouseEnter={onDayMouseEnter}
-      onDayMouseLeave={onDayMouseLeave}
+      onDayMouseEnter={onDayMouseEnter as any}
+      onDayMouseLeave={onDayMouseLeave as any}
       modifiersClassNames={{
         hoverRange: "day-hoverRange",
         selectedRange: "day-selectedRange",
