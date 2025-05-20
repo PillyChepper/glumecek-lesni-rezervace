@@ -12,6 +12,7 @@ export type Database = {
       reservations: {
         Row: {
           arrival_date: string
+          city: string | null
           created_at: string
           departure_date: string
           email: string
@@ -21,11 +22,14 @@ export type Database = {
           number_of_guests: number | null
           number_of_pets: number
           phone: string
+          postal_code: string | null
           special_requests: string | null
           status: string
+          street: string | null
         }
         Insert: {
           arrival_date: string
+          city?: string | null
           created_at?: string
           departure_date: string
           email: string
@@ -35,11 +39,14 @@ export type Database = {
           number_of_guests?: number | null
           number_of_pets?: number
           phone: string
+          postal_code?: string | null
           special_requests?: string | null
           status?: string
+          street?: string | null
         }
         Update: {
           arrival_date?: string
+          city?: string | null
           created_at?: string
           departure_date?: string
           email?: string
@@ -49,8 +56,10 @@ export type Database = {
           number_of_guests?: number | null
           number_of_pets?: number
           phone?: string
+          postal_code?: string | null
           special_requests?: string | null
           status?: string
+          street?: string | null
         }
         Relationships: []
       }

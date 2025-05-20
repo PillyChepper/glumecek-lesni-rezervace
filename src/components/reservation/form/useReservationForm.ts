@@ -46,9 +46,6 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
     setIsSubmitting(true);
     
     try {
-      // Prepare address information (optional)
-      const addressInfo = [street, city, postalCode].filter(Boolean).join(", ");
-      
       const { data, error } = await createReservation({
         first_name: firstName,
         last_name: lastName,
@@ -57,9 +54,11 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
         arrival_date: dateRange.from.toISOString(),
         departure_date: dateRange.to.toISOString(),
         number_of_pets: hasPet ? 1 : 0,
-        special_requests: addressInfo ? 
-          `Adresa: ${addressInfo}${specialRequests ? '\n\n' + specialRequests : ''}` : 
-          specialRequests
+        special_requests: specialRequests,
+        // Add address fields directly to the reservation
+        street,
+        city,
+        postal_code: postalCode
       });
       
       if (error) throw error;

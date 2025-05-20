@@ -9,11 +9,15 @@ export interface Reservation {
   phone: string;
   arrival_date: string;
   departure_date: string;
-  number_of_guests?: number; // Now optional
+  number_of_guests?: number; // Optional
   number_of_pets: number;
   special_requests?: string;
   status: 'pending' | 'confirmed' | 'cancelled' | string; // Added string to accept any value from database
   created_at?: string;
+  // Add new address fields
+  street?: string;
+  city?: string;
+  postal_code?: string;
 }
 
 export async function createReservation(reservation: Omit<Reservation, 'id' | 'status' | 'created_at'>): Promise<{ data: Reservation | null; error: any }> {
