@@ -54,11 +54,13 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
         
         // Try to fetch from Supabase
         try {
-          // Filter out reservations with status 'cancelled'
+          // Filter out ONLY reservations with status 'cancelled'
+          // This means both 'pending' and 'confirmed' reservations will block dates
           const { data: reservationsData, error: reservationsError } = await supabase
             .from('reservations')
             .select('arrival_date, departure_date, status')
-            .neq('status', 'cancelled'); // Only exclude cancelled reservations
+            .eq('status', 'cancelled')
+            .not(); // Using .not() to invert the condition - get all except 'cancelled'
 
           if (reservationsError) {
             console.error('Error fetching reservations:', reservationsError);
