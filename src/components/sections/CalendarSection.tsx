@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Section from '@/components/Section';
@@ -102,6 +101,7 @@ const CalendarSection = () => {
                     id="first-name" 
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="Zadejte jméno"
                     required
                   />
                 </div>
@@ -111,6 +111,7 @@ const CalendarSection = () => {
                     id="last-name" 
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Zadejte příjmení"
                     required
                   />
                 </div>
@@ -122,6 +123,7 @@ const CalendarSection = () => {
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Zadejte emailovou adresu"
                   required
                 />
               </div>
@@ -133,7 +135,7 @@ const CalendarSection = () => {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   isNumeric={true}
-                  placeholder="Pouze čísla"
+                  placeholder="Zadejte telefonní číslo"
                   required
                 />
               </div>

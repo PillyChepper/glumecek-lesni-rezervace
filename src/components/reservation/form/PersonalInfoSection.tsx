@@ -40,6 +40,7 @@ const PersonalInfoSection = ({
               id="first-name" 
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              placeholder="Zadejte jméno"
               required
             />
           </div>
@@ -49,6 +50,7 @@ const PersonalInfoSection = ({
               id="last-name" 
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              placeholder="Zadejte příjmení"
               required
             />
           </div>
@@ -64,6 +66,7 @@ const PersonalInfoSection = ({
             type="email" 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="Zadejte emailovou adresu"
             required
           />
         </div>
@@ -79,7 +82,7 @@ const PersonalInfoSection = ({
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             isNumeric={true}
-            placeholder="Pouze čísla"
+            placeholder="Zadejte telefonní číslo"
             required
           />
         </div>
