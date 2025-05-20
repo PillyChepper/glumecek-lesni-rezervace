@@ -73,7 +73,7 @@ const Rezervace = () => {
         <div className="max-w-7xl mx-auto">
           <h1 className="section-title text-center mb-8">Rezervace pobytu</h1>
           
-          <BookingSteps currentStep={currentStep} />
+          {!showContactForm && <BookingSteps currentStep={currentStep} />}
           
           {error && (
             <Alert variant="destructive" className="mb-6">

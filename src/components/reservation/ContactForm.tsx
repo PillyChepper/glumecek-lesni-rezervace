@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { DateRange } from '@/components/DateRangePicker';
 import ReservationContactInfo from './form/ReservationContactInfo';
@@ -8,7 +8,7 @@ import ReservationSpecialRequests from './form/ReservationSpecialRequests';
 import ReservationPaymentInfo from './form/ReservationPaymentInfo';
 import ReservationFormSubmitButton from './form/ReservationFormSubmitButton';
 import { useReservationForm } from './form/useReservationForm';
-import { BookingStep } from './BookingSteps';
+import BookingSteps, { BookingStep } from './BookingSteps';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ArrowRight } from 'lucide-react';
@@ -19,7 +19,7 @@ interface ContactFormProps {
 }
 
 const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
-  const [currentStep, setCurrentStep] = useState<'contact' | 'confirm'>('contact');
+  const [currentStep, setCurrentStep] = useState<BookingStep>('contact');
   
   const {
     firstName,
@@ -57,6 +57,8 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
 
   return (
     <div>
+      <BookingSteps currentStep={currentStep} />
+      
       <h2 className="text-xl md:text-2xl font-display font-medium mb-4 text-forest-700">
         {currentStep === 'contact' ? 'Vyplňte své údaje' : 'Potvrzení rezervace'}
       </h2>
