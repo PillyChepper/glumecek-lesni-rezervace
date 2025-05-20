@@ -10,32 +10,68 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, isNumeric, ...props }, ref) => {
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      // Allow: backspace, delete, tab, escape, enter and .
-      if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
-        // Allow: Ctrl+A
-        (e.keyCode === 65 && e.ctrlKey === true) ||
-        // Allow: Ctrl+C
-        (e.keyCode === 67 && e.ctrlKey === true) ||
-        // Allow: Ctrl+X
-        (e.keyCode === 88 && e.ctrlKey === true) ||
-        // Allow: Ctrl+V
-        (e.keyCode === 86 && e.ctrlKey === true) ||
-        // Allow: home, end, left, right
-        (e.keyCode >= 35 && e.keyCode <= 39)) {
+      // Allow special keys (backspace, delete, arrows, etc.)
+      if (
+        e.key === 'Backspace' || 
+        e.key === 'Delete' || 
+        e.key === 'Tab' ||
+        e.key === 'Escape' ||
+        e.key === 'Enter' ||
+        e.key === 'ArrowLeft' ||
+        e.key === 'ArrowRight' ||
+        e.key === 'ArrowUp' ||
+        e.key === 'ArrowDown' ||
+        // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+        ((e.ctrlKey || e.metaKey) && (
+          e.key === 'a' || 
+          e.key === 'c' || 
+          e.key === 'v' || 
+          e.key === 'x')
+        )
+      ) {
         return;
       }
-      // Ensure that it's a number and stop the keypress if not
-      if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+      
+      // Block any key that isn't a number
+      if (!/^\d$/.test(e.key)) {
         e.preventDefault();
+      }
+    };
+
+    const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
+      if (isNumeric) {
+        const input = e.currentTarget;
+        // Remove any non-digit characters
+        const sanitizedValue = input.value.replace(/\D/g, '');
+        
+        // Only update if value changed to prevent cursor jumping
+        if (sanitizedValue !== input.value) {
+          input.value = sanitizedValue;
+        }
       }
     };
 
     const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
       if (isNumeric) {
-        const pastedData = e.clipboardData.getData('text');
-        if (!/^\d*$/.test(pastedData)) {
-          e.preventDefault();
-        }
+        e.preventDefault();
+        // Get pasted content and sanitize
+        const pastedText = e.clipboardData.getData('text');
+        const sanitizedText = pastedText.replace(/\D/g, '');
+        
+        // Insert at cursor position
+        const input = e.currentTarget;
+        const start = input.selectionStart || 0;
+        const end = input.selectionEnd || 0;
+        
+        const beforeText = input.value.substring(0, start);
+        const afterText = input.value.substring(end);
+        
+        // Update input value
+        input.value = beforeText + sanitizedText + afterText;
+        
+        // Move cursor to end of inserted text
+        const newCursorPos = start + sanitizedText.length;
+        input.setSelectionRange(newCursorPos, newCursorPos);
       }
     };
 
@@ -48,8 +84,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         ref={ref}
         onKeyDown={isNumeric ? handleKeyDown : undefined}
+        onInput={isNumeric ? handleInput : undefined}
         onPaste={isNumeric ? handlePaste : undefined}
         inputMode={isNumeric ? "numeric" : undefined}
+        pattern={isNumeric ? "[0-9]*" : undefined}
         {...props}
       />
     )
