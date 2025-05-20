@@ -59,8 +59,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
           const { data: reservationsData, error: reservationsError } = await supabase
             .from('reservations')
             .select('arrival_date, departure_date, status')
-            .eq('status', 'cancelled')
-            .not(); // Using .not() to invert the condition - get all except 'cancelled'
+            .neq('status', 'cancelled'); // Using .neq instead of .not() to get all except 'cancelled'
 
           if (reservationsError) {
             console.error('Error fetching reservations:', reservationsError);
