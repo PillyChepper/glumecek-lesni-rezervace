@@ -16,7 +16,11 @@ type Client = {
   reservation_count: number;
   last_reservation: string;
   has_pet: boolean;
-  created_at: string; // Add created_at to the Client type
+  created_at: string;
+  // Add address fields to Client type
+  street: string | null;
+  city: string | null;
+  postal_code: string | null;
 };
 
 const AdminClients = () => {
@@ -27,7 +31,7 @@ const AdminClients = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("reservations")
-        .select("first_name, last_name, email, phone, number_of_pets, created_at") // Include created_at in the select
+        .select("first_name, last_name, email, phone, number_of_pets, created_at, street, city, postal_code")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -51,6 +55,16 @@ const AdminClients = () => {
           if (hasPet) {
             client.has_pet = true;
           }
+          // Update address information if current reservation has more complete data
+          if (!client.street && reservation.street) {
+            client.street = reservation.street;
+          }
+          if (!client.city && reservation.city) {
+            client.city = reservation.city;
+          }
+          if (!client.postal_code && reservation.postal_code) {
+            client.postal_code = reservation.postal_code;
+          }
         } else {
           // Add new client
           clientMap.set(email, {
@@ -61,7 +75,10 @@ const AdminClients = () => {
             reservation_count: 1,
             last_reservation: reservation.created_at,
             has_pet: hasPet,
-            created_at: reservation.created_at // Include created_at in the new client object
+            created_at: reservation.created_at,
+            street: reservation.street,
+            city: reservation.city,
+            postal_code: reservation.postal_code
           });
         }
       });
@@ -77,9 +94,22 @@ const AdminClients = () => {
       client.first_name.toLowerCase().includes(searchLower) ||
       client.last_name.toLowerCase().includes(searchLower) ||
       client.email.toLowerCase().includes(searchLower) ||
-      client.phone.includes(searchTerm)
+      client.phone.includes(searchTerm) ||
+      (client.street && client.street.toLowerCase().includes(searchLower)) ||
+      (client.city && client.city.toLowerCase().includes(searchLower)) ||
+      (client.postal_code && client.postal_code.includes(searchTerm))
     );
   });
+
+  // Helper function to format address
+  const formatAddress = (client: Client) => {
+    const parts = [];
+    if (client.street) parts.push(client.street);
+    if (client.city) parts.push(client.city);
+    if (client.postal_code) parts.push(client.postal_code);
+    
+    return parts.length > 0 ? parts.join(", ") : "—";
+  };
 
   return (
     <SidebarProvider>
@@ -128,7 +158,7 @@ const AdminClients = () => {
                     <TableHead>Email</TableHead>
                     <TableHead>Telefon</TableHead>
                     <TableHead>Počet rezervací</TableHead>
-                    <TableHead>Pejsek</TableHead>
+                    <TableHead>Adresa</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -141,7 +171,7 @@ const AdminClients = () => {
                         <TableCell>{client.email}</TableCell>
                         <TableCell>{client.phone}</TableCell>
                         <TableCell>{client.reservation_count}</TableCell>
-                        <TableCell>{client.has_pet ? "Ano" : "Ne"}</TableCell>
+                        <TableCell>{formatAddress(client)}</TableCell>
                       </TableRow>
                     ))
                   ) : (
