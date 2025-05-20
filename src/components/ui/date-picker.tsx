@@ -95,7 +95,9 @@ export function DatePicker({
           className="w-auto p-0 max-w-[600px]" 
           align="start" 
           alignOffset={isMobile ? -30 : 0}
-          side={isMobile ? "bottom" : "bottom"}
+          side="bottom"
+          avoidCollisions={true}
+          sideOffset={5}
         >
           <div className="p-2 text-center text-sm font-medium">
             {label}
