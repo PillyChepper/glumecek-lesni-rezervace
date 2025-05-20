@@ -20,6 +20,17 @@ function Calendar({
   onDayMouseLeave,
   ...props
 }: CalendarProps) {
+  // Add additional debug logging to help troubleshoot date selection issues
+  const enhancedProps = {
+    ...props,
+    onDayClick: (day: Date, modifiers: any) => {
+      console.log(`Calendar day clicked: ${day.toISOString()}`, modifiers);
+      if (props.onDayClick) {
+        props.onDayClick(day, modifiers);
+      }
+    },
+  };
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -105,7 +116,7 @@ function Calendar({
       }}
       locale={cs}
       weekStartsOn={1}
-      {...props}
+      {...enhancedProps}
     />
   );
 }

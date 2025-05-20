@@ -79,21 +79,21 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
               // Skip cancelled reservations (double check even though we filtered in the query)
               if (reservation.status === 'cancelled') return;
               
-              // Parse the dates properly
+              // Parse dates and ensure they're in local time by using new Date() without UTC conversion
               const arrivalDate = new Date(reservation.arrival_date);
               const departureDate = new Date(reservation.departure_date);
               
               console.log(`Processing reservation: ${arrivalDate.toISOString()} - ${departureDate.toISOString()}`);
               
-              // Generate all dates between arrival and departure (inclusive of both dates)
+              // Generate all dates between arrival and departure (inclusive of arrival, exclusive of departure)
               let currentDateCopy = new Date(arrivalDate);
               
               // Use a safe approach to prevent potential infinite loops
               const maxDays = 100; // Safety limit
               let dayCount = 0;
               
-              // Include all dates from arrival through departure
-              while ((currentDateCopy.getTime() <= departureDate.getTime()) && dayCount < maxDays) {
+              // Start from arrival date through the day BEFORE departure (exclusive of departure date)
+              while ((currentDateCopy.getTime() < departureDate.getTime()) && dayCount < maxDays) {
                 // Format date without time component for consistency
                 const dateStr = currentDateCopy.toISOString().split('T')[0];
                 bookedDatesSet.add(dateStr);

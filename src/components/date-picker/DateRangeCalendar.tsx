@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
-import { startOfDay, isAfter, isBefore, isEqual, addDays } from "date-fns";
+import { startOfDay, isAfter, isBefore, isEqual, addDays, format } from "date-fns";
 import { cs } from "date-fns/locale";
 import { DateRange } from "@/components/DateRangePicker";
 
@@ -34,10 +34,11 @@ const DateRangeCalendar = ({
       console.log('Processing disabled dates:', disabledDates);
       disabledDates.forEach((date) => {
         if (date) {
-          // Normalize dates by removing the time component
+          // Normalize dates by removing the time component and use a consistent format
           const normalizedDate = startOfDay(new Date(date));
-          map.set(normalizedDate.toISOString(), true);
-          console.log(`Disabled date added to map: ${normalizedDate.toISOString()}`);
+          const dateKey = format(normalizedDate, 'yyyy-MM-dd');
+          map.set(dateKey, true);
+          console.log(`Disabled date added to map: ${dateKey}`);
         }
       });
     }
@@ -52,8 +53,10 @@ const DateRangeCalendar = ({
   };
   
   const isFullyReserved = (date: Date) => {
-    const normalizedDate = startOfDay(new Date(date)).toISOString();
-    const isReserved = disabledDatesMap.has(normalizedDate);
+    // Use consistent date formatting for lookup
+    const normalizedDate = startOfDay(new Date(date));
+    const dateKey = format(normalizedDate, 'yyyy-MM-dd');
+    const isReserved = disabledDatesMap.has(dateKey);
     return isReserved;
   };
   
@@ -94,14 +97,19 @@ const DateRangeCalendar = ({
   };
 
   const onDayClick = (date: Date) => {
+    // Log the clicked date for debugging purposes
+    console.log(`Day clicked: ${format(date, 'yyyy-MM-dd')}`);
+    
     if (isFullyReserved(date)) {
       console.log(`Cannot select reserved date: ${date}`);
       return;
     }
     
     if (!arrivalDate) {
-      setArrivalDate(date);
-      onChange({ from: date, to: undefined });
+      const selectedArrivalDate = startOfDay(date);
+      console.log(`Setting arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')}`);
+      setArrivalDate(selectedArrivalDate);
+      onChange({ from: selectedArrivalDate, to: undefined });
       return;
     }
     
@@ -116,8 +124,10 @@ const DateRangeCalendar = ({
     if (!departureDate) {
       if (isBefore(date, arrivalDate)) {
         // If clicked date is before arrival, make it the new arrival
-        setArrivalDate(date);
-        onChange({ from: date, to: undefined });
+        const selectedArrivalDate = startOfDay(date);
+        console.log(`Updating arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')}`);
+        setArrivalDate(selectedArrivalDate);
+        onChange({ from: selectedArrivalDate, to: undefined });
         return;
       }
       
@@ -144,15 +154,19 @@ const DateRangeCalendar = ({
         return;
       }
       
-      setDepartureDate(date);
-      onChange({ from: arrivalDate, to: date });
+      const selectedDepartureDate = startOfDay(date);
+      console.log(`Setting departure date: ${format(selectedDepartureDate, 'yyyy-MM-dd')}`);
+      setDepartureDate(selectedDepartureDate);
+      onChange({ from: arrivalDate, to: selectedDepartureDate });
       return;
     }
     
     // Reset if both dates were already selected
-    setArrivalDate(date);
+    const selectedArrivalDate = startOfDay(date);
+    console.log(`Resetting selection with new arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')}`);
+    setArrivalDate(selectedArrivalDate);
     setDepartureDate(undefined);
-    onChange({ from: date, to: undefined });
+    onChange({ from: selectedArrivalDate, to: undefined });
   };
 
   const onDayMouseLeave = () => {

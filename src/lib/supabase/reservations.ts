@@ -24,8 +24,17 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
   try {
     console.log('Creating reservation with Supabase:', reservation);
     
+    // Ensure dates are in the correct format for the database
+    // The dates come in as ISO strings but we want to make sure they're stored correctly
+    const arrivalDate = new Date(reservation.arrival_date);
+    const departureDate = new Date(reservation.departure_date);
+    
+    console.log(`Parsed dates for storage: Arrival=${arrivalDate.toISOString()}, Departure=${departureDate.toISOString()}`);
+    
     const reservationData = {
       ...reservation,
+      arrival_date: arrivalDate.toISOString(),
+      departure_date: departureDate.toISOString(),
       status: 'pending' // Ensure status is set explicitly
     };
     
