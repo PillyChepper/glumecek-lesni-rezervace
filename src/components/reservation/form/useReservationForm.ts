@@ -10,7 +10,7 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  // New address fields
+  // Address fields
   const [street, setStreet] = useState('');
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
