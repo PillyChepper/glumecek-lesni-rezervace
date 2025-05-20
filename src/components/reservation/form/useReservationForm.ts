@@ -10,6 +10,7 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
   // Address fields
   const [street, setStreet] = useState('');
   const [city, setCity] = useState('');
@@ -21,6 +22,17 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
   
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email) && email.length > 0) {
+      setEmailError('Prosím zadejte platnou emailovou adresu');
+      return false;
+    } else {
+      setEmailError(null);
+      return true;
+    }
+  };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +50,16 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
       toast({
         title: "Chyba při rezervaci",
         description: "Prosím vyplňte všechny povinné údaje",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate email before submitting
+    if (!validateEmail(email)) {
+      toast({
+        title: "Neplatný email",
+        description: "Prosím zadejte platnou emailovou adresu",
         variant: "destructive",
       });
       return;
@@ -103,6 +125,9 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
     setLastName,
     email, 
     setEmail,
+    emailError,
+    setEmailError,
+    validateEmail,
     phone,
     setPhone,
     street,

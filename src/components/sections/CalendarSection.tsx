@@ -16,6 +16,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useReservationDatesWithRefresh } from '@/hooks/useReservationDatesWithRefresh';
 import { Spinner } from '@/components/ui/spinner';
+import { AlertCircle } from 'lucide-react';
 
 const CalendarSection = () => {
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -27,9 +28,31 @@ const CalendarSection = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
   
   const navigate = useNavigate();
   const { disabledDates, loading, error } = useReservationDatesWithRefresh();
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email) && email.length > 0) {
+      setEmailError('Prosím zadejte platnou emailovou adresu');
+      return false;
+    } else {
+      setEmailError(null);
+      return true;
+    }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    if (newEmail.length > 3) {
+      validateEmail(newEmail);
+    } else {
+      setEmailError(null);
+    }
+  };
 
   const handleReservationClick = () => {
     // Only open contact form dialog if both dates are selected
@@ -51,6 +74,11 @@ const CalendarSection = () => {
         description: "Prosím vyplňte všechny povinné údaje",
         variant: "destructive",
       });
+      return;
+    }
+
+    // Validate email before submitting
+    if (!validateEmail(email)) {
       return;
     }
 
@@ -122,10 +150,18 @@ const CalendarSection = () => {
                   id="email" 
                   type="email" 
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={handleEmailChange}
+                  onBlur={() => email && validateEmail(email)}
                   placeholder="Zadejte emailovou adresu"
+                  className={emailError ? "border-red-500" : ""}
                   required
                 />
+                {emailError && (
+                  <div className="text-red-500 text-sm flex items-center mt-1">
+                    <AlertCircle className="h-3 w-3 mr-1" />
+                    {emailError}
+                  </div>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Telefon *</Label>
@@ -144,6 +180,7 @@ const CalendarSection = () => {
               <Button 
                 className="w-full bg-forest-600 hover:bg-forest-700" 
                 onClick={handleSubmitContact}
+                disabled={emailError !== null && email.length > 0}
               >
                 Dokončit rezervaci
               </Button>
