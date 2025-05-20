@@ -9,7 +9,7 @@ export function useReservationsAdmin() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [selectedReservation, setSelectedReservation] = useState<{id: string, action: 'confirm' | 'cancel'} | null>(null);
+  const [selectedReservation, setSelectedReservation] = useState<{id: string, action: 'confirm' | 'cancel' | 'cancel-confirmed'} | null>(null);
   const { toast } = useToast();
 
   const fetchReservations = useCallback(async () => {
@@ -44,6 +44,7 @@ export function useReservationsAdmin() {
     
     try {
       const { id, action } = selectedReservation;
+      // Both 'cancel' and 'cancel-confirmed' actions will set status to 'cancelled'
       const newStatus = action === 'confirm' ? 'confirmed' : 'cancelled';
       
       const { data, error } = await updateReservationStatus(id, newStatus);
@@ -57,7 +58,7 @@ export function useReservationsAdmin() {
       
       // If we're cancelling a reservation, broadcast an event that the calendar
       // data needs to be refreshed (dates have been freed up)
-      if (action === 'cancel') {
+      if (action === 'cancel' || action === 'cancel-confirmed') {
         // The event will be picked up by any component subscribing to it
         const event = new CustomEvent('reservation-cancelled', { 
           detail: { reservationId: id } 
@@ -65,9 +66,23 @@ export function useReservationsAdmin() {
         window.dispatchEvent(event);
       }
       
+      let toastTitle = "";
+      let toastDescription = "";
+      
+      if (action === 'confirm') {
+        toastTitle = "Rezervace potvrzena";
+        toastDescription = "Rezervace byla úspěšně potvrzena.";
+      } else if (action === 'cancel') {
+        toastTitle = "Rezervace zamítnuta";
+        toastDescription = "Rezervace byla úspěšně zamítnuta.";
+      } else if (action === 'cancel-confirmed') {
+        toastTitle = "Rezervace zrušena";
+        toastDescription = "Potvrzená rezervace byla úspěšně zrušena.";
+      }
+      
       toast({
-        title: action === 'confirm' ? "Rezervace potvrzena" : "Rezervace zamítnuta",
-        description: `Rezervace byla úspěšně ${action === 'confirm' ? 'potvrzena' : 'zamítnuta'}.`,
+        title: toastTitle,
+        description: toastDescription,
         variant: action === 'confirm' ? "default" : "destructive",
       });
     } catch (err) {
@@ -83,7 +98,7 @@ export function useReservationsAdmin() {
     }
   };
 
-  const openConfirmDialog = (id: string, action: 'confirm' | 'cancel') => {
+  const openConfirmDialog = (id: string, action: 'confirm' | 'cancel' | 'cancel-confirmed') => {
     setSelectedReservation({ id, action });
     setConfirmDialogOpen(true);
   };

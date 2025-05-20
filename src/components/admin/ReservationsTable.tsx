@@ -1,6 +1,7 @@
+
 import { format } from "date-fns";
 import { cs } from "date-fns/locale";
-import { Check, X } from "lucide-react";
+import { Check, X, Trash } from "lucide-react";
 import { Reservation } from "@/lib/supabase/reservations";
 import { Button } from "@/components/ui/button";
 import { 
@@ -18,7 +19,7 @@ type ReservationsTableProps = {
   loading: boolean;
   error: string | null;
   reservations: Reservation[];
-  onStatusChange: (id: string, action: 'confirm' | 'cancel') => void;
+  onStatusChange: (id: string, action: 'confirm' | 'cancel' | 'cancel-confirmed') => void;
 };
 
 export const ReservationsTable = ({
@@ -149,6 +150,17 @@ export const ReservationsTable = ({
                           Zamítnout
                         </Button>
                       </>
+                    )}
+                    {reservation.status === 'confirmed' && (
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="flex items-center text-red-600 border-red-600 hover:bg-red-50"
+                        onClick={() => onStatusChange(reservation.id!, 'cancel-confirmed')}
+                      >
+                        <Trash className="h-4 w-4 mr-1" />
+                        Zrušit rezervaci
+                      </Button>
                     )}
                   </div>
                 </TableCell>
