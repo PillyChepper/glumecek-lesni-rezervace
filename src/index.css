@@ -20,12 +20,12 @@
 }
 
 /* Input placeholder styles */
-input::placeholder {
-  opacity: 0.3 !important;
-  color: #6c757d !important;
+input::placeholder, textarea::placeholder {
+  opacity: 0.5 !important;
+  color: #4a4a4a !important;
 }
 
-input:focus::placeholder {
+input:focus::placeholder, textarea:focus::placeholder {
   opacity: 0 !important;
 }
 
