@@ -1,17 +1,11 @@
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
+import { Card } from '@/components/ui/card';
 import { DateRange } from '@/components/DateRangePicker';
-import ReservationContactInfo from './form/ReservationContactInfo';
-import ReservationGuestOptions from './form/ReservationGuestOptions';
-import ReservationSpecialRequests from './form/ReservationSpecialRequests';
-import ReservationPaymentInfo from './form/ReservationPaymentInfo';
-import ReservationFormSubmitButton from './form/ReservationFormSubmitButton';
 import { useReservationForm } from './form/useReservationForm';
 import BookingSteps, { BookingStep } from './BookingSteps';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { ArrowRight } from 'lucide-react';
+import ReservationContactView from './form/ReservationContactView';
+import ReservationConfirmView from './form/ReservationConfirmView';
 
 interface ContactFormProps {
   dateRange: DateRange;
@@ -52,7 +46,6 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
   };
   
   const handleBackToContact = (e: React.MouseEvent) => {
-    // Prevent any form submission
     e.preventDefault();
     setCurrentStep('contact');
   };
@@ -68,132 +61,41 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
       <Card>
         <form onSubmit={handleFormSubmit}>
           {currentStep === 'contact' ? (
-            <>
-              <CardHeader>
-                <CardTitle>Kontaktní informace</CardTitle>
-                <CardDescription>Prosím vyplňte své údaje pro dokončení rezervace</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <ReservationContactInfo 
-                  firstName={firstName}
-                  setFirstName={setFirstName}
-                  lastName={lastName}
-                  setLastName={setLastName}
-                  email={email}
-                  setEmail={setEmail}
-                  phone={phone}
-                  setPhone={setPhone}
-                  street={street}
-                  setStreet={setStreet}
-                  city={city}
-                  setCity={setCity}
-                  postalCode={postalCode}
-                  setPostalCode={setPostalCode}
-                />
-                
-                <ReservationGuestOptions 
-                  hasPet={hasPet}
-                  setHasPet={setHasPet}
-                />
-                
-                <ReservationSpecialRequests 
-                  specialRequests={specialRequests}
-                  setSpecialRequests={setSpecialRequests}
-                />
-              </CardContent>
-              <CardFooter>
-                <Button 
-                  className="w-full bg-[#4a544a] hover:bg-[#3d443d] text-white"
-                  onClick={handleContinueToConfirm}
-                  disabled={!firstName || !lastName || !email || !phone}
-                  type="button"
-                >
-                  <ArrowRight className="h-4 w-4 mr-1" />
-                  Pokračovat k potvrzení
-                </Button>
-              </CardFooter>
-            </>
+            <ReservationContactView 
+              firstName={firstName}
+              setFirstName={setFirstName}
+              lastName={lastName}
+              setLastName={setLastName}
+              email={email}
+              setEmail={setEmail}
+              phone={phone}
+              setPhone={setPhone}
+              street={street}
+              setStreet={setStreet}
+              city={city}
+              setCity={setCity}
+              postalCode={postalCode}
+              setPostalCode={setPostalCode}
+              hasPet={hasPet}
+              setHasPet={setHasPet}
+              specialRequests={specialRequests}
+              setSpecialRequests={setSpecialRequests}
+              onContinueClick={handleContinueToConfirm}
+            />
           ) : (
-            <>
-              <CardHeader>
-                <CardTitle>Potvrzení rezervace</CardTitle>
-                <CardDescription>Zkontrolujte prosím zadané údaje před odesláním rezervace</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h3 className="font-medium mb-2">Osobní údaje</h3>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="text-muted-foreground">Jméno:</div>
-                    <div>{firstName} {lastName}</div>
-                    <div className="text-muted-foreground">Email:</div>
-                    <div>{email}</div>
-                    <div className="text-muted-foreground">Telefon:</div>
-                    <div>{phone}</div>
-                  </div>
-                </div>
-                
-                <Separator />
-                
-                {/* Address confirmation */}
-                {(street || city || postalCode) && (
-                  <>
-                    <div>
-                      <h3 className="font-medium mb-2">Adresa</h3>
-                      <div className="grid grid-cols-2 gap-2 text-sm">
-                        {street && (
-                          <>
-                            <div className="text-muted-foreground">Ulice:</div>
-                            <div>{street}</div>
-                          </>
-                        )}
-                        {city && (
-                          <>
-                            <div className="text-muted-foreground">Město:</div>
-                            <div>{city}</div>
-                          </>
-                        )}
-                        {postalCode && (
-                          <>
-                            <div className="text-muted-foreground">PSČ:</div>
-                            <div>{postalCode}</div>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    <Separator />
-                  </>
-                )}
-                
-                <div>
-                  <h3 className="font-medium mb-2">Detaily pobytu</h3>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="text-muted-foreground">Pejsek:</div>
-                    <div>{hasPet ? 'Ano' : 'Ne'}</div>
-                    {specialRequests && (
-                      <>
-                        <div className="text-muted-foreground">Zvláštní požadavky:</div>
-                        <div>{specialRequests}</div>
-                      </>
-                    )}
-                  </div>
-                </div>
-                
-                <Separator />
-                
-                <ReservationPaymentInfo />
-              </CardContent>
-              <CardFooter className="flex flex-col sm:flex-row gap-3">
-                <Button 
-                  variant="outline" 
-                  type="button"
-                  onClick={handleBackToContact}
-                  className="w-full sm:w-auto"
-                >
-                  Zpět k údajům
-                </Button>
-                <ReservationFormSubmitButton isSubmitting={isSubmitting} />
-              </CardFooter>
-            </>
+            <ReservationConfirmView
+              firstName={firstName}
+              lastName={lastName}
+              email={email}
+              phone={phone}
+              street={street}
+              city={city}
+              postalCode={postalCode}
+              hasPet={hasPet}
+              specialRequests={specialRequests}
+              isSubmitting={isSubmitting}
+              onBackClick={handleBackToContact}
+            />
           )}
         </form>
       </Card>
