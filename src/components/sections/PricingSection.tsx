@@ -24,11 +24,11 @@ const PricingSection = () => {
             </div>
             <div className="flex justify-between items-center">
               <span>Domácí mazlíček</span>
-              <span className="font-medium">200 Kč / pobyt</span>
+              <span className="font-medium">200 Kč</span>
             </div>
             <div className="flex justify-between items-center pt-4 border-t">
               <span>Check-in</span>
-              <span className="font-medium">14:00 - 18:00</span>
+              <span className="font-medium">od 14:00</span>
             </div>
             <div className="flex justify-between items-center">
               <span>Check-out</span>
