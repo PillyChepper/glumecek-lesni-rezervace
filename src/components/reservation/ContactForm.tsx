@@ -51,7 +51,9 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
     setCurrentStep('confirm');
   };
   
-  const handleBackToContact = () => {
+  const handleBackToContact = (e: React.MouseEvent) => {
+    // Prevent any form submission
+    e.preventDefault();
     setCurrentStep('contact');
   };
 
@@ -104,6 +106,7 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
                   className="w-full bg-[#4a544a] hover:bg-[#3d443d] text-white"
                   onClick={handleContinueToConfirm}
                   disabled={!firstName || !lastName || !email || !phone}
+                  type="button"
                 >
                   <ArrowRight className="h-4 w-4 mr-1" />
                   Pokračovat k potvrzení
