@@ -78,6 +78,8 @@ const PersonalInfoSection = ({
             type="tel" 
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            isNumeric={true}
+            placeholder="Pouze čísla"
             required
           />
         </div>

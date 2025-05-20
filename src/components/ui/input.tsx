@@ -3,8 +3,42 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-  ({ className, type, ...props }, ref) => {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  isNumeric?: boolean;
+}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, isNumeric, ...props }, ref) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      // Allow: backspace, delete, tab, escape, enter and .
+      if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
+        // Allow: Ctrl+A
+        (e.keyCode === 65 && e.ctrlKey === true) ||
+        // Allow: Ctrl+C
+        (e.keyCode === 67 && e.ctrlKey === true) ||
+        // Allow: Ctrl+X
+        (e.keyCode === 88 && e.ctrlKey === true) ||
+        // Allow: Ctrl+V
+        (e.keyCode === 86 && e.ctrlKey === true) ||
+        // Allow: home, end, left, right
+        (e.keyCode >= 35 && e.keyCode <= 39)) {
+        return;
+      }
+      // Ensure that it's a number and stop the keypress if not
+      if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+        e.preventDefault();
+      }
+    };
+
+    const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+      if (isNumeric) {
+        const pastedData = e.clipboardData.getData('text');
+        if (!/^\d*$/.test(pastedData)) {
+          e.preventDefault();
+        }
+      }
+    };
+
     return (
       <input
         type={type}
@@ -13,6 +47,9 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           className
         )}
         ref={ref}
+        onKeyDown={isNumeric ? handleKeyDown : undefined}
+        onPaste={isNumeric ? handlePaste : undefined}
+        inputMode={isNumeric ? "numeric" : undefined}
         {...props}
       />
     )

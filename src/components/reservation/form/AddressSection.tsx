@@ -57,6 +57,7 @@ const AddressSection = ({
                 value={postalCode}
                 onChange={(e) => setPostalCode(e.target.value)}
                 placeholder="Zadejte PSČ"
+                isNumeric={true}
               />
             </div>
           </div>
