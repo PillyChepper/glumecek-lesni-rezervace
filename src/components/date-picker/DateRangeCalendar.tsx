@@ -38,7 +38,7 @@ const DateRangeCalendar = ({
           const normalizedDate = startOfDay(new Date(date));
           const dateKey = format(normalizedDate, 'yyyy-MM-dd');
           map.set(dateKey, true);
-          console.log(`Disabled date added to map: ${dateKey}`);
+          console.log(`Disabled date added to map: ${dateKey} (${normalizedDate.getDate()}/${normalizedDate.getMonth() + 1})`);
         }
       });
     }
@@ -65,7 +65,9 @@ const DateRangeCalendar = ({
     if (isBefore(date, today)) return true;
     
     // Don't allow selection of fully reserved dates
-    if (isFullyReserved(date)) return true;
+    if (isFullyReserved(date)) {
+      return true;
+    }
     
     // If arrival date is set, find the range of selectable departure dates
     if (arrivalDate && !departureDate) {
@@ -98,7 +100,7 @@ const DateRangeCalendar = ({
 
   const onDayClick = (date: Date) => {
     // Log the clicked date for debugging purposes
-    console.log(`Day clicked: ${format(date, 'yyyy-MM-dd')}`);
+    console.log(`Day clicked: ${format(date, 'yyyy-MM-dd')} (${date.getDate()}/${date.getMonth() + 1})`);
     
     if (isFullyReserved(date)) {
       console.log(`Cannot select reserved date: ${date}`);
@@ -107,7 +109,7 @@ const DateRangeCalendar = ({
     
     if (!arrivalDate) {
       const selectedArrivalDate = startOfDay(date);
-      console.log(`Setting arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')}`);
+      console.log(`Setting arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')} (${selectedArrivalDate.getDate()}/${selectedArrivalDate.getMonth() + 1})`);
       setArrivalDate(selectedArrivalDate);
       onChange({ from: selectedArrivalDate, to: undefined });
       return;
@@ -125,7 +127,7 @@ const DateRangeCalendar = ({
       if (isBefore(date, arrivalDate)) {
         // If clicked date is before arrival, make it the new arrival
         const selectedArrivalDate = startOfDay(date);
-        console.log(`Updating arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')}`);
+        console.log(`Updating arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')} (${selectedArrivalDate.getDate()}/${selectedArrivalDate.getMonth() + 1})`);
         setArrivalDate(selectedArrivalDate);
         onChange({ from: selectedArrivalDate, to: undefined });
         return;
@@ -155,7 +157,7 @@ const DateRangeCalendar = ({
       }
       
       const selectedDepartureDate = startOfDay(date);
-      console.log(`Setting departure date: ${format(selectedDepartureDate, 'yyyy-MM-dd')}`);
+      console.log(`Setting departure date: ${format(selectedDepartureDate, 'yyyy-MM-dd')} (${selectedDepartureDate.getDate()}/${selectedDepartureDate.getMonth() + 1})`);
       setDepartureDate(selectedDepartureDate);
       onChange({ from: arrivalDate, to: selectedDepartureDate });
       return;
@@ -163,7 +165,7 @@ const DateRangeCalendar = ({
     
     // Reset if both dates were already selected
     const selectedArrivalDate = startOfDay(date);
-    console.log(`Resetting selection with new arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')}`);
+    console.log(`Resetting selection with new arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')} (${selectedArrivalDate.getDate()}/${selectedArrivalDate.getMonth() + 1})`);
     setArrivalDate(selectedArrivalDate);
     setDepartureDate(undefined);
     onChange({ from: selectedArrivalDate, to: undefined });

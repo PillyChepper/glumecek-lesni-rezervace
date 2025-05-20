@@ -59,7 +59,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
           const { data: reservationsData, error: reservationsError } = await supabase
             .from('reservations')
             .select('arrival_date, departure_date, status')
-            .neq('status', 'cancelled'); // Using .neq instead of .not() to get all except 'cancelled'
+            .neq('status', 'cancelled');
 
           if (reservationsError) {
             console.error('Error fetching reservations:', reservationsError);
@@ -79,25 +79,26 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
               // Skip cancelled reservations (double check even though we filtered in the query)
               if (reservation.status === 'cancelled') return;
               
-              // Parse dates and ensure they're in local time by using new Date() without UTC conversion
+              // Parse dates and ensure they're in local time by using new Date()
               const arrivalDate = new Date(reservation.arrival_date);
               const departureDate = new Date(reservation.departure_date);
               
               console.log(`Processing reservation: ${arrivalDate.toISOString()} - ${departureDate.toISOString()}`);
+              console.log(`Arrival date: ${arrivalDate.getDate()}/${arrivalDate.getMonth() + 1}, Departure date: ${departureDate.getDate()}/${departureDate.getMonth() + 1}`);
               
-              // Generate all dates between arrival and departure (inclusive of arrival, exclusive of departure)
+              // Generate all dates FROM arrival TO departure (inclusive of arrival, exclusive of departure)
+              // This is the crucial fix - we want to mark dates from arrival date UP TO BUT NOT INCLUDING departure date
               let currentDateCopy = new Date(arrivalDate);
               
               // Use a safe approach to prevent potential infinite loops
               const maxDays = 100; // Safety limit
               let dayCount = 0;
               
-              // Start from arrival date through the day BEFORE departure (exclusive of departure date)
-              while ((currentDateCopy.getTime() < departureDate.getTime()) && dayCount < maxDays) {
-                // Format date without time component for consistency
+              while (currentDateCopy < departureDate && dayCount < maxDays) {
+                // Format date without time component
                 const dateStr = currentDateCopy.toISOString().split('T')[0];
                 bookedDatesSet.add(dateStr);
-                console.log(`Adding booked date: ${dateStr}`);
+                console.log(`Adding booked date: ${dateStr} (${currentDateCopy.getDate()}/${currentDateCopy.getMonth() + 1})`);
                 
                 // Create a new date object for the next day to avoid reference issues
                 const nextDay = new Date(currentDateCopy);
