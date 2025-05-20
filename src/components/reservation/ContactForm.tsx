@@ -30,6 +30,12 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
     setEmail,
     phone,
     setPhone,
+    street,
+    setStreet,
+    city,
+    setCity,
+    postalCode,
+    setPostalCode,
     hasPet,
     setHasPet,
     specialRequests,
@@ -73,6 +79,12 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
                   setEmail={setEmail}
                   phone={phone}
                   setPhone={setPhone}
+                  street={street}
+                  setStreet={setStreet}
+                  city={city}
+                  setCity={setCity}
+                  postalCode={postalCode}
+                  setPostalCode={setPostalCode}
                 />
                 
                 <ReservationGuestOptions 
@@ -116,6 +128,36 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
                 </div>
                 
                 <Separator />
+                
+                {/* Address confirmation */}
+                {(street || city || postalCode) && (
+                  <>
+                    <div>
+                      <h3 className="font-medium mb-2">Adresa</h3>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        {street && (
+                          <>
+                            <div className="text-muted-foreground">Ulice:</div>
+                            <div>{street}</div>
+                          </>
+                        )}
+                        {city && (
+                          <>
+                            <div className="text-muted-foreground">Město:</div>
+                            <div>{city}</div>
+                          </>
+                        )}
+                        {postalCode && (
+                          <>
+                            <div className="text-muted-foreground">PSČ:</div>
+                            <div>{postalCode}</div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <Separator />
+                  </>
+                )}
                 
                 <div>
                   <h3 className="font-medium mb-2">Detaily pobytu</h3>

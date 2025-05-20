@@ -10,6 +10,10 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  // New address fields
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState('');
+  const [postalCode, setPostalCode] = useState('');
   const [hasPet, setHasPet] = useState(false);
   const [specialRequests, setSpecialRequests] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,6 +46,9 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
     setIsSubmitting(true);
     
     try {
+      // Prepare address information (optional)
+      const addressInfo = [street, city, postalCode].filter(Boolean).join(", ");
+      
       const { data, error } = await createReservation({
         first_name: firstName,
         last_name: lastName,
@@ -50,7 +57,9 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
         arrival_date: dateRange.from.toISOString(),
         departure_date: dateRange.to.toISOString(),
         number_of_pets: hasPet ? 1 : 0,
-        special_requests: specialRequests
+        special_requests: addressInfo ? 
+          `Adresa: ${addressInfo}${specialRequests ? '\n\n' + specialRequests : ''}` : 
+          specialRequests
       });
       
       if (error) throw error;
@@ -68,6 +77,9 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
       setLastName('');
       setEmail('');
       setPhone('');
+      setStreet('');
+      setCity('');
+      setPostalCode('');
       setHasPet(false);
       setSpecialRequests('');
       
@@ -94,6 +106,12 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
     setEmail,
     phone,
     setPhone,
+    street,
+    setStreet,
+    city,
+    setCity,
+    postalCode,
+    setPostalCode,
     hasPet,
     setHasPet,
     specialRequests,
