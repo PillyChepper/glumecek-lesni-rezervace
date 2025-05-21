@@ -6,7 +6,9 @@ import { RefreshCw } from "lucide-react";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getSubdomain } from "@/utils/subdomains";
+import AdminNavbar from "@/components/admin/AdminNavbar";
 
 type Client = {
   first_name: string;
@@ -17,7 +19,6 @@ type Client = {
   last_reservation: string;
   has_pet: boolean;
   created_at: string;
-  // Add address fields to Client type
   street: string | null;
   city: string | null;
   postal_code: string | null;
@@ -25,6 +26,12 @@ type Client = {
 
 const AdminClients = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isAdminSubdomain, setIsAdminSubdomain] = useState(false);
+  
+  useEffect(() => {
+    const subdomain = getSubdomain();
+    setIsAdminSubdomain(subdomain === 'admin');
+  }, []);
 
   const { data: clients, isLoading, error, refetch } = useQuery({
     queryKey: ["clients"],
@@ -114,8 +121,8 @@ const AdminClients = () => {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
-        <AdminSidebar />
-        <SidebarInset className="px-4 py-6 md:px-8">
+        {isAdminSubdomain ? <AdminNavbar /> : <AdminSidebar />}
+        <SidebarInset className={`px-4 md:px-8 ${isAdminSubdomain ? 'pt-16 pb-6' : 'py-6'}`}>
           <div className="flex justify-between items-center mb-6">
             <h1 className="section-title">Klienti</h1>
             <div className="flex items-center gap-2">
@@ -128,7 +135,7 @@ const AdminClients = () => {
                 <RefreshCw className="h-4 w-4" />
                 Obnovit
               </Button>
-              <SidebarTrigger />
+              {!isAdminSubdomain && <SidebarTrigger />}
             </div>
           </div>
           
