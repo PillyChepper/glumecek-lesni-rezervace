@@ -1,7 +1,6 @@
 
-import React, { useState } from 'react';
-import { GoogleMap, LoadScript, Marker, LoadScriptProps } from '@react-google-maps/api';
-import { MapPin, AlertCircle } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { MapPin } from 'lucide-react';
 
 interface MapProps {
   latitude: number;
@@ -25,7 +24,9 @@ const Map: React.FC<MapProps> = ({
   zoom = 13,
   height = '300px'
 }) => {
-  // Since the sample API key isn't working, let's skip the loading attempt and directly show the fallback
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInitialized = useRef(false);
+  
   const mapContainerStyle = {
     width: '100%',
     height,
@@ -34,13 +35,75 @@ const Map: React.FC<MapProps> = ({
   
   const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}&z=${zoom}`;
 
-  // Always show the fallback with a link to Google Maps since the API key isn't configured for this domain
+  useEffect(() => {
+    // Skip if already initialized or container not ready
+    if (mapInitialized.current || !mapContainerRef.current) return;
+    
+    // Load Mapy.cz API script
+    const loadMapyApi = () => {
+      const script = document.createElement('script');
+      script.src = 'https://api.mapy.cz/loader.js';
+      script.async = true;
+      document.body.appendChild(script);
+      
+      script.onload = () => {
+        // Initialize the API with our key
+        window.Loader.apiKey = 'S8oj5YoEgR-XJcZIM6JGQqiNbvCH1HerrfXwWNqNrGo';
+        window.Loader.load(null, { suggest: true }, initializeMap);
+      };
+      
+      script.onerror = () => {
+        console.error('Failed to load Mapy.cz API');
+      };
+    };
+    
+    // Initialize map after API loads
+    const initializeMap = () => {
+      if (!mapContainerRef.current || !window.SMap) return;
+      
+      // Create map centered on our coordinates
+      const center = window.SMap.Coords.fromWGS84(longitude, latitude);
+      const map = new window.SMap(mapContainerRef.current, center, zoom);
+      
+      // Add controls
+      map.addDefaultLayer(window.SMap.DEF_BASE);
+      map.addDefaultControls();
+      
+      // Add marker at specified location
+      const layer = new window.SMap.Layer.Marker();
+      map.addLayer(layer);
+      layer.enable();
+      
+      const marker = new window.SMap.Marker(center);
+      layer.addMarker(marker);
+      
+      // Set flag to prevent re-initialization
+      mapInitialized.current = true;
+    };
+    
+    loadMapyApi();
+    
+    // Cleanup function
+    return () => {
+      const script = document.querySelector('script[src="https://api.mapy.cz/loader.js"]');
+      if (script) {
+        document.body.removeChild(script);
+      }
+    };
+  }, [latitude, longitude, zoom]);
+
   return (
     <div 
       style={mapContainerStyle}
       className="flex flex-col items-center justify-center bg-gray-100 rounded-lg shadow-md border border-gray-200"
     >
-      <div className="text-center p-6">
+      <div 
+        ref={mapContainerRef} 
+        style={{ width: '100%', height: '100%' }}
+        className="relative rounded-lg overflow-hidden"
+      />
+      {/* Fallback only shows if map fails to load */}
+      <div id="map-fallback" className="hidden absolute inset-0 text-center p-6 bg-gray-100">
         <MapPin size={32} className="text-forest-600 mx-auto mb-3" />
         <h4 className="text-lg font-medium mb-2">Zobrazit mapu</h4>
         <p className="text-sm text-gray-600 mb-4">

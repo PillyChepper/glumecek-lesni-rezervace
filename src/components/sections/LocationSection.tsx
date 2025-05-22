@@ -54,7 +54,7 @@ const LocationSection = () => {
       
       <div className="mt-8">
         <h3 className="text-xl md:text-2xl font-display font-medium text-forest-700 mb-4">Najdete nás zde</h3>
-        <div className="rounded-lg overflow-hidden">
+        <div className="rounded-lg overflow-hidden" style={{ height: '400px' }}>
           <Map 
             latitude={LATITUDE}
             longitude={LONGITUDE}
