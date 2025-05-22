@@ -55,8 +55,8 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
         }),
       };
 
-      // Add the outdoor layer as default
-      tileLayers['Outdoor'].addTo(map);
+      // Add the aerial layer as default
+      tileLayers['Aerial'].addTo(map);
 
       // Add layers control
       L.control.layers(tileLayers).addTo(map);
