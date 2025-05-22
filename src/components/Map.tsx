@@ -9,15 +9,6 @@ interface MapProps {
   height?: string;
 }
 
-// Convert degrees, minutes, seconds to decimal degrees
-const dmsToDecimal = (degrees: number, minutes: number, seconds: number, direction: string): number => {
-  let decimal = degrees + minutes/60 + seconds/3600;
-  if (direction === 'S' || direction === 'W') {
-    decimal = -decimal;
-  }
-  return decimal;
-};
-
 const Map: React.FC<MapProps> = ({ 
   latitude, 
   longitude, 
@@ -25,8 +16,9 @@ const Map: React.FC<MapProps> = ({
   height = '300px'
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapInitialized = useRef(false);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [mapError, setMapError] = useState(false);
+  const mapInitialized = useRef(false);
   
   const mapContainerStyle = {
     width: '100%',
@@ -40,30 +32,53 @@ const Map: React.FC<MapProps> = ({
     // Skip if already initialized or container not ready
     if (mapInitialized.current || !mapContainerRef.current) return;
     
-    // Load Mapy.cz API script
+    // Declare script outside to allow access in cleanup
+    let scriptElement: HTMLScriptElement | null = null;
+
     const loadMapyApi = () => {
       try {
-        const script = document.createElement('script');
-        script.src = 'https://api.mapy.cz/loader.js';
-        script.async = true;
+        // Check if script already exists to prevent duplication
+        const existingScript = document.querySelector('script[src="https://api.mapy.cz/loader.js"]');
         
-        script.onload = () => {
-          // Initialize the API with our key
+        if (existingScript) {
+          // If script already exists, try to initialize the map directly
           if (window.Loader) {
             window.Loader.apiKey = 'S8oj5YoEgR-XJcZIM6JGQqiNbvCH1HerrfXwWNqNrGo';
             window.Loader.load(null, { suggest: true }, initializeMap);
           } else {
-            console.error('Mapy.cz Loader not available');
+            console.error('Mapy.cz Loader exists but is not available');
+            setMapError(true);
+          }
+          return;
+        }
+
+        // Create and add the script
+        scriptElement = document.createElement('script');
+        scriptElement.src = 'https://api.mapy.cz/loader.js';
+        scriptElement.async = true;
+        
+        scriptElement.onload = () => {
+          console.log('Mapy.cz script loaded');
+          // Initialize the API with our key
+          if (window.Loader) {
+            console.log('Loader found, initializing with API key');
+            window.Loader.apiKey = 'S8oj5YoEgR-XJcZIM6JGQqiNbvCH1HerrfXwWNqNrGo';
+            window.Loader.load(null, { suggest: true }, () => {
+              console.log('Loader.load callback executed');
+              initializeMap();
+            });
+          } else {
+            console.error('Mapy.cz Loader not available after script load');
             setMapError(true);
           }
         };
         
-        script.onerror = () => {
+        scriptElement.onerror = () => {
           console.error('Failed to load Mapy.cz API');
           setMapError(true);
         };
         
-        document.body.appendChild(script);
+        document.body.appendChild(scriptElement);
       } catch (error) {
         console.error('Error loading Mapy.cz API:', error);
         setMapError(true);
@@ -73,12 +88,21 @@ const Map: React.FC<MapProps> = ({
     // Initialize map after API loads
     const initializeMap = () => {
       try {
-        if (!mapContainerRef.current || !window.SMap) {
+        console.log('Initializing map');
+        if (!mapContainerRef.current) {
+          console.error('Map container ref is not available');
+          setMapError(true);
+          return;
+        }
+        
+        if (!window.SMap) {
+          console.error('SMap is not available');
           setMapError(true);
           return;
         }
         
         // Create map centered on our coordinates
+        console.log('Creating map with coords:', longitude, latitude);
         const center = window.SMap.Coords.fromWGS84(longitude, latitude);
         const map = new window.SMap(mapContainerRef.current, center, zoom);
         
@@ -96,25 +120,29 @@ const Map: React.FC<MapProps> = ({
         
         // Set flag to prevent re-initialization
         mapInitialized.current = true;
+        setIsMapLoaded(true);
+        console.log('Map initialized successfully');
       } catch (error) {
         console.error('Error initializing map:', error);
         setMapError(true);
       }
     };
     
+    // Start loading the map API
+    console.log('Starting to load Mapy.cz API');
     loadMapyApi();
     
     // Cleanup function
     return () => {
-      const script = document.querySelector('script[src="https://api.mapy.cz/loader.js"]');
-      if (script) {
-        document.body.removeChild(script);
+      if (scriptElement && document.body.contains(scriptElement)) {
+        document.body.removeChild(scriptElement);
       }
     };
   }, [latitude, longitude, zoom]);
 
   // If there's an error, show the fallback
   if (mapError) {
+    console.log('Showing map error fallback');
     return (
       <div 
         style={mapContainerStyle}
@@ -124,7 +152,7 @@ const Map: React.FC<MapProps> = ({
           <MapPin size={32} className="text-forest-600 mx-auto mb-3" />
           <h4 className="text-lg font-medium mb-2">Zobrazit mapu</h4>
           <p className="text-sm text-gray-600 mb-4">
-            Pro zobrazení interaktivní mapy klikněte na tlačítko níže.
+            Načítání mapy selhalo. Pro zobrazení mapy klikněte na tlačítko níže.
           </p>
           <a 
             href={googleMapsUrl} 
@@ -135,6 +163,21 @@ const Map: React.FC<MapProps> = ({
             <MapPin size={18} className="mr-2" />
             Otevřít v Google Maps
           </a>
+        </div>
+      </div>
+    );
+  }
+
+  // Add a loading state
+  if (!isMapLoaded) {
+    return (
+      <div 
+        style={mapContainerStyle}
+        className="flex flex-col items-center justify-center bg-gray-100 rounded-lg shadow-md border border-gray-200"
+      >
+        <div className="text-center p-6">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-forest-700 mx-auto mb-4"></div>
+          <p className="text-gray-600">Načítám mapu...</p>
         </div>
       </div>
     );
