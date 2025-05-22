@@ -61,8 +61,19 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
       // Add layers control
       L.control.layers(tileLayers).addTo(map);
 
-      // Add marker at the location
-      L.marker([latitude, longitude]).addTo(map);
+      // Fix for default marker icon paths in Leaflet
+      const defaultIcon = L.icon({
+        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      });
+
+      // Add marker at the location with fixed icon
+      L.marker([latitude, longitude], { icon: defaultIcon }).addTo(map);
 
       // Format coordinates for Mapy.cz URL
       // Mapy.cz uses format: https://mapy.cz/zakladni?x=13.8453900&y=49.5867500&z=15
