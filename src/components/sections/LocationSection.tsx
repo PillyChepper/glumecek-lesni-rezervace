@@ -2,15 +2,9 @@
 import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-import Map from '@/components/Map';
 
 // Import the image from our assets folder
 import { glumecekImage } from '@/assets/images';
-
-// Convert the coordinates from DMS format to decimal degrees
-// 49°35'12.3"N 13°50'43.4"E
-const LATITUDE = 49 + (35/60) + (12.3/3600);  // 49.58675
-const LONGITUDE = 13 + (50/60) + (43.4/3600);  // 13.84539
 
 const LocationSection = () => {
   const [imageError, setImageError] = useState(false);
@@ -52,19 +46,19 @@ const LocationSection = () => {
         </div>
       </div>
       
-      <div className="mt-8">
+      <div className="mt-8 text-center">
         <h3 className="text-xl md:text-2xl font-display font-medium text-forest-700 mb-4">Najdete nás zde</h3>
-        <div className="rounded-lg overflow-hidden shadow-lg" style={{ height: '400px' }}>
-          <Map 
-            latitude={LATITUDE}
-            longitude={LONGITUDE}
-            zoom={14}
-            height="400px"
-          />
+        <div className="p-4 bg-gray-100 rounded-lg shadow-lg">
+          <p className="text-lg mb-2">Souřadnice: 49°35'12.3"N 13°50'43.4"E</p>
+          <a 
+            href="https://www.google.com/maps?q=49.58675,13.84539&z=14" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="bg-forest-600 hover:bg-forest-700 text-white px-4 py-2 rounded transition-colors inline-flex items-center mt-2"
+          >
+            Otevřít v Google Maps
+          </a>
         </div>
-        <p className="mt-4 text-sm text-muted-foreground text-center">
-          Souřadnice: 49°35'12.3"N 13°50'43.4"E
-        </p>
       </div>
     </Section>
   );
