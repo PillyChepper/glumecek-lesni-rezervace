@@ -28,6 +28,23 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    event.preventDefault();
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+      window.scrollTo({
+        top: targetElement.offsetTop,
+        behavior: 'smooth'
+      });
+      
+      // Close the mobile menu if it's open
+      if (isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    }
+  };
+
   return (
     <nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -44,16 +61,32 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-6">
           {isHomePage ? (
             <>
-              <a href="#o-nas" className="text-forest-800 hover:text-forest-600 transition-colors">
+              <a 
+                href="#o-nas" 
+                className="text-forest-800 hover:text-forest-600 transition-colors"
+                onClick={(e) => handleSmoothScroll(e, "o-nas")}
+              >
                 O nás
               </a>
-              <a href="#ubytovani" className="text-forest-800 hover:text-forest-600 transition-colors">
+              <a 
+                href="#ubytovani" 
+                className="text-forest-800 hover:text-forest-600 transition-colors"
+                onClick={(e) => handleSmoothScroll(e, "ubytovani")}
+              >
                 Ubytování
               </a>
-              <a href="#lokalita" className="text-forest-800 hover:text-forest-600 transition-colors">
+              <a 
+                href="#lokalita" 
+                className="text-forest-800 hover:text-forest-600 transition-colors"
+                onClick={(e) => handleSmoothScroll(e, "lokalita")}
+              >
                 Lokalita
               </a>
-              <a href="#cenik" className="text-forest-800 hover:text-forest-600 transition-colors">
+              <a 
+                href="#cenik" 
+                className="text-forest-800 hover:text-forest-600 transition-colors"
+                onClick={(e) => handleSmoothScroll(e, "cenik")}
+              >
                 Ceník
               </a>
             </>
@@ -112,28 +145,28 @@ const Navbar = () => {
               <a 
                 href="#o-nas" 
                 className="text-forest-800 py-2 border-b border-gray-100"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={(e) => handleSmoothScroll(e, "o-nas")}
               >
                 O nás
               </a>
               <a 
                 href="#ubytovani" 
                 className="text-forest-800 py-2 border-b border-gray-100"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={(e) => handleSmoothScroll(e, "ubytovani")}
               >
                 Ubytování
               </a>
               <a 
                 href="#lokalita" 
                 className="text-forest-800 py-2 border-b border-gray-100"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={(e) => handleSmoothScroll(e, "lokalita")}
               >
                 Lokalita
               </a>
               <a 
                 href="#cenik" 
                 className="text-forest-800 py-2 border-b border-gray-100"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={(e) => handleSmoothScroll(e, "cenik")}
               >
                 Ceník
               </a>

@@ -12,6 +12,18 @@ const HeroSection = () => {
     setLoaded(true);
   }, []);
 
+  const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    event.preventDefault();
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+      window.scrollTo({
+        top: targetElement.offsetTop,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <section 
       id="domov" 
@@ -38,7 +50,7 @@ const HeroSection = () => {
               Rezervovat pobyt
             </Button>
           </Link>
-          <a href="#o-nas">
+          <a href="#o-nas" onClick={(e) => handleSmoothScroll(e, "o-nas")}>
             <Button variant="outline" size="lg" className="bg-white/20 hover:bg-white/30 text-white border-white">
               Objevit více
             </Button>
@@ -50,6 +62,7 @@ const HeroSection = () => {
         href="#o-nas" 
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white z-10 animate-bounce"
         aria-label="Posunout dolů"
+        onClick={(e) => handleSmoothScroll(e, "o-nas")}
       >
         <ChevronDown size={32} />
       </a>
