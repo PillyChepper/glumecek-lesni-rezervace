@@ -2,9 +2,15 @@
 import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import Map from '@/components/Map';
 
 // Import the image from our assets folder
 import { glumecekImage } from '@/assets/images';
+
+// Convert the coordinates from DMS format to decimal degrees
+// 49°35'12.3"N 13°50'43.4"E
+const LATITUDE = 49 + (35/60) + (12.3/3600);  // 49.58675
+const LONGITUDE = 13 + (50/60) + (43.4/3600);  // 13.84539
 
 const LocationSection = () => {
   const [imageError, setImageError] = useState(false);
@@ -13,7 +19,7 @@ const LocationSection = () => {
 
   return (
     <Section id="lokalita" className="px-4">
-      <div className="grid md:grid-cols-2 gap-12 items-center">
+      <div className="grid md:grid-cols-2 gap-12 items-center mb-12">
         <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-lg">
           <AspectRatio ratio={3/2} className="bg-muted">
             <img 
@@ -44,6 +50,21 @@ const LocationSection = () => {
             Domek je dostupný autem s parkováním přímo u objektu. Po příjezdu vám předáme klíče a ukážeme vše potřebné pro váš komfortní pobyt.
           </p>
         </div>
+      </div>
+      
+      <div className="mt-8">
+        <h3 className="text-xl md:text-2xl font-display font-medium text-forest-700 mb-4">Najdete nás zde</h3>
+        <div className="rounded-lg overflow-hidden">
+          <Map 
+            latitude={LATITUDE}
+            longitude={LONGITUDE}
+            zoom={14}
+            height="400px"
+          />
+        </div>
+        <p className="mt-4 text-sm text-muted-foreground text-center">
+          Souřadnice: 49°35'12.3"N 13°50'43.4"E
+        </p>
       </div>
     </Section>
   );
