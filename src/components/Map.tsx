@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MapPin } from 'lucide-react';
 
 interface MapProps {
@@ -26,6 +26,7 @@ const Map: React.FC<MapProps> = ({
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInitialized = useRef(false);
+  const [mapError, setMapError] = useState(false);
   
   const mapContainerStyle = {
     width: '100%',
@@ -41,44 +42,64 @@ const Map: React.FC<MapProps> = ({
     
     // Load Mapy.cz API script
     const loadMapyApi = () => {
-      const script = document.createElement('script');
-      script.src = 'https://api.mapy.cz/loader.js';
-      script.async = true;
-      document.body.appendChild(script);
-      
-      script.onload = () => {
-        // Initialize the API with our key
-        window.Loader.apiKey = 'S8oj5YoEgR-XJcZIM6JGQqiNbvCH1HerrfXwWNqNrGo';
-        window.Loader.load(null, { suggest: true }, initializeMap);
-      };
-      
-      script.onerror = () => {
-        console.error('Failed to load Mapy.cz API');
-      };
+      try {
+        const script = document.createElement('script');
+        script.src = 'https://api.mapy.cz/loader.js';
+        script.async = true;
+        
+        script.onload = () => {
+          // Initialize the API with our key
+          if (window.Loader) {
+            window.Loader.apiKey = 'S8oj5YoEgR-XJcZIM6JGQqiNbvCH1HerrfXwWNqNrGo';
+            window.Loader.load(null, { suggest: true }, initializeMap);
+          } else {
+            console.error('Mapy.cz Loader not available');
+            setMapError(true);
+          }
+        };
+        
+        script.onerror = () => {
+          console.error('Failed to load Mapy.cz API');
+          setMapError(true);
+        };
+        
+        document.body.appendChild(script);
+      } catch (error) {
+        console.error('Error loading Mapy.cz API:', error);
+        setMapError(true);
+      }
     };
     
     // Initialize map after API loads
     const initializeMap = () => {
-      if (!mapContainerRef.current || !window.SMap) return;
-      
-      // Create map centered on our coordinates
-      const center = window.SMap.Coords.fromWGS84(longitude, latitude);
-      const map = new window.SMap(mapContainerRef.current, center, zoom);
-      
-      // Add controls
-      map.addDefaultLayer(window.SMap.DEF_BASE);
-      map.addDefaultControls();
-      
-      // Add marker at specified location
-      const layer = new window.SMap.Layer.Marker();
-      map.addLayer(layer);
-      layer.enable();
-      
-      const marker = new window.SMap.Marker(center);
-      layer.addMarker(marker);
-      
-      // Set flag to prevent re-initialization
-      mapInitialized.current = true;
+      try {
+        if (!mapContainerRef.current || !window.SMap) {
+          setMapError(true);
+          return;
+        }
+        
+        // Create map centered on our coordinates
+        const center = window.SMap.Coords.fromWGS84(longitude, latitude);
+        const map = new window.SMap(mapContainerRef.current, center, zoom);
+        
+        // Add controls
+        map.addDefaultLayer(window.SMap.DEF_BASE);
+        map.addDefaultControls();
+        
+        // Add marker at specified location
+        const layer = new window.SMap.Layer.Marker();
+        map.addLayer(layer);
+        layer.enable();
+        
+        const marker = new window.SMap.Marker(center);
+        layer.addMarker(marker);
+        
+        // Set flag to prevent re-initialization
+        mapInitialized.current = true;
+      } catch (error) {
+        console.error('Error initializing map:', error);
+        setMapError(true);
+      }
     };
     
     loadMapyApi();
@@ -92,6 +113,33 @@ const Map: React.FC<MapProps> = ({
     };
   }, [latitude, longitude, zoom]);
 
+  // If there's an error, show the fallback
+  if (mapError) {
+    return (
+      <div 
+        style={mapContainerStyle}
+        className="flex flex-col items-center justify-center bg-gray-100 rounded-lg shadow-md border border-gray-200"
+      >
+        <div className="text-center p-6">
+          <MapPin size={32} className="text-forest-600 mx-auto mb-3" />
+          <h4 className="text-lg font-medium mb-2">Zobrazit mapu</h4>
+          <p className="text-sm text-gray-600 mb-4">
+            Pro zobrazení interaktivní mapy klikněte na tlačítko níže.
+          </p>
+          <a 
+            href={googleMapsUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="bg-forest-600 hover:bg-forest-700 text-white px-4 py-2 rounded transition-colors inline-flex items-center"
+          >
+            <MapPin size={18} className="mr-2" />
+            Otevřít v Google Maps
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div 
       style={mapContainerStyle}
@@ -102,23 +150,6 @@ const Map: React.FC<MapProps> = ({
         style={{ width: '100%', height: '100%' }}
         className="relative rounded-lg overflow-hidden"
       />
-      {/* Fallback only shows if map fails to load */}
-      <div id="map-fallback" className="hidden absolute inset-0 text-center p-6 bg-gray-100">
-        <MapPin size={32} className="text-forest-600 mx-auto mb-3" />
-        <h4 className="text-lg font-medium mb-2">Zobrazit mapu</h4>
-        <p className="text-sm text-gray-600 mb-4">
-          Pro zobrazení interaktivní mapy klikněte na tlačítko níže.
-        </p>
-        <a 
-          href={googleMapsUrl} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="bg-forest-600 hover:bg-forest-700 text-white px-4 py-2 rounded transition-colors inline-flex items-center"
-        >
-          <MapPin size={18} className="mr-2" />
-          Otevřít v Google Maps
-        </a>
-      </div>
     </div>
   );
 };

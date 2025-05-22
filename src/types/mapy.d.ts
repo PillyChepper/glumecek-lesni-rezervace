@@ -16,7 +16,7 @@ interface Window {
     Layer: {
       Marker: new () => any;
     };
-    Marker: new (coords: any) => any;
+    Marker: new (coords: any, options?: any) => any;
     new (element: HTMLElement, coords: any, zoom: number): {
       addDefaultLayer: (layer: string) => void;
       addDefaultControls: () => void;
