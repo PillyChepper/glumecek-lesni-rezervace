@@ -24,7 +24,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
     if (mapInstanceRef.current || !mapRef.current) return;
 
     // Define API key
-    const API_KEY = 'eyJpIjoyNTcsImMiOjE2Njc0ODU2MjN9.c_UlvdpHGTI_Jb-TNMYlDYuIkCLJaUpi911RdlwPsAY';
+    const API_KEY = 'S8oj5YoEgR-XJcZIM6JGQqiNbvCH1HerrfXwWNqNrGo';
 
     try {
       // Create map instance
