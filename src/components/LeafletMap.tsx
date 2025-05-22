@@ -64,7 +64,11 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
       // Add marker at the location
       L.marker([latitude, longitude]).addTo(map);
 
-      // Add the Mapy.cz logo
+      // Format coordinates for Mapy.cz URL
+      // Mapy.cz uses format: https://mapy.cz/zakladni?x=13.8453900&y=49.5867500&z=15
+      const mapyCzUrl = `https://mapy.cz/zakladni?x=${longitude.toFixed(7)}&y=${latitude.toFixed(7)}&z=${zoom}`;
+
+      // Add the Mapy.cz logo with direct link to coordinates
       const LogoControl = L.Control.extend({
         options: {
           position: 'bottomleft',
@@ -73,8 +77,9 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
           const container = L.DomUtil.create('div');
           const link = L.DomUtil.create('a', '', container);
           
-          link.setAttribute('href', 'http://mapy.cz/');
+          link.setAttribute('href', mapyCzUrl);
           link.setAttribute('target', '_blank');
+          link.setAttribute('title', 'Otevřít tuto lokaci na Mapy.cz');
           link.innerHTML = '<img src="https://api.mapy.cz/img/api/logo.svg" />';
           L.DomEvent.disableClickPropagation(link);
           
