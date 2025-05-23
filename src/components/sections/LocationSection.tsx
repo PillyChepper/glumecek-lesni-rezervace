@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -14,6 +13,7 @@ const LATITUDE = 49 + (35/60) + (12.3/3600);  // 49.58675
 const LONGITUDE = 13 + (50/60) + (43.4/3600);  // 13.84539
 
 const LocationSection = () => {
+  // We'll still keep the fallback mechanism just in case
   const [imageError, setImageError] = useState(false);
   // Fallback image from Unsplash (forest landscape)
   const fallbackImage = "https://images.unsplash.com/photo-1472396961693-142e6e269027";
