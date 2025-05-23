@@ -5,8 +5,8 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import LeafletMap from '@/components/LeafletMap';
 import { MapPin } from 'lucide-react';
 
-// Import the image from our assets folder
-import { glumecekImage } from '@/assets/images';
+// Import the image from our organized assets folder
+import { surroundingAreaImage } from '@/assets/images';
 
 // Convert the coordinates from DMS format to decimal degrees
 // 49°35'12.3"N 13°50'43.4"E
@@ -24,7 +24,7 @@ const LocationSection = () => {
         <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-lg">
           <AspectRatio ratio={3/2} className="bg-muted">
             <img 
-              src={imageError ? fallbackImage : glumecekImage} 
+              src={imageError ? fallbackImage : surroundingAreaImage} 
               alt="Krajina Brdských lesů" 
               className="w-full h-full object-cover"
               onError={() => setImageError(true)}
