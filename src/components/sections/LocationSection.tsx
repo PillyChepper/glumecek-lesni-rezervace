@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -18,6 +19,8 @@ const LocationSection = () => {
   // Fallback image from Unsplash (forest landscape)
   const fallbackImage = "https://images.unsplash.com/photo-1472396961693-142e6e269027";
 
+  console.log("Image path being used:", surroundingAreaImage);
+
   return (
     <Section id="lokalita" className="px-4">
       <div className="grid md:grid-cols-2 gap-12 items-center mb-12">
@@ -27,7 +30,10 @@ const LocationSection = () => {
               src={imageError ? fallbackImage : surroundingAreaImage} 
               alt="Krajina Brdských lesů" 
               className="w-full h-full object-cover"
-              onError={() => setImageError(true)}
+              onError={() => {
+                console.error("Image failed to load:", surroundingAreaImage);
+                setImageError(true);
+              }}
             />
           </AspectRatio>
         </div>
