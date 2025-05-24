@@ -14,10 +14,7 @@ const LATITUDE = 49 + (35/60) + (12.3/3600);  // 49.58675
 const LONGITUDE = 13 + (50/60) + (43.4/3600);  // 13.84539
 
 const LocationSection = () => {
-  // We'll still keep the fallback mechanism just in case
   const [imageError, setImageError] = useState(false);
-  // Fallback image from Unsplash (forest landscape)
-  const fallbackImage = "https://images.unsplash.com/photo-1472396961693-142e6e269027";
 
   console.log("Image path being used:", surroundingAreaImage);
 
@@ -26,15 +23,21 @@ const LocationSection = () => {
       <div className="grid md:grid-cols-2 gap-12 items-center mb-12">
         <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-lg">
           <AspectRatio ratio={3/2} className="bg-muted">
-            <img 
-              src={imageError ? fallbackImage : surroundingAreaImage} 
-              alt="Krajina Brdských lesů" 
-              className="w-full h-full object-cover"
-              onError={() => {
-                console.error("Image failed to load:", surroundingAreaImage);
-                setImageError(true);
-              }}
-            />
+            {!imageError ? (
+              <img 
+                src={surroundingAreaImage} 
+                alt="Krajina Brdských lesů" 
+                className="w-full h-full object-cover"
+                onError={() => {
+                  console.error("Image failed to load:", surroundingAreaImage);
+                  setImageError(true);
+                }}
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <p className="text-gray-500">Image failed to load</p>
+              </div>
+            )}
           </AspectRatio>
         </div>
         <div className="order-1 md:order-2 px-4 md:px-0">
