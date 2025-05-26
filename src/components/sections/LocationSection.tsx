@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -14,10 +15,10 @@ const LONGITUDE = 13 + (50/60) + (43.4/3600);  // 13.84539
 
 const pointsOfInterest = [
   {
-    icon: <TreePine className="w-5 h-5" />,
-    name: "Hřebeny - nejvyšší bod Brd",
+    icon: <Camera className="w-5 h-5" />,
+    name: "Voltušská vyhlídka",
     distance: "8 km",
-    description: "Nejvyšší vrchol Brdských hor s nádherným výhledem do kraje"
+    description: "Krásná vyhlídka s panoramatickým výhledem na okolní krajinu Brd"
   },
   {
     icon: <Castle className="w-5 h-5" />,
