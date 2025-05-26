@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import LeafletMap from '@/components/LeafletMap';
-import { MapPin, Clock, Car, Hiking, Camera, TreePine, Castle, Waves } from 'lucide-react';
+import { MapPin, Clock, Car, Map, Camera, TreePine, Castle, Waves } from 'lucide-react';
 
 // Import the image from our organized assets folder
 import { surroundingAreaImage } from '@/assets/images';
@@ -43,7 +43,7 @@ const pointsOfInterest = [
     description: "Dřevěná rozhledna s panoramatickým výhledem na Brdy a okolí"
   },
   {
-    icon: <Hiking className="w-5 h-5" />,
+    icon: <Map className="w-5 h-5" />,
     name: "Naučná stezka Tři trubky",
     distance: "4 km",
     time: "5 min autem",
