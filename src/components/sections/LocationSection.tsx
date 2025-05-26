@@ -17,7 +17,7 @@ const pointsOfInterest = [
   {
     icon: <Camera className="w-5 h-5" />,
     name: "Voltušská vyhlídka",
-    distance: "8 km",
+    distance: "3.5 km",
     description: "Krásná vyhlídka s panoramatickým výhledem na okolní krajinu Brd"
   },
   {
