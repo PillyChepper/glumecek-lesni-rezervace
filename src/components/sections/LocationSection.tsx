@@ -1,9 +1,8 @@
-
 import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import LeafletMap from '@/components/LeafletMap';
-import { MapPin, Clock, Car, Map, Camera, TreePine, Castle, Waves } from 'lucide-react';
+import { MapPin, Camera, TreePine, Castle, Waves, Map } from 'lucide-react';
 
 // Import the image from our organized assets folder
 import { surroundingAreaImage } from '@/assets/images';
@@ -18,42 +17,36 @@ const pointsOfInterest = [
     icon: <TreePine className="w-5 h-5" />,
     name: "Hřebeny - nejvyšší bod Brd",
     distance: "8 km",
-    time: "15 min autem",
     description: "Nejvyšší vrchol Brdských hor s nádherným výhledem do kraje"
   },
   {
     icon: <Castle className="w-5 h-5" />,
     name: "Hrad Týřov",
     distance: "12 km",
-    time: "20 min autem",
     description: "Zřícenina gotického hradu s bohatou historií a krásnou procházkou"
   },
   {
     icon: <Waves className="w-5 h-5" />,
     name: "Klíčava - přehrada",
     distance: "15 km",
-    time: "25 min autem",
     description: "Vodní nádrž vhodná ke koupání, rybaření a vodním sportům"
   },
   {
     icon: <Camera className="w-5 h-5" />,
     name: "Rozhledna Velika",
     distance: "6 km",
-    time: "10 min autem",
     description: "Dřevěná rozhledna s panoramatickým výhledem na Brdy a okolí"
   },
   {
     icon: <Map className="w-5 h-5" />,
     name: "Naučná stezka Tři trubky",
     distance: "4 km",
-    time: "5 min autem",
     description: "Vzdělávací stezka s informacemi o místní flóře a fauně"
   },
   {
     icon: <TreePine className="w-5 h-5" />,
     name: "Padrťské rybníky",
     distance: "18 km",
-    time: "30 min autem",
     description: "Soustava rybníků ideální pro pozorování ptactva a klidné procházky"
   }
 ];
@@ -109,9 +102,12 @@ const LocationSection = () => {
 
       {/* Points of Interest Section */}
       <div className="mb-12">
-        <h3 className="text-2xl md:text-3xl font-display font-medium text-forest-700 mb-8 text-center">
+        <h3 className="text-2xl md:text-3xl font-display font-medium text-forest-700 mb-4 text-center">
           Zajímavá místa v okolí
         </h3>
+        <p className="text-center text-muted-foreground mb-8">
+          Vzdálenosti jsou měřeny od chatky Glumeček
+        </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {pointsOfInterest.map((poi, index) => (
             <div key={index} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
@@ -121,15 +117,9 @@ const LocationSection = () => {
                 </div>
                 <div className="flex-1">
                   <h4 className="font-medium text-forest-800 mb-2">{poi.name}</h4>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-4 h-4" />
-                      <span>{poi.distance}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Car className="w-4 h-4" />
-                      <span>{poi.time}</span>
-                    </div>
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground mb-3">
+                    <MapPin className="w-4 h-4" />
+                    <span>{poi.distance}</span>
                   </div>
                   <p className="text-sm text-gray-600">{poi.description}</p>
                 </div>
