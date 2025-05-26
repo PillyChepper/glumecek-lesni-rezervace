@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -21,10 +20,10 @@ const pointsOfInterest = [
     description: "Krásná vyhlídka s panoramatickým výhledem na okolní krajinu Brd"
   },
   {
-    icon: <Castle className="w-5 h-5" />,
-    name: "Hrad Týřov",
-    distance: "12 km",
-    description: "Zřícenina gotického hradu s bohatou historií a krásnou procházkou"
+    icon: <Camera className="w-5 h-5" />,
+    name: "Vyhlídka Bílá skála",
+    distance: "7 km",
+    description: "Skalní vyhlídka s jedinečným výhledem na Brdy a okolní lesy"
   },
   {
     icon: <Waves className="w-5 h-5" />,
