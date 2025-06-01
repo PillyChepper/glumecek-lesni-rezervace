@@ -28,7 +28,7 @@ const pointsOfInterest = [
   },
   {
     icon: <Waves className="w-5 h-5" />,
-    name: "Velký Kostelský rybník",
+    name: "Velký Kotelský rybník",
     distance: "4.5 km",
     description: "Vodní nádrž vhodná ke koupání, rybaření a vodním sportům"
   },
