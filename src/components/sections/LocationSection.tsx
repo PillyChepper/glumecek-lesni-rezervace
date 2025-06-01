@@ -34,9 +34,9 @@ const pointsOfInterest = [
   },
   {
     icon: <Camera className="w-5 h-5" />,
-    name: "Rozhledna Velika",
-    distance: "6 km",
-    description: "Dřevěná rozhledna s panoramatickým výhledem na Brdy a okolí"
+    name: "Štěrbina (753 m)",
+    distance: "2.3 km",
+    description: "Turistický cíl s krásným výhledem na okolní krajinu"
   },
   {
     icon: <Map className="w-5 h-5" />,
