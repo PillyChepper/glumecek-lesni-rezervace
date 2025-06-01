@@ -22,7 +22,7 @@ const pointsOfInterest = [
   {
     icon: <Camera className="w-5 h-5" />,
     name: "Vyhlídka Bílá skála",
-    distance: "7 km",
+    distance: "2 km",
     description: "Skalní vyhlídka s jedinečným výhledem na Brdy a okolní lesy"
   },
   {
