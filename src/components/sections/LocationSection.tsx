@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -27,8 +28,8 @@ const pointsOfInterest = [
   },
   {
     icon: <Waves className="w-5 h-5" />,
-    name: "Klíčava - přehrada",
-    distance: "15 km",
+    name: "Velkí kotelský rybník",
+    distance: "4.5 km",
     description: "Vodní nádrž vhodná ke koupání, rybaření a vodním sportům"
   },
   {
