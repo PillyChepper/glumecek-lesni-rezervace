@@ -10,6 +10,8 @@ export function useReservationDatesWithRefresh(startDate?: Date, endDate?: Date)
   const refreshDates = useCallback(() => {
     console.log('Manually refreshing reservation dates');
     setRefreshCounter(prev => prev + 1);
+    // Force a page reload to ensure fresh data fetch
+    window.location.reload();
   }, []);
   
   // Listen for reservation-cancelled events
