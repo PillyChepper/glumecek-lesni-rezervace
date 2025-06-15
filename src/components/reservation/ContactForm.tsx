@@ -36,12 +36,14 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
     setSpecialRequests,
     isSubmitting,
     handleFormSubmit,
-    emailError
+    emailError,
+    validateEmail,
+    isEmailValid
   } = useReservationForm(dateRange, onSubmit);
 
   const handleContinueToConfirm = () => {
     // Check if all required fields are filled and email is valid
-    if (!firstName || !lastName || !email || !phone || emailError) {
+    if (!firstName || !lastName || !email || !phone || !isEmailValid()) {
       return;
     }
     setCurrentStep('confirm');
@@ -83,6 +85,9 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
               specialRequests={specialRequests}
               setSpecialRequests={setSpecialRequests}
               onContinueClick={handleContinueToConfirm}
+              emailError={emailError}
+              validateEmail={validateEmail}
+              isEmailValid={isEmailValid}
             />
           ) : (
             <ReservationConfirmView

@@ -28,6 +28,7 @@ interface ReservationContactViewProps {
   onContinueClick: () => void;
   emailError?: string | null;
   validateEmail?: (email: string) => boolean;
+  isEmailValid?: () => boolean;
 }
 
 const ReservationContactView = ({
@@ -51,8 +52,11 @@ const ReservationContactView = ({
   setSpecialRequests,
   onContinueClick,
   emailError,
-  validateEmail
+  validateEmail,
+  isEmailValid
 }: ReservationContactViewProps) => {
+  const canContinue = firstName && lastName && email && phone && isEmailValid && isEmailValid();
+
   return (
     <>
       <CardHeader>
@@ -93,7 +97,7 @@ const ReservationContactView = ({
         <Button 
           className="w-full bg-[#4a544a] hover:bg-[#3d443d] text-white"
           onClick={onContinueClick}
-          disabled={!firstName || !lastName || !email || !phone || !!emailError}
+          disabled={!canContinue}
           type="button"
         >
           <ArrowRight className="h-4 w-4 mr-1" />
