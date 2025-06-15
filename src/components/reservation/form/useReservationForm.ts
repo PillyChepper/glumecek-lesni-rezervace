@@ -23,7 +23,7 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const validateEmail = (email: string) => {
+  const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email) && email.length > 0) {
       setEmailError('Prosím zadejte platnou emailovou adresu');
@@ -113,6 +113,7 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
       setPostalCode('');
       setHasPet(false);
       setSpecialRequests('');
+      setEmailError(null);
       
       // Navigate to homepage after submission
       navigate('/', { replace: true });

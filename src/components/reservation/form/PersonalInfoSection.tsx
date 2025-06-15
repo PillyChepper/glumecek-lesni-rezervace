@@ -32,8 +32,16 @@ const PersonalInfoSection = ({
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
-    if (newEmail.length > 3 && validateEmail) {
+    // Validate email on change if there's content
+    if (newEmail.length > 0 && validateEmail) {
       validateEmail(newEmail);
+    }
+  };
+
+  const handleEmailBlur = () => {
+    // Validate email on blur if there's content
+    if (email.length > 0 && validateEmail) {
+      validateEmail(email);
     }
   };
   
@@ -78,7 +86,7 @@ const PersonalInfoSection = ({
             type="email" 
             value={email}
             onChange={handleEmailChange}
-            onBlur={() => email && validateEmail && validateEmail(email)}
+            onBlur={handleEmailBlur}
             placeholder="Zadejte emailovou adresu"
             className={emailError ? "border-red-500" : ""}
             required
