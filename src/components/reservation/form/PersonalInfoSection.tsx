@@ -1,5 +1,4 @@
 
-import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
@@ -14,6 +13,8 @@ interface PersonalInfoSectionProps {
   setEmail: (value: string) => void;
   phone: string;
   setPhone: (value: string) => void;
+  emailError?: string | null;
+  validateEmail?: (email: string) => boolean;
 }
 
 const PersonalInfoSection = ({
@@ -24,28 +25,15 @@ const PersonalInfoSection = ({
   email,
   setEmail,
   phone,
-  setPhone
+  setPhone,
+  emailError,
+  validateEmail
 }: PersonalInfoSectionProps) => {
-  const [emailError, setEmailError] = useState<string | null>(null);
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email) && email.length > 0) {
-      setEmailError('Prosím zadejte platnou emailovou adresu');
-      return false;
-    } else {
-      setEmailError(null);
-      return true;
-    }
-  };
-
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
-    if (newEmail.length > 3) {
+    if (newEmail.length > 3 && validateEmail) {
       validateEmail(newEmail);
-    } else {
-      setEmailError(null);
     }
   };
   
@@ -90,7 +78,7 @@ const PersonalInfoSection = ({
             type="email" 
             value={email}
             onChange={handleEmailChange}
-            onBlur={() => email && validateEmail(email)}
+            onBlur={() => email && validateEmail && validateEmail(email)}
             placeholder="Zadejte emailovou adresu"
             className={emailError ? "border-red-500" : ""}
             required

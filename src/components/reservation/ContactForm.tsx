@@ -35,11 +35,13 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
     specialRequests,
     setSpecialRequests,
     isSubmitting,
-    handleFormSubmit
+    handleFormSubmit,
+    emailError
   } = useReservationForm(dateRange, onSubmit);
 
   const handleContinueToConfirm = () => {
-    if (!firstName || !lastName || !email || !phone) {
+    // Check if all required fields are filled and email is valid
+    if (!firstName || !lastName || !email || !phone || emailError) {
       return;
     }
     setCurrentStep('confirm');

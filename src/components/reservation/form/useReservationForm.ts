@@ -55,11 +55,21 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
       return;
     }
 
-    // Validate email before submitting
+    // Validate email before submitting - if invalid, stop submission
     if (!validateEmail(email)) {
       toast({
         title: "Neplatný email",
         description: "Prosím zadejte platnou emailovou adresu",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Additional check: if there's still an email error, don't submit
+    if (emailError) {
+      toast({
+        title: "Neplatný email",
+        description: "Prosím opravte emailovou adresu před odesláním",
         variant: "destructive",
       });
       return;

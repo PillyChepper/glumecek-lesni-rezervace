@@ -26,6 +26,8 @@ interface ReservationContactViewProps {
   specialRequests: string;
   setSpecialRequests: (value: string) => void;
   onContinueClick: () => void;
+  emailError?: string | null;
+  validateEmail?: (email: string) => boolean;
 }
 
 const ReservationContactView = ({
@@ -47,7 +49,9 @@ const ReservationContactView = ({
   setHasPet,
   specialRequests,
   setSpecialRequests,
-  onContinueClick
+  onContinueClick,
+  emailError,
+  validateEmail
 }: ReservationContactViewProps) => {
   return (
     <>
@@ -71,6 +75,8 @@ const ReservationContactView = ({
           setCity={setCity}
           postalCode={postalCode}
           setPostalCode={setPostalCode}
+          emailError={emailError}
+          validateEmail={validateEmail}
         />
         
         <ReservationGuestOptions 
@@ -87,7 +93,7 @@ const ReservationContactView = ({
         <Button 
           className="w-full bg-[#4a544a] hover:bg-[#3d443d] text-white"
           onClick={onContinueClick}
-          disabled={!firstName || !lastName || !email || !phone}
+          disabled={!firstName || !lastName || !email || !phone || !!emailError}
           type="button"
         >
           <ArrowRight className="h-4 w-4 mr-1" />

@@ -17,6 +17,8 @@ interface ReservationContactInfoProps {
   setCity: (value: string) => void;
   postalCode: string;
   setPostalCode: (value: string) => void;
+  emailError?: string | null;
+  validateEmail?: (email: string) => boolean;
 }
 
 const ReservationContactInfo = ({
@@ -33,7 +35,9 @@ const ReservationContactInfo = ({
   city,
   setCity,
   postalCode,
-  setPostalCode
+  setPostalCode,
+  emailError,
+  validateEmail
 }: ReservationContactInfoProps) => {
   return (
     <div className="space-y-6">
@@ -47,6 +51,8 @@ const ReservationContactInfo = ({
         setEmail={setEmail}
         phone={phone}
         setPhone={setPhone}
+        emailError={emailError}
+        validateEmail={validateEmail}
       />
 
       {/* Address Section */}
