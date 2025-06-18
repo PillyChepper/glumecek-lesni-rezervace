@@ -1,12 +1,11 @@
-
 import Section from '@/components/Section';
 
 const PricingSection = () => {
   return (
-    <Section id="cenik" bgColor="bg-forest-50">
+    <Section id="cenik" bgColor="bg-forest-100">
       <h2 className="section-title text-center">Ceník</h2>
       <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="bg-forest-50 rounded-lg shadow-md overflow-hidden">
           <div className="p-6 border-b">
             <h3 className="text-2xl font-display font-medium mb-2">Základní informace</h3>
             <p className="text-muted-foreground">
