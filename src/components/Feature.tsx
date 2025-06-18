@@ -27,7 +27,7 @@ const Feature = ({
   return (
     <div 
       className={cn(
-        "feature-card flex flex-col items-center text-center p-6 hover:shadow-lg transition-all duration-300", 
+        "feature-card flex flex-col items-center text-center p-6 rounded-xl hover:shadow-lg transition-all duration-300", 
         className
       )}
     >
