@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -110,7 +111,7 @@ const LocationSection = () => {
         </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {pointsOfInterest.map((poi, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
+            <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
               <div className="flex items-start gap-4">
                 <div className="text-forest-600 mt-1 flex-shrink-0">
                   {poi.icon}
