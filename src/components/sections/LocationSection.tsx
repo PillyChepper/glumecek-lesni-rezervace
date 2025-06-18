@@ -58,7 +58,7 @@ const LocationSection = () => {
   console.log("Image path being used:", surroundingAreaImage);
 
   return (
-    <Section id="lokalita" className="px-4">
+    <Section id="lokalita">
       <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
         <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-lg">
           <AspectRatio ratio={3/2} className="bg-muted">
@@ -79,7 +79,7 @@ const LocationSection = () => {
             )}
           </AspectRatio>
         </div>
-        <div className="order-1 md:order-2 px-4 md:px-0">
+        <div className="order-1 md:order-2">
           <h2 className="section-title">Lokalita</h2>
           <p className="mb-4">
             Glumeček se nachází v malebné oblasti Brd, jednom z nejrozsáhlejších zalesněných území v České republice. 

@@ -12,9 +12,9 @@ const AboutSection = () => {
   const fallbackImage = "https://images.unsplash.com/photo-1506744038136-46273834b3fb";
 
   return (
-    <Section id="o-nas" className="px-4">
+    <Section id="o-nas">
       <div className="grid md:grid-cols-2 gap-12 items-center">
-        <div className="px-4 md:px-0">
+        <div>
           <h2 className="section-title">Vítejte v Glumečku</h2>
           <p className="mb-4 text-forest-700">
             Naše malá lesní oáza v srdci Brd nabízí jedinečný zážitek pro všechny milovníky přírody a klidu.

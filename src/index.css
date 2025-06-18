@@ -17,6 +17,10 @@
   .section-subtitle {
     @apply text-xl md:text-2xl font-display text-forest-700 mb-6;
   }
+  
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
 }
 
 /* Input placeholder styles */

@@ -5,9 +5,9 @@ import { Utensils, Droplets, WifiOff, Thermometer, PawPrint, MapPin } from 'luci
 
 const AccommodationSection = () => {
   return (
-    <Section id="ubytovani" bgColor="bg-forest-50" className="px-4">
+    <Section id="ubytovani" bgColor="bg-forest-50">
       <h2 className="section-title text-center">Ubytování</h2>
-      <p className="text-center max-w-3xl mx-auto mb-12 px-4">
+      <p className="text-center max-w-3xl mx-auto mb-12">
         Náš domek je kompletně vybaven vším, co potřebujete pro pohodlný pobyt v přírodě. Spojení moderního komfortu s rustikálním prostředím vám zaručí nezapomenutelný zážitek.
       </p>
       
