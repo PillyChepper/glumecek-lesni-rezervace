@@ -106,16 +106,8 @@ const Navbar = () => {
               </Link>
             </>
           )}
-          <Link to="/rezervace">
-            <Button 
-              className={
-                isScrolled 
-                  ? 'bg-forest-600 hover:bg-forest-700 text-white' 
-                  : 'bg-forest-600 hover:bg-forest-700 text-white/70'
-              }
-            >
-              Rezervace
-            </Button>
+          <Link to="/rezervace" className="text-forest-800 hover:text-forest-600 transition-colors">
+            Rezervace
           </Link>
           <Link to="/admin">
             <Button variant="outline" className="flex items-center gap-2">
@@ -205,13 +197,10 @@ const Navbar = () => {
           )}
           <Link 
             to="/rezervace"
+            className="text-forest-800 py-2 border-b border-gray-100"
             onClick={() => setIsMenuOpen(false)}
           >
-            <Button 
-              className="w-full bg-forest-600 hover:bg-forest-700 text-white"
-            >
-              Rezervace
-            </Button>
+            Rezervace
           </Link>
           <Link 
             to="/admin"
