@@ -4,6 +4,7 @@ import { DateRange } from "@/components/DateRangePicker";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useDateRangeSelection } from "./hooks/useDateRangeSelection";
 import { cs } from "date-fns/locale";
+import { memo } from "react";
 
 interface DateRangeCalendarProps {
   value: DateRange;
@@ -12,7 +13,7 @@ interface DateRangeCalendarProps {
   minDays?: number;
 }
 
-const DateRangeCalendar = ({
+const DateRangeCalendar = memo(({
   value,
   onChange,
   disabledDates = [],
@@ -53,6 +54,8 @@ const DateRangeCalendar = ({
       />
     </div>
   );
-};
+});
+
+DateRangeCalendar.displayName = 'DateRangeCalendar';
 
 export default DateRangeCalendar;

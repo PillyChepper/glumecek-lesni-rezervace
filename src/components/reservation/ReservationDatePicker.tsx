@@ -1,5 +1,6 @@
 
 import DateRangePicker, { DateRange } from '@/components/DateRangePicker';
+import { memo } from 'react';
 
 interface ReservationDatePickerProps {
   dateRange: DateRange;
@@ -8,7 +9,7 @@ interface ReservationDatePickerProps {
   disabledDates: Date[];
 }
 
-const ReservationDatePicker = ({ 
+const ReservationDatePicker = memo(({ 
   dateRange, 
   onDateChange, 
   onReservationClick,
@@ -24,6 +25,8 @@ const ReservationDatePicker = ({
       />
     </div>
   );
-};
+});
+
+ReservationDatePicker.displayName = 'ReservationDatePicker';
 
 export default ReservationDatePicker;

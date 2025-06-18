@@ -4,22 +4,28 @@ import { heroBackgroundImage } from '@/assets/images';
 import { useEffect, useState } from 'react';
 
 const HeroSection = () => {
-  const [loaded, setLoaded] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(false);
 
   useEffect(() => {
-    setLoaded(true);
+    // Use requestAnimationFrame for smoother animations
+    const animateTitle = () => {
+      requestAnimationFrame(() => {
+        setShowTitle(true);
+      });
+    };
+    
+    const animateSubtitle = () => {
+      requestAnimationFrame(() => {
+        setShowSubtitle(true);
+      });
+    };
     
     // Animate title first
-    const titleTimer = setTimeout(() => {
-      setShowTitle(true);
-    }, 300);
+    const titleTimer = setTimeout(animateTitle, 300);
     
     // Animate subtitle after title with a split second delay
-    const subtitleTimer = setTimeout(() => {
-      setShowSubtitle(true);
-    }, 800);
+    const subtitleTimer = setTimeout(animateSubtitle, 800);
 
     return () => {
       clearTimeout(titleTimer);
@@ -47,12 +53,14 @@ const HeroSection = () => {
         height: '100vh',
         backgroundImage: `url(${heroBackgroundImage})`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center'
+        backgroundPosition: 'center',
+        // Prevent layout shift during loading
+        willChange: 'transform'
       }}
     >
       <div className="absolute inset-0 bg-black/40" />
       
-      <div className={`relative z-10 text-center px-4 ${loaded ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="relative z-10 text-center px-4">
         <h1 className={`text-4xl md:text-6xl font-display font-semibold mb-4 transition-all duration-700 transform ${showTitle ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
           Glumeček
         </h1>

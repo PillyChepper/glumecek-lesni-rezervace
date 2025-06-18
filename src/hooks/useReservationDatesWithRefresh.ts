@@ -10,8 +10,8 @@ export function useReservationDatesWithRefresh(startDate?: Date, endDate?: Date)
   const refreshDates = useCallback(() => {
     console.log('Manually refreshing reservation dates');
     setRefreshCounter(prev => prev + 1);
-    // Force a page reload to ensure fresh data fetch
-    window.location.reload();
+    // Remove the forced page reload - this was causing performance issues
+    // Instead, rely on React Query's refetch mechanism
   }, []);
   
   // Listen for reservation-cancelled events

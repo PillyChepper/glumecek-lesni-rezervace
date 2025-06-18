@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -22,7 +22,7 @@ interface DateRangePickerProps {
   onReservationClick?: () => void;
 }
 
-const DateRangePicker = ({
+const DateRangePicker = React.memo(({
   dateRange,
   onDateChange,
   disabledDates = [],
@@ -33,7 +33,12 @@ const DateRangePicker = ({
   const [hoverDate, setHoverDate] = useState<Date | undefined>(undefined);
   const isMobile = useIsMobile();
   
-  const handleDateSelect = (date: Date | undefined) => {
+  // Memoize the button disabled state
+  const isReservationDisabled = useMemo(() => {
+    return !dateRange.from || !dateRange.to;
+  }, [dateRange.from, dateRange.to]);
+  
+  const handleDateSelect = useCallback((date: Date | undefined) => {
     if (!selectingDeparture) {
       // Selecting arrival date
       if (date?.getTime() === dateRange.from?.getTime()) {
@@ -80,47 +85,47 @@ const DateRangePicker = ({
         }
       }
     }
-  };
+  }, [selectingDeparture, dateRange, onDateChange]);
 
-  const handleReservationClick = () => {
+  const handleReservationClick = useCallback(() => {
     if (onReservationClick) {
       onReservationClick();
     }
-  };
+  }, [onReservationClick]);
 
-  const handleArrivalTriggerClick = () => {
+  const handleArrivalTriggerClick = useCallback(() => {
     setSelectingDeparture(false);
     setOpen(true);
-  };
+  }, []);
 
-  const handleDepartureTriggerClick = () => {
+  const handleDepartureTriggerClick = useCallback(() => {
     if (dateRange.from) {
       setSelectingDeparture(true);
       setOpen(true);
     }
-  };
+  }, [dateRange.from]);
 
   // Close the popover when clicking outside
-  const handleOpenChange = (newOpen: boolean) => {
+  const handleOpenChange = useCallback((newOpen: boolean) => {
     setOpen(newOpen);
     if (!newOpen) {
       // Reset selecting state when closing
       setSelectingDeparture(dateRange.from !== undefined);
       setHoverDate(undefined);
     }
-  };
+  }, [dateRange.from]);
 
   // Function to handle mouse over events on calendar days
-  const handleDayMouseEnter = (day: Date) => {
+  const handleDayMouseEnter = useCallback((day: Date) => {
     if (selectingDeparture && dateRange.from) {
       setHoverDate(day);
     }
-  };
+  }, [selectingDeparture, dateRange.from]);
 
   // Function to handle mouse leave events
-  const handleDayMouseLeave = () => {
+  const handleDayMouseLeave = useCallback(() => {
     setHoverDate(undefined);
-  };
+  }, []);
 
   // Make sure to reset selectingDeparture if arrival date is removed
   useEffect(() => {
@@ -179,13 +184,15 @@ const DateRangePicker = ({
         <Button 
           onClick={handleReservationClick}
           className="bg-forest-600 hover:bg-forest-700 h-12 md:w-[180px] w-full text-white"
-          disabled={!dateRange.from || !dateRange.to}
+          disabled={isReservationDisabled}
         >
           REZERVOVAT
         </Button>
       </div>
     </div>
   );
-};
+});
+
+DateRangePicker.displayName = 'DateRangePicker';
 
 export default DateRangePicker;
