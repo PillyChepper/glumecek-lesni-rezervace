@@ -58,7 +58,7 @@ const HeroSection = () => {
         willChange: 'transform'
       }}
     >
-      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 bg-black/20" />
       
       <div className="relative z-10 text-center px-4">
         <h1 className={`text-4xl md:text-6xl font-display font-semibold mb-4 transition-all duration-700 transform ${showTitle ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
