@@ -14,7 +14,7 @@ const Section = ({
   id, 
   className, 
   children, 
-  bgColor = 'bg-background',
+  bgColor = 'bg-forest-50',
   fullWidth = false
 }: SectionProps) => {
   return (
