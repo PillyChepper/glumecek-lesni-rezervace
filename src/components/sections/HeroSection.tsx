@@ -1,15 +1,30 @@
 
-import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { heroBackgroundImage } from '@/assets/images';
 import { useEffect, useState } from 'react';
 
 const HeroSection = () => {
   const [loaded, setLoaded] = useState(false);
+  const [showTitle, setShowTitle] = useState(false);
+  const [showSubtitle, setShowSubtitle] = useState(false);
 
   useEffect(() => {
     setLoaded(true);
+    
+    // Animate title first
+    const titleTimer = setTimeout(() => {
+      setShowTitle(true);
+    }, 300);
+    
+    // Animate subtitle after title with a split second delay
+    const subtitleTimer = setTimeout(() => {
+      setShowSubtitle(true);
+    }, 800);
+
+    return () => {
+      clearTimeout(titleTimer);
+      clearTimeout(subtitleTimer);
+    };
   }, []);
 
   const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
@@ -37,25 +52,13 @@ const HeroSection = () => {
     >
       <div className="absolute inset-0 bg-black/40" />
       
-      <div className={`relative z-10 text-center px-4 ${loaded ? 'animate-fade-in' : 'opacity-0'}`}>
-        <h1 className="text-4xl md:text-6xl font-display font-semibold mb-4">
+      <div className={`relative z-10 text-center px-4 ${loaded ? 'opacity-100' : 'opacity-0'}`}>
+        <h1 className={`text-4xl md:text-6xl font-display font-semibold mb-4 transition-all duration-700 transform ${showTitle ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
           Glumeček
         </h1>
-        <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-center">
+        <p className={`text-xl md:text-2xl max-w-2xl mx-auto text-center transition-all duration-700 transform ${showSubtitle ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
           Útočiště v srdci brdských lesů pro váš dokonalý odpočinek
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/rezervace">
-            <Button size="lg" className="bg-forest-600 hover:bg-forest-700 text-white">
-              Rezervovat pobyt
-            </Button>
-          </Link>
-          <a href="#o-nas" onClick={(e) => handleSmoothScroll(e, "o-nas")}>
-            <Button variant="outline" size="lg" className="bg-white/20 hover:bg-white/30 text-white border-white">
-              Objevit více
-            </Button>
-          </a>
-        </div>
       </div>
       
       <a 
