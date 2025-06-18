@@ -30,7 +30,7 @@ const AboutSection = () => {
             zatímco interiér nabízí útulné a komfortní zázemí.
           </p>
         </div>
-        <div className="rounded-lg overflow-hidden shadow-lg">
+        <div className="rounded-xl overflow-hidden shadow-lg">
           <AspectRatio ratio={3/2} className="bg-muted">
             <img 
               src={imageError ? fallbackImage : cabinImage} 

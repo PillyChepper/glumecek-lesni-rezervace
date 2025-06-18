@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -60,7 +59,7 @@ const LocationSection = () => {
   return (
     <Section id="lokalita">
       <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-        <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-lg">
+        <div className="order-2 md:order-1 rounded-xl overflow-hidden shadow-lg">
           <AspectRatio ratio={3/2} className="bg-muted">
             {!imageError ? (
               <img 
@@ -132,7 +131,7 @@ const LocationSection = () => {
       
       <div className="mt-8">
         <h3 className="text-xl md:text-2xl font-display font-medium text-forest-700 mb-4 text-center">Najdete nás zde</h3>
-        <div className="rounded-lg overflow-hidden shadow-lg" style={{ height: '400px' }}>
+        <div className="rounded-xl overflow-hidden shadow-lg" style={{ height: '400px' }}>
           <LeafletMap
             latitude={LATITUDE}
             longitude={LONGITUDE}
