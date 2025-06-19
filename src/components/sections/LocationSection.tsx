@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -93,7 +92,6 @@ const LocationSection = () => {
             <li>Cyklostezky s nádhernými výhledy</li>
             <li>Historické památky a rozhledny</li>
             <li>Přírodní vodní plochy vhodné ke koupání</li>
-            <li>Místní farmy s čerstvými produkty</li>
           </ul>
           <p>
             Domek je dostupný autem s parkováním přímo u objektu. Po příjezdu vám předáme klíče a ukážeme vše potřebné pro váš komfortní pobyt.
