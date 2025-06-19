@@ -19,12 +19,12 @@ const AboutSection = () => {
           <p className="mb-4 text-forest-700">
             Naše malá lesní oáza v srdci Brd nabízí jedinečný zážitek pro všechny milovníky přírody a klidu.
           </p>
-          <p className="mb-6">
+          <p className="mb-6 text-forest-700">
             Ručně postavený domek Glumeček vám poskytne vše, co potřebujete pro dokonalý odpočinek - 
             komfort, soukromí a přímé spojení s nádhernou okolní přírodou. Bez rušivých zvuků města, 
             jen vy a les kolem vás.
           </p>
-          <p>
+          <p className="text-forest-700">
             Domek je navržen tak, aby respektoval okolní přírodu a zároveň poskytoval všechny moderní vymoženosti. 
             Postavený z přírodních materiálů se dokonale začleňuje do lesního prostředí, 
             zatímco interiér nabízí útulné a komfortní zázemí.
