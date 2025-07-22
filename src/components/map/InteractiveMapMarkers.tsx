@@ -54,8 +54,17 @@ const InteractiveMapMarkers = ({ map, pois, cabinLocation }: InteractiveMapMarke
 
     const markers: L.Marker[] = [];
 
-    // Use Leaflet's whenReady to ensure map is fully initialized
-    map.whenReady(() => {
+    // Use a more robust initialization approach
+    const initializeMarkers = () => {
+      const container = map.getContainer();
+      const mapPane = container?.querySelector('.leaflet-map-pane');
+      const overlayPane = container?.querySelector('.leaflet-overlay-pane');
+      
+      // Ensure all necessary DOM elements exist
+      if (!container || !mapPane || !overlayPane) {
+        setTimeout(initializeMarkers, 100);
+        return;
+      }
       // Create custom cabin icon
       const cabinIcon = L.divIcon({
         html: `
@@ -189,7 +198,10 @@ const InteractiveMapMarkers = ({ map, pois, cabinLocation }: InteractiveMapMarke
         marker.bindPopup(popupContent);
         markers.push(marker);
       });
-    });
+    };
+
+    // Start the initialization process
+    initializeMarkers();
 
     // Cleanup function
     return () => {
