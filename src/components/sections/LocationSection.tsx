@@ -3,6 +3,7 @@ import Section from '@/components/Section';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import LeafletMap from '@/components/LeafletMap';
 import { MapPin, Camera, TreePine, Castle, Waves, Map } from 'lucide-react';
+import { logger } from '@/utils/logger';
 
 // Import the image from our organized assets folder
 import { surroundingAreaImage } from '@/assets/images';
@@ -54,8 +55,6 @@ const pointsOfInterest = [
 const LocationSection = () => {
   const [imageError, setImageError] = useState(false);
 
-  console.log("Image path being used:", surroundingAreaImage);
-
   return (
     <Section id="lokalita">
       <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
@@ -67,7 +66,7 @@ const LocationSection = () => {
                 alt="Krajina Brdských lesů" 
                 className="w-full h-full object-cover"
                 onError={() => {
-                  console.error("Image failed to load:", surroundingAreaImage);
+                  logger.error("Image failed to load:", surroundingAreaImage);
                   setImageError(true);
                 }}
               />

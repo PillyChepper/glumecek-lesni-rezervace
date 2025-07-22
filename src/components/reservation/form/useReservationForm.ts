@@ -1,9 +1,10 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { createReservation } from '@/lib/supabase/reservations';
 import { DateRange } from '@/components/DateRangePicker';
+import { logger } from '@/utils/logger';
 
 export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.FormEvent) => void) => {
   const [firstName, setFirstName] = useState('');
@@ -115,7 +116,7 @@ export const useReservationForm = (dateRange: DateRange, onSubmit: (e: React.For
       // Navigate to homepage after submission
       navigate('/', { replace: true });
     } catch (error) {
-      console.error('Error creating reservation:', error);
+      logger.error('Error creating reservation:', error);
       toast({
         title: "Chyba při rezervaci",
         description: "Došlo k chybě při odesílání rezervace. Prosím zkuste to znovu později.",

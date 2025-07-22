@@ -107,7 +107,9 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
       }, 100);
 
     } catch (error) {
-      console.error('Error initializing Leaflet map:', error);
+      import('@/utils/logger').then(({ logger }) => {
+        logger.error('Error initializing Leaflet map:', error);
+      });
     }
 
     // Cleanup on component unmount

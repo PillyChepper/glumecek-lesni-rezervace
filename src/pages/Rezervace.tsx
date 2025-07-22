@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { DateRange } from '@/components/DateRangePicker';
 import Footer from '@/components/Footer';
 import ReservationDatePicker from '@/components/reservation/ReservationDatePicker';

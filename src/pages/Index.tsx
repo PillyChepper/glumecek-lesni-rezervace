@@ -8,8 +8,6 @@ import PricingSection from '@/components/sections/PricingSection';
 import ReservationCTASection from '@/components/sections/ReservationCTASection';
 
 const Index = () => {
-  console.log("Index page rendering");
-  
   return (
     <div className="min-h-screen">
       <HeroSection />
