@@ -87,15 +87,16 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
       // Add logo control
       new LogoControl().addTo(map);
 
-      // Ensure map is refreshed when container size changes
+      // Ensure map is refreshed when container size changes and DOM is ready
       setTimeout(() => {
-        map.invalidateSize();
-      }, 100);
-
-      // Call the onMapInit callback if provided
-      if (onMapInit) {
-        onMapInit(map);
-      }
+        if (map.getContainer() && map.getContainer().offsetWidth > 0) {
+          map.invalidateSize();
+          // Call the onMapInit callback only after map is fully ready
+          if (onMapInit) {
+            onMapInit(map);
+          }
+        }
+      }, 150);
 
     } catch (error) {
       console.error('Error initializing Leaflet map:', error);

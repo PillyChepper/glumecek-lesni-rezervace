@@ -50,7 +50,7 @@ const InteractiveMapMarkers = ({ map, pois, cabinLocation }: InteractiveMapMarke
   };
 
   useEffect(() => {
-    if (!map) return;
+    if (!map || !map.getContainer()) return;
 
     const markers: L.Marker[] = [];
 
