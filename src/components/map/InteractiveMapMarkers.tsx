@@ -50,148 +50,153 @@ const InteractiveMapMarkers = ({ map, pois, cabinLocation }: InteractiveMapMarke
   };
 
   useEffect(() => {
-    if (!map || !map.getContainer()) return;
+    if (!map) return;
 
     const markers: L.Marker[] = [];
 
-    // Create custom cabin icon
-    const cabinIcon = L.divIcon({
-      html: `
-        <div style="
-          background: #166534;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          border: 3px solid white;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 20px;
-        ">
-          🏠
-        </div>
-      `,
-      className: 'custom-cabin-marker',
-      iconSize: [40, 40],
-      iconAnchor: [20, 20],
-      popupAnchor: [0, -20]
-    });
-
-    // Add cabin marker
-    const cabinMarker = L.marker([cabinLocation.latitude, cabinLocation.longitude], { 
-      icon: cabinIcon 
-    }).addTo(map);
-
-    cabinMarker.bindPopup(`
-      <div style="min-width: 200px;">
-        <h3 style="margin: 0 0 8px 0; color: #166534; font-weight: bold;">Chatka Glumeček</h3>
-        <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">
-          Váš útulný pobyt v srdci Brdských lesů
-        </p>
-        <div style="display: flex; gap: 8px; margin-top: 8px;">
-          <a href="/rezervace" style="
-            background: #166534;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: bold;
-          ">Rezervovat</a>
-          <a href="#ubytovani" style="
-            background: #f3f4f6;
-            color: #374151;
-            padding: 6px 12px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 12px;
-          ">Více info</a>
-        </div>
-      </div>
-    `);
-
-    markers.push(cabinMarker);
-
-    // Add POI markers
-    pois.forEach(poi => {
-      const poiIcon = L.divIcon({
+    // Use Leaflet's whenReady to ensure map is fully initialized
+    map.whenReady(() => {
+      // Create custom cabin icon
+      const cabinIcon = L.divIcon({
         html: `
           <div style="
-            background: ${getCategoryColor(poi.category)};
-            width: 32px;
-            height: 32px;
+            background: #166534;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 20px;
           ">
-            ${getCategoryIcon(poi.category)}
+            🏠
           </div>
         `,
-        className: `custom-poi-marker poi-${poi.category}`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16],
-        popupAnchor: [0, -16]
+        className: 'custom-cabin-marker',
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+        popupAnchor: [0, -20]
       });
 
-      const marker = L.marker([poi.latitude, poi.longitude], { 
-        icon: poiIcon 
+      // Add cabin marker
+      const cabinMarker = L.marker([cabinLocation.latitude, cabinLocation.longitude], { 
+        icon: cabinIcon 
       }).addTo(map);
 
-      const popupContent = `
-        <div style="min-width: 250px;">
-          <h3 style="margin: 0 0 8px 0; color: ${getCategoryColor(poi.category)}; font-weight: bold;">
-            ${poi.name}
-          </h3>
-          <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 8px;">
-            <span style="color: #666; font-size: 12px;">📍 ${poi.distance} od chatky</span>
-          </div>
-          <p style="margin: 0 0 12px 0; color: #666; font-size: 14px; line-height: 1.4;">
-            ${poi.description}
+      cabinMarker.bindPopup(`
+        <div style="min-width: 200px;">
+          <h3 style="margin: 0 0 8px 0; color: #166534; font-weight: bold;">Chatka Glumeček</h3>
+          <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">
+            Váš útulný pobyt v srdci Brdských lesů
           </p>
-          <div style="display: flex; gap: 8px;">
-            <a href="https://www.google.com/maps/dir//${poi.latitude},${poi.longitude}" 
-               target="_blank" 
-               style="
-                 background: #1f2937;
-                 color: white;
-                 padding: 6px 12px;
-                 border-radius: 4px;
-                 text-decoration: none;
-                 font-size: 12px;
-               ">
-              🧭 Navigace
-            </a>
-            ${poi.website ? `
-              <a href="${poi.website}" 
+          <div style="display: flex; gap: 8px; margin-top: 8px;">
+            <a href="/rezervace" style="
+              background: #166534;
+              color: white;
+              padding: 6px 12px;
+              border-radius: 4px;
+              text-decoration: none;
+              font-size: 12px;
+              font-weight: bold;
+            ">Rezervovat</a>
+            <a href="#ubytovani" style="
+              background: #f3f4f6;
+              color: #374151;
+              padding: 6px 12px;
+              border-radius: 4px;
+              text-decoration: none;
+              font-size: 12px;
+            ">Více info</a>
+          </div>
+        </div>
+      `);
+
+      markers.push(cabinMarker);
+
+      // Add POI markers
+      pois.forEach(poi => {
+        const poiIcon = L.divIcon({
+          html: `
+            <div style="
+              background: ${getCategoryColor(poi.category)};
+              width: 32px;
+              height: 32px;
+              border-radius: 50%;
+              border: 2px solid white;
+              box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 16px;
+            ">
+              ${getCategoryIcon(poi.category)}
+            </div>
+          `,
+          className: `custom-poi-marker poi-${poi.category}`,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
+          popupAnchor: [0, -16]
+        });
+
+        const marker = L.marker([poi.latitude, poi.longitude], { 
+          icon: poiIcon 
+        }).addTo(map);
+
+        const popupContent = `
+          <div style="min-width: 250px;">
+            <h3 style="margin: 0 0 8px 0; color: ${getCategoryColor(poi.category)}; font-weight: bold;">
+              ${poi.name}
+            </h3>
+            <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 8px;">
+              <span style="color: #666; font-size: 12px;">📍 ${poi.distance} od chatky</span>
+            </div>
+            <p style="margin: 0 0 12px 0; color: #666; font-size: 14px; line-height: 1.4;">
+              ${poi.description}
+            </p>
+            <div style="display: flex; gap: 8px;">
+              <a href="https://www.google.com/maps/dir//${poi.latitude},${poi.longitude}" 
                  target="_blank" 
                  style="
-                   background: #f3f4f6;
-                   color: #374151;
+                   background: #1f2937;
+                   color: white;
                    padding: 6px 12px;
                    border-radius: 4px;
                    text-decoration: none;
                    font-size: 12px;
                  ">
-                🌐 Web
+                🧭 Navigace
               </a>
-            ` : ''}
+              ${poi.website ? `
+                <a href="${poi.website}" 
+                   target="_blank" 
+                   style="
+                     background: #f3f4f6;
+                     color: #374151;
+                     padding: 6px 12px;
+                     border-radius: 4px;
+                     text-decoration: none;
+                     font-size: 12px;
+                   ">
+                  🌐 Web
+                </a>
+              ` : ''}
+            </div>
           </div>
-        </div>
-      `;
+        `;
 
-      marker.bindPopup(popupContent);
-      markers.push(marker);
+        marker.bindPopup(popupContent);
+        markers.push(marker);
+      });
     });
 
     // Cleanup function
     return () => {
       markers.forEach(marker => {
-        map.removeLayer(marker);
+        if (map.hasLayer(marker)) {
+          map.removeLayer(marker);
+        }
       });
     };
   }, [map, pois, cabinLocation]);
