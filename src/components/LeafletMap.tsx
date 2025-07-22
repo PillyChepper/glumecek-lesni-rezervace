@@ -8,15 +8,13 @@ interface LeafletMapProps {
   longitude: number;
   zoom?: number;
   height?: string;
-  onMapInit?: (map: L.Map) => void;
 }
 
 const LeafletMap: React.FC<LeafletMapProps> = ({
   latitude,
   longitude,
   zoom = 15,
-  height = '400px',
-  onMapInit
+  height = '400px'
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -63,9 +61,25 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
       // Add layers control
       L.control.layers(tileLayers).addTo(map);
 
-      // Add the Mapy.cz logo with direct link to coordinates
+      // Fix for default marker icon paths in Leaflet
+      const defaultIcon = L.icon({
+        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      });
+
+      // Add marker at the location with fixed icon
+      L.marker([latitude, longitude], { icon: defaultIcon }).addTo(map);
+
+      // Format coordinates for Mapy.cz URL
+      // Mapy.cz uses format: https://mapy.cz/zakladni?x=13.8453900&y=49.5867500&z=15
       const mapyCzUrl = `https://mapy.cz/zakladni?x=${longitude.toFixed(7)}&y=${latitude.toFixed(7)}&z=${zoom}`;
 
+      // Add the Mapy.cz logo with direct link to coordinates
       const LogoControl = L.Control.extend({
         options: {
           position: 'bottomleft',
@@ -87,16 +101,10 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
       // Add logo control
       new LogoControl().addTo(map);
 
-      // Ensure map is refreshed when container size changes and DOM is ready
+      // Ensure map is refreshed when container size changes
       setTimeout(() => {
-        if (map.getContainer() && map.getContainer().offsetWidth > 0) {
-          map.invalidateSize();
-          // Call the onMapInit callback only after map is fully ready
-          if (onMapInit) {
-            onMapInit(map);
-          }
-        }
-      }, 150);
+        map.invalidateSize();
+      }, 100);
 
     } catch (error) {
       console.error('Error initializing Leaflet map:', error);
@@ -109,7 +117,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
         mapInstanceRef.current = null;
       }
     };
-  }, [latitude, longitude, zoom, onMapInit]);
+  }, [latitude, longitude, zoom]);
 
   return (
     <div 
