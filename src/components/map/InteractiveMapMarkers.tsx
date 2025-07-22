@@ -53,18 +53,21 @@ const InteractiveMapMarkers = ({ map, pois, cabinLocation }: InteractiveMapMarke
     if (!map) return;
 
     const markers: L.Marker[] = [];
+    let markersInitialized = false;
 
-    // Use a more robust initialization approach
-    const initializeMarkers = () => {
-      const container = map.getContainer();
-      const mapPane = container?.querySelector('.leaflet-map-pane');
-      const overlayPane = container?.querySelector('.leaflet-overlay-pane');
+    // Wait for map to be fully loaded and ready
+    const handleMapReady = () => {
+      if (markersInitialized) return; // Prevent duplicate initialization
       
-      // Ensure all necessary DOM elements exist
-      if (!container || !mapPane || !overlayPane) {
-        setTimeout(initializeMarkers, 100);
+      // Double check that marker pane exists
+      const markerPane = map.getPane('markerPane');
+      if (!markerPane) {
+        setTimeout(handleMapReady, 50);
         return;
       }
+
+      markersInitialized = true;
+
       // Create custom cabin icon
       const cabinIcon = L.divIcon({
         html: `
@@ -200,11 +203,15 @@ const InteractiveMapMarkers = ({ map, pois, cabinLocation }: InteractiveMapMarke
       });
     };
 
-    // Start the initialization process
-    initializeMarkers();
+    // Use map events and fallback to ensure it's fully ready
+    map.on('load', handleMapReady);
+    // Always use fallback timeout for reliability
+    const timeoutId = setTimeout(handleMapReady, 300);
 
     // Cleanup function
     return () => {
+      clearTimeout(timeoutId);
+      map.off('load', handleMapReady);
       markers.forEach(marker => {
         if (map.hasLayer(marker)) {
           map.removeLayer(marker);
