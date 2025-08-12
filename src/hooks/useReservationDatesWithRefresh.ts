@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useReservationDates } from './useReservationDates';
+import { logger } from '@/utils/logger';
 
 export function useReservationDatesWithRefresh(startDate?: Date, endDate?: Date) {
   const [refreshCounter, setRefreshCounter] = useState(0);
@@ -8,7 +9,7 @@ export function useReservationDatesWithRefresh(startDate?: Date, endDate?: Date)
   
   // Function to force a refresh of the reservation dates
   const refreshDates = useCallback(() => {
-    console.log('Manually refreshing reservation dates');
+    logger.info('Manually refreshing reservation dates');
     setRefreshCounter(prev => prev + 1);
     // Remove the forced page reload - this was causing performance issues
     // Instead, rely on React Query's refetch mechanism
@@ -17,7 +18,7 @@ export function useReservationDatesWithRefresh(startDate?: Date, endDate?: Date)
   // Listen for reservation-cancelled events
   useEffect(() => {
     const handleReservationCancelled = () => {
-      console.log('Reservation cancelled, refreshing calendar dates');
+      logger.info('Reservation cancelled, refreshing calendar dates');
       refreshDates();
     };
     

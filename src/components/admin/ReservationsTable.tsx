@@ -14,6 +14,7 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Spinner } from "@/components/ui/spinner";
+import { logger } from "@/utils/logger";
 
 type ReservationsTableProps = {
   loading: boolean;
@@ -71,8 +72,8 @@ export const ReservationsTable = ({
     return <div className="text-center text-red-500 p-4">{error}</div>;
   }
 
-  console.log("Total reservations:", reservations.length);
-  console.log("Pending reservations:", pendingReservations.length);
+  logger.debug("Total reservations:", reservations.length);
+  logger.debug("Pending reservations:", pendingReservations.length);
 
   return (
     <div className="space-y-4">

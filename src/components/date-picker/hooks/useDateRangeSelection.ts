@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { startOfDay, isAfter, isBefore, isEqual, addDays, format } from "date-fns";
 import { DateRange } from "@/components/DateRangePicker";
 import { isDateReserved, hasReservationsInRange } from "../utils/dateUtils";
+import { logger } from "@/utils/logger";
 
 interface DateRangeSelectionProps {
   value: DateRange;
@@ -30,20 +31,20 @@ export const useDateRangeSelection = ({
     const map = new Map<string, boolean>();
     
     if (disabledDates && disabledDates.length > 0) {
-      console.log('Processing disabled dates:', disabledDates);
+      logger.debug('Processing disabled dates:', disabledDates);
       disabledDates.forEach((date) => {
         if (date) {
           // Normalize dates by removing the time component and use a consistent format
           const normalizedDate = startOfDay(new Date(date));
           const dateKey = format(normalizedDate, 'yyyy-MM-dd');
           map.set(dateKey, true);
-          console.log(`Disabled date added to map: ${dateKey} (${normalizedDate.getDate()}/${normalizedDate.getMonth() + 1})`);
+          logger.debug(`Disabled date added to map: ${dateKey} (${normalizedDate.getDate()}/${normalizedDate.getMonth() + 1})`);
         }
       });
     }
     
     setDisabledDatesMap(map);
-    console.log(`Processed ${map.size} disabled dates`);
+    logger.debug(`Processed ${map.size} disabled dates`);
   }, [disabledDates]);
   
   // Sync component state with external value
@@ -104,16 +105,16 @@ export const useDateRangeSelection = ({
   // Handle day click
   const onDayClick = (date: Date) => {
     // Log the clicked date for debugging purposes
-    console.log(`Day clicked: ${format(date, 'yyyy-MM-dd')} (${date.getDate()}/${date.getMonth() + 1})`);
+    logger.debug(`Day clicked: ${format(date, 'yyyy-MM-dd')} (${date.getDate()}/${date.getMonth() + 1})`);
     
     if (isFullyReserved(date)) {
-      console.log(`Cannot select reserved date: ${date}`);
+      logger.debug(`Cannot select reserved date: ${date}`);
       return;
     }
     
     if (!arrivalDate) {
       const selectedArrivalDate = startOfDay(date);
-      console.log(`Setting arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')} (${selectedArrivalDate.getDate()}/${selectedArrivalDate.getMonth() + 1})`);
+      logger.debug(`Setting arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')} (${selectedArrivalDate.getDate()}/${selectedArrivalDate.getMonth() + 1})`);
       setArrivalDate(selectedArrivalDate);
       onChange({ from: selectedArrivalDate, to: undefined });
       return;
@@ -131,7 +132,7 @@ export const useDateRangeSelection = ({
       if (isBefore(date, arrivalDate)) {
         // If clicked date is before arrival, make it the new arrival
         const selectedArrivalDate = startOfDay(date);
-        console.log(`Updating arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')} (${selectedArrivalDate.getDate()}/${selectedArrivalDate.getMonth() + 1})`);
+        logger.debug(`Updating arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')} (${selectedArrivalDate.getDate()}/${selectedArrivalDate.getMonth() + 1})`);
         setArrivalDate(selectedArrivalDate);
         onChange({ from: selectedArrivalDate, to: undefined });
         return;
@@ -140,18 +141,18 @@ export const useDateRangeSelection = ({
       // Ensure min stay and no reserved dates in between
       const minDepartureDate = addDays(arrivalDate, minDays - 1);
       if (isBefore(date, minDepartureDate)) {
-        console.log(`Selected departure date doesn't meet minimum stay of ${minDays} days`);
+        logger.debug(`Selected departure date doesn't meet minimum stay of ${minDays} days`);
         return;
       }
       
       // Check for reserved dates between arrival and departure
       if (hasReservationsInRange(arrivalDate, date, disabledDatesMap)) {
-        console.log("Cannot select this range because there are reserved dates in between");
+        logger.debug("Cannot select this range because there are reserved dates in between");
         return;
       }
       
       const selectedDepartureDate = startOfDay(date);
-      console.log(`Setting departure date: ${format(selectedDepartureDate, 'yyyy-MM-dd')} (${selectedDepartureDate.getDate()}/${selectedDepartureDate.getMonth() + 1})`);
+      logger.debug(`Setting departure date: ${format(selectedDepartureDate, 'yyyy-MM-dd')} (${selectedDepartureDate.getDate()}/${selectedDepartureDate.getMonth() + 1})`);
       setDepartureDate(selectedDepartureDate);
       onChange({ from: arrivalDate, to: selectedDepartureDate });
       return;
@@ -159,7 +160,7 @@ export const useDateRangeSelection = ({
     
     // Reset if both dates were already selected
     const selectedArrivalDate = startOfDay(date);
-    console.log(`Resetting selection with new arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')} (${selectedArrivalDate.getDate()}/${selectedArrivalDate.getMonth() + 1})`);
+    logger.debug(`Resetting selection with new arrival date: ${format(selectedArrivalDate, 'yyyy-MM-dd')} (${selectedArrivalDate.getDate()}/${selectedArrivalDate.getMonth() + 1})`);
     setArrivalDate(selectedArrivalDate);
     setDepartureDate(undefined);
     onChange({ from: selectedArrivalDate, to: undefined });

@@ -1,5 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/utils/logger';
 
 export interface Reservation {
   id?: string;
@@ -22,7 +23,7 @@ export interface Reservation {
 
 export async function createReservation(reservation: Omit<Reservation, 'id' | 'status' | 'created_at'>): Promise<{ data: Reservation | null; error: any }> {
   try {
-    console.log('Creating reservation with Supabase:', reservation);
+    logger.info('Creating reservation with Supabase:', reservation);
     
     // Ensure dates are in the correct format for the database
     // Store dates at noon to avoid timezone issues
@@ -32,8 +33,8 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
     const departureDate = new Date(reservation.departure_date);
     departureDate.setHours(12, 0, 0, 0);
     
-    console.log(`Parsed dates for storage: Arrival=${arrivalDate.toISOString()}, Departure=${departureDate.toISOString()}`);
-    console.log(`Date values: Arrival=${arrivalDate.getDate()}/${arrivalDate.getMonth() + 1}, Departure=${departureDate.getDate()}/${departureDate.getMonth() + 1}`);
+    logger.debug(`Parsed dates for storage: Arrival=${arrivalDate.toISOString()}, Departure=${departureDate.toISOString()}`);
+    logger.debug(`Date values: Arrival=${arrivalDate.getDate()}/${arrivalDate.getMonth() + 1}, Departure=${departureDate.getDate()}/${departureDate.getMonth() + 1}`);
     
     const reservationData = {
       ...reservation,
@@ -49,7 +50,7 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
       .single();
     
     if (error) {
-      console.error('Error creating reservation in Supabase:', error);
+      logger.error('Error creating reservation in Supabase:', error);
       
       // Fallback for development/testing
       const mockReservation = {
@@ -59,7 +60,7 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
         created_at: new Date().toISOString()
       };
       
-      console.log('Falling back to mock reservation:', mockReservation);
+      logger.warn('Falling back to mock reservation:', mockReservation);
       
       return { 
         data: mockReservation as Reservation, 
@@ -67,7 +68,7 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
       };
     }
     
-    console.log('Reservation created successfully:', data);
+    logger.info('Reservation created successfully:', data);
     
     // Dispatch event to notify other components that a reservation has been created
     const event = new CustomEvent('reservation-changed', { 
@@ -77,7 +78,7 @@ export async function createReservation(reservation: Omit<Reservation, 'id' | 's
     
     return { data, error: null };
   } catch (error) {
-    console.error('Exception in createReservation:', error);
+    logger.error('Exception in createReservation:', error);
     return { data: null, error };
   }
 }

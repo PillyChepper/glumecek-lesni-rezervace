@@ -1,5 +1,6 @@
 
 import { format, startOfDay, isAfter, isBefore, isEqual, addDays } from "date-fns";
+import { logger } from "@/utils/logger";
 
 /**
  * Creates a Map of disabled dates for faster lookup
@@ -8,19 +9,19 @@ export const createDisabledDatesMap = (disabledDates: Date[] = []): Map<string, 
   const map = new Map<string, boolean>();
   
   if (disabledDates && disabledDates.length > 0) {
-    console.log('Processing disabled dates:', disabledDates);
+    logger.debug('Processing disabled dates:', disabledDates);
     disabledDates.forEach((date) => {
       if (date) {
         // Normalize dates by removing the time component and use a consistent format
         const normalizedDate = startOfDay(new Date(date));
         const dateKey = format(normalizedDate, 'yyyy-MM-dd');
         map.set(dateKey, true);
-        console.log(`Disabled date added to map: ${dateKey} (${normalizedDate.getDate()}/${normalizedDate.getMonth() + 1})`);
+        logger.debug(`Disabled date added to map: ${dateKey} (${normalizedDate.getDate()}/${normalizedDate.getMonth() + 1})`);
       }
     });
   }
   
-  console.log(`Processed ${map.size} disabled dates`);
+  logger.debug(`Processed ${map.size} disabled dates`);
   return map;
 };
 

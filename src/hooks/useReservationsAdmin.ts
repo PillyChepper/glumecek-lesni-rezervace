@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Reservation, updateReservationStatus } from '@/lib/supabase/reservations';
+import { logger } from '@/utils/logger';
 
 export function useReservationsAdmin() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
@@ -17,7 +18,7 @@ export function useReservationsAdmin() {
       setLoading(true);
       setError(null);
       
-      console.log('Fetching reservations...');
+      logger.info('Fetching reservations...');
       
       const { data, error } = await supabase
         .from('reservations')
@@ -25,14 +26,14 @@ export function useReservationsAdmin() {
         .order('arrival_date', { ascending: false }); // Changed to descending order (newest dates at top)
       
       if (error) {
-        console.error('Error fetching reservations:', error);
+        logger.error('Error fetching reservations:', error);
         throw error;
       }
       
-      console.log('Fetched reservations:', data?.length || 0, data);
+      logger.info('Fetched reservations:', data?.length || 0, data);
       setReservations(data || []);
     } catch (err) {
-      console.error('Error fetching reservations:', err);
+      logger.error('Error fetching reservations:', err);
       setError('Nepodařilo se načíst rezervace');
     } finally {
       setLoading(false);
@@ -86,7 +87,7 @@ export function useReservationsAdmin() {
         variant: action === 'confirm' ? "default" : "destructive",
       });
     } catch (err) {
-      console.error('Error updating reservation status:', err);
+      logger.error('Error updating reservation status:', err);
       toast({
         title: "Chyba",
         description: "Nepodařilo se aktualizovat stav rezervace.",
@@ -117,18 +118,18 @@ export function useReservationsAdmin() {
           table: 'reservations' 
         }, 
         (payload) => {
-          console.log('Reservation changed via realtime:', payload);
+          logger.debug('Reservation changed via realtime:', payload);
           // Refresh the data when a change is detected
           fetchReservations();
         }
       )
       .subscribe((status) => {
-        console.log('Realtime subscription status:', status);
+        logger.debug('Realtime subscription status:', status);
       });
       
     // Listen for reservation-changed events from other components
     const handleReservationChange = () => {
-      console.log('Reservation change event received, refreshing...');
+      logger.info('Reservation change event received, refreshing...');
       fetchReservations();
     };
     
@@ -137,7 +138,7 @@ export function useReservationsAdmin() {
     
     // Clean up the subscription and event listeners
     return () => {
-      console.log('Cleaning up Admin component subscriptions');
+      logger.debug('Cleaning up Admin component subscriptions');
       supabase.removeChannel(channel);
       window.removeEventListener('reservation-changed', handleReservationChange);
       window.removeEventListener('reservation-cancelled', handleReservationChange);

@@ -6,6 +6,7 @@ import { cs } from "date-fns/locale";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { logger } from "@/utils/logger";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
   onDayMouseEnter?: (day: Date, modifiers: any, e: React.MouseEvent) => void;
@@ -24,7 +25,7 @@ function Calendar({
   const enhancedProps = {
     ...props,
     onDayClick: (day: Date, modifiers: any, e: React.MouseEvent) => {
-      console.log(`Calendar day clicked: ${day.toISOString()}`, modifiers, e);
+      logger.debug(`Calendar day clicked: ${day.toISOString()}`, modifiers, e);
       if (props.onDayClick) {
         props.onDayClick(day, modifiers, e);
       }

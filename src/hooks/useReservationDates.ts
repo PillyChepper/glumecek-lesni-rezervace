@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { startOfDay } from 'date-fns';
+import { logger } from '@/utils/logger';
 
 export function useReservationDates(startDate?: Date, endDate?: Date) {
   const [disabledDates, setDisabledDates] = useState<Date[]>([]);
@@ -19,13 +20,13 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
       
       // If not connected, show error but don't fall back to sample data
       if (!connected) {
-        console.log('Database connection issues');
+        logger.warn('Database connection issues');
         setDisabledDates([]);
         setLoading(false);
         return;
       }
 
-      console.log('Fetching ALL reservations from the database');
+      logger.info('Fetching ALL reservations from the database');
       
       // Try to fetch from Supabase
       try {
@@ -37,14 +38,14 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
           .neq('status', 'cancelled');
 
         if (reservationsError) {
-          console.error('Error fetching reservations:', reservationsError);
+          logger.error('Error fetching reservations:', reservationsError);
           setError('Error fetching reservation data.');
           setDisabledDates([]);
           setLoading(false);
           return;
         }
 
-        console.log('Raw reservations data:', reservationsData);
+        logger.debug('Raw reservations data:', reservationsData);
 
         if (reservationsData && reservationsData.length > 0) {
           // Process the reservations to get all dates between arrival and departure
@@ -58,8 +59,8 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
             const arrivalDate = new Date(reservation.arrival_date);
             const departureDate = new Date(reservation.departure_date);
             
-            console.log(`Processing reservation: ${arrivalDate.toISOString()} - ${departureDate.toISOString()}`);
-            console.log(`Arrival date: ${arrivalDate.getDate()}/${arrivalDate.getMonth() + 1}, Departure date: ${departureDate.getDate()}/${departureDate.getMonth() + 1}`);
+            logger.debug(`Processing reservation: ${arrivalDate.toISOString()} - ${departureDate.toISOString()}`);
+            logger.debug(`Arrival date: ${arrivalDate.getDate()}/${arrivalDate.getMonth() + 1}, Departure date: ${departureDate.getDate()}/${departureDate.getMonth() + 1}`);
             
             // Generate all dates FROM arrival TO departure (inclusive of arrival, exclusive of departure)
             // This is the crucial fix - we want to mark dates from arrival date UP TO BUT NOT INCLUDING departure date
@@ -73,7 +74,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
               // Format date without time component
               const dateStr = currentDateCopy.toISOString().split('T')[0];
               bookedDatesSet.add(dateStr);
-              console.log(`Adding booked date: ${dateStr} (${currentDateCopy.getDate()}/${currentDateCopy.getMonth() + 1})`);
+              logger.debug(`Adding booked date: ${dateStr} (${currentDateCopy.getDate()}/${currentDateCopy.getMonth() + 1})`);
               
               // Create a new date object for the next day to avoid reference issues
               const nextDay = new Date(currentDateCopy);
@@ -89,19 +90,19 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
             return startOfDay(new Date(dateStr));
           });
           
-          console.log('Processed booked dates:', bookedDates.length, 'dates:', bookedDates);
+          logger.debug('Processed booked dates:', bookedDates.length, 'dates:', bookedDates);
           setDisabledDates(bookedDates);
         } else {
-          console.log('No booked dates found in database');
+          logger.info('No booked dates found in database');
           setDisabledDates([]);
         }
       } catch (supabaseErr) {
-        console.error('Supabase query error:', supabaseErr);
+        logger.error('Supabase query error:', supabaseErr);
         setError('Error fetching reservation data.');
         setDisabledDates([]);
       }
     } catch (err) {
-      console.error('Error fetching reservation dates:', err);
+      logger.error('Error fetching reservation dates:', err);
       setError('Failed to load reservation dates.');
       setDisabledDates([]);
     } finally {
@@ -116,17 +117,17 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
       const { data, error } = await supabase.from('reservations').select('count').limit(1);
       
       if (error) {
-        console.error('Supabase connection check failed:', error);
+        logger.error('Supabase connection check failed:', error);
         setIsSupabaseConnected(false);
         setError('Could not connect to the database. Please try again later.');
         return false;
       }
       
-      console.log('Supabase connection check succeeded');
+      logger.info('Supabase connection check succeeded');
       setIsSupabaseConnected(true);
       return true;
     } catch (err) {
-      console.error('Unexpected error checking Supabase connection:', err);
+      logger.error('Unexpected error checking Supabase connection:', err);
       setIsSupabaseConnected(false);
       setError('Could not connect to the database due to an unexpected error.');
       return false;
@@ -140,10 +141,10 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
     // Set up periodic connection checks to detect when Supabase comes back online
     const connectionCheckInterval = setInterval(async () => {
       if (!isSupabaseConnected) {
-        console.log('Checking if Supabase is back online...');
+        logger.info('Checking if Supabase is back online...');
         const connected = await checkSupabaseConnection();
         if (connected) {
-          console.log('Supabase is back online! Refreshing reservation dates...');
+          logger.info('Supabase is back online! Refreshing reservation dates...');
           fetchReservationDates();
         }
       }
@@ -151,7 +152,7 @@ export function useReservationDates(startDate?: Date, endDate?: Date) {
     
     // Set up event listener for reservation changes
     const handleReservationChange = () => {
-      console.log('Reservation change detected, refreshing dates');
+      logger.info('Reservation change detected, refreshing dates');
       fetchReservationDates();
     };
     
