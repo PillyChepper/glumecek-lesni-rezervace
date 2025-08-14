@@ -2,10 +2,11 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { DateRange } from '@/components/DateRangePicker';
-import { useReservationForm } from './form/useReservationForm';
+import { useReservationFormRHF } from './form/useReservationFormRHF';
 import BookingSteps, { BookingStep } from './BookingSteps';
-import ReservationContactView from './form/ReservationContactView';
-import ReservationConfirmView from './form/ReservationConfirmView';
+import ReservationContactViewRHF from './form/ReservationContactViewRHF';
+import ReservationConfirmViewRHF from './form/ReservationConfirmViewRHF';
+import { Form } from '@/components/ui/form';
 
 interface ContactFormProps {
   dateRange: DateRange;
@@ -15,37 +16,9 @@ interface ContactFormProps {
 const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
   const [currentStep, setCurrentStep] = useState<BookingStep>('contact');
   
-  const {
-    firstName,
-    setFirstName,
-    lastName,
-    setLastName,
-    email,
-    setEmail,
-    phone,
-    setPhone,
-    street,
-    setStreet,
-    city,
-    setCity,
-    postalCode,
-    setPostalCode,
-    hasPet,
-    setHasPet,
-    specialRequests,
-    setSpecialRequests,
-    isSubmitting,
-    handleFormSubmit,
-    emailError,
-    validateEmail,
-    isEmailValid
-  } = useReservationForm(dateRange, onSubmit);
+  const { form, handleFormSubmit } = useReservationFormRHF(dateRange, onSubmit);
 
   const handleContinueToConfirm = () => {
-    // Check if all required fields are filled and email is valid
-    if (!firstName || !lastName || !email || !phone || !isEmailValid()) {
-      return;
-    }
     setCurrentStep('confirm');
   };
   
@@ -63,48 +36,20 @@ const ContactForm = ({ dateRange, onSubmit }: ContactFormProps) => {
       </h2>
       
       <Card>
-        <form onSubmit={handleFormSubmit}>
-          {currentStep === 'contact' ? (
-            <ReservationContactView 
-              firstName={firstName}
-              setFirstName={setFirstName}
-              lastName={lastName}
-              setLastName={setLastName}
-              email={email}
-              setEmail={setEmail}
-              phone={phone}
-              setPhone={setPhone}
-              street={street}
-              setStreet={setStreet}
-              city={city}
-              setCity={setCity}
-              postalCode={postalCode}
-              setPostalCode={setPostalCode}
-              hasPet={hasPet}
-              setHasPet={setHasPet}
-              specialRequests={specialRequests}
-              setSpecialRequests={setSpecialRequests}
-              onContinueClick={handleContinueToConfirm}
-              emailError={emailError}
-              validateEmail={validateEmail}
-              isEmailValid={isEmailValid}
-            />
-          ) : (
-            <ReservationConfirmView
-              firstName={firstName}
-              lastName={lastName}
-              email={email}
-              phone={phone}
-              street={street}
-              city={city}
-              postalCode={postalCode}
-              hasPet={hasPet}
-              specialRequests={specialRequests}
-              isSubmitting={isSubmitting}
-              onBackClick={handleBackToContact}
-            />
-          )}
-        </form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleFormSubmit)}>
+            {currentStep === 'contact' ? (
+              <ReservationContactViewRHF 
+                onContinueClick={handleContinueToConfirm}
+              />
+            ) : (
+              <ReservationConfirmViewRHF
+                isSubmitting={form.formState.isSubmitting}
+                onBackClick={handleBackToContact}
+              />
+            )}
+          </form>
+        </Form>
       </Card>
     </div>
   );
