@@ -13,6 +13,7 @@ export const useReservationFormRHF = (dateRange: DateRange, onSubmit: (e: React.
   
   const form = useForm<ReservationFormData>({
     resolver: zodResolver(reservationFormSchema),
+    mode: 'onChange', // Enable validation on change
     defaultValues: {
       firstName: '',
       lastName: '',

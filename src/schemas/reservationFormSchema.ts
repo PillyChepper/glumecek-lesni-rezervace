@@ -6,7 +6,10 @@ export const reservationFormSchema = z.object({
   email: z.string()
     .min(1, "Email je povinný")
     .email("Prosím zadejte platnou emailovou adresu"),
-  phone: z.string().min(1, "Telefon je povinný").trim(),
+  phone: z.string()
+    .min(1, "Telefon je povinný")
+    .regex(/^[0-9+\s\-()]+$/, "Telefon může obsahovat pouze číslice, mezery a znaky +, -, ()")
+    .trim(),
   street: z.string().optional(),
   city: z.string().optional(),
   postalCode: z.string().optional(),

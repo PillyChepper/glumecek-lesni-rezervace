@@ -27,7 +27,7 @@ const BookingSteps = ({ currentStep }: BookingStepsProps) => {
           const StepIcon = step.icon;
           
           return (
-            <React.Fragment key={step.id}>
+            <div key={step.id} className="flex items-center">
               {/* Step item */}
               <div className="flex items-center mb-4 md:mb-0">
                 <div 
@@ -51,7 +51,7 @@ const BookingSteps = ({ currentStep }: BookingStepsProps) => {
               {index < steps.length - 1 && (
                 <div className="hidden md:block w-16 h-px bg-gray-200 mx-4"></div>
               )}
-            </React.Fragment>
+            </div>
           );
         })}
       </div>

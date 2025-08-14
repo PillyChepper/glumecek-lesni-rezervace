@@ -70,22 +70,31 @@ const PersonalInfoSectionRHF = () => {
           />
         </div>
         
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center mb-1">
-                <Phone className="h-4 w-4 text-forest-600 mr-2" />
-                <FormLabel>Telefon *</FormLabel>
-              </div>
-              <FormControl>
-                <Input type="tel" placeholder="Zadejte telefonní číslo" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center mb-1">
+                  <Phone className="h-4 w-4 text-forest-600 mr-2" />
+                  <FormLabel>Telefon *</FormLabel>
+                </div>
+                <FormControl>
+                  <Input 
+                    type="tel" 
+                    placeholder="Zadejte telefonní číslo" 
+                    {...field}
+                    onChange={(e) => {
+                      // Only allow numbers, spaces, +, -, ( and )
+                      const value = e.target.value.replace(/[^0-9+\s\-()]/g, '');
+                      field.onChange(value);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
       </CardContent>
     </Card>
   );

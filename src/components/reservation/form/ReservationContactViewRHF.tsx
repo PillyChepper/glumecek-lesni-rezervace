@@ -13,9 +13,11 @@ interface ReservationContactViewRHFProps {
 const ReservationContactViewRHF = ({ onContinueClick }: ReservationContactViewRHFProps) => {
   const form = useFormContext<ReservationFormData>();
   
+  
   const isFormValid = () => {
     const { firstName, lastName, email, phone } = form.getValues();
-    return firstName && lastName && email && phone && !form.formState.errors.email;
+    const { errors } = form.formState;
+    return firstName && lastName && email && phone && Object.keys(errors).length === 0;
   };
 
   return (
